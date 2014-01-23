@@ -1840,7 +1840,8 @@ void idle_exit_fair(struct rq *this_rq)
 	update_rq_runnable_avg(this_rq, 0);
 }
 
-#else
+#else /* CONFIG_SMP */
+
 static inline void update_entity_load_avg(struct sched_entity *se,
 					  int update_cfs_rq) {}
 static inline void update_rq_runnable_avg(struct rq *rq, int runnable) {}
@@ -1852,7 +1853,7 @@ static inline void dequeue_entity_load_avg(struct cfs_rq *cfs_rq,
 					   int sleep) {}
 static inline void update_cfs_rq_blocked_load(struct cfs_rq *cfs_rq,
 					      int force_update) {}
-#endif
+#endif /* CONFIG_SMP */
 
 static void enqueue_sleeper(struct cfs_rq *cfs_rq, struct sched_entity *se)
 {
@@ -5072,9 +5073,10 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev)
 	struct sched_entity *se;
 	struct task_struct *p;
 
+again: __maybe_unused
 #ifdef CONFIG_FAIR_GROUP_SCHED
 	if (!cfs_rq->nr_running)
-		return NULL;
+		goto idle;
 
 	if (!prev || prev->sched_class != &fair_sched_class)
 		goto simple;
@@ -5150,7 +5152,7 @@ simple:
 #endif
 
 	if (!cfs_rq->nr_running)
-		return NULL;
+		goto idle;
 
 	if (prev)
 		prev->sched_class->put_prev_task(rq, prev);
@@ -5167,6 +5169,22 @@ simple:
 		hrtick_start_fair(rq, p);
 
 	return p;
+
+idle:
+#ifdef CONFIG_SMP
+	idle_enter_fair(rq);
+	/*
+	 * We must set idle_stamp _before_ calling idle_balance(), such that we
+	 * measure the duration of idle_balance() as idle time.
+	 */
+	rq->idle_stamp = rq_clock(rq);
+	if (idle_balance(rq)) { /* drops rq->lock */
+		rq->idle_stamp = 0;
+		goto again;
+	}
+#endif
+
+	return NULL;
 }
 
 /*
