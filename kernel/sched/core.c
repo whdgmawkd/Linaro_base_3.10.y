@@ -3041,7 +3041,8 @@ recheck:
 	}
 
 	/*
-	 * If not changing anything there's no need to proceed further:
+	 * If not changing anything there's no need to proceed further,
+	 * but store a possible modification of reset_on_fork.
 	 */
 	if (unlikely(policy == p->policy)) {
 		if (fair_policy(policy) && attr->sched_nice != task_nice(p))
@@ -3049,6 +3050,7 @@ recheck:
 		if (rt_policy(policy) && attr->sched_priority != p->rt_priority)
 			goto change;
 
+		p->sched_reset_on_fork = reset_on_fork;
 		task_rq_unlock(rq, p, &flags);
 		return 0;
 	}
