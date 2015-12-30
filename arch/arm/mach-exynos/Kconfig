@@ -941,3 +941,19 @@ config EXYNOS_RUN_QUEUE_STATS
 	 This option enalbes statistics collection on Run Queue. A daemon
          in user mode, called MPDecision will be using this data to decide
          on when to switch off/on the other cores.
+
+config SEC_BAT_AUT
+	bool "Samsung TN Bat Automation Test Feature"
+	default n
+	help
+	  Samsung TN Bat Automation Test
+
+config EXYNOS5_DYNAMIC_CPU_HOTPLUG_SLEEP_PREPARE
+        int "Activate number of cores when sleep"
+        depends on EXYNOS5_DYNAMIC_CPU_HOTPLUG
+        default 1
+        help
+          When gose to sleep, activate some cores for performace
+          during sleep/wakeup sequence.
+          This config set the number of activate cores.
+          defaut value is "4" to activate all cores in cluster0.
