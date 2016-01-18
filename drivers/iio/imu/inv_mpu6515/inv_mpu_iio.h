@@ -314,9 +314,9 @@
 #define DMP_TICK_DUR                          5
 #define DEFAULT_ACCEL_TRIM                    16384
 #define DEFAULT_GYRO_TRIM                     131
-#define MAX_FIFO_RATE                         1000
+#define MAX_FIFO_RATE                         200
 #define MAX_DMP_OUTPUT_RATE                   200
-#define MIN_FIFO_RATE                         4
+#define MIN_FIFO_RATE                         5
 #define ONE_K_HZ                              1000
 #define NS_PER_MS_SHIFT                       20
 #define END_MARKER                            0x0010
@@ -461,11 +461,14 @@ enum INV_SENSORS {
  */
 struct inv_sensor {
 	u64 ts;
+	u64 old_ts;
 	int dur;
 	int rate;
 	int counter;
 	bool on;
 	u8 sample_size;
+	int sample_count;
+	u64 batch_irq_time;
 	int (*send_data)(struct inv_mpu_state *st, bool on);
 	int (*set_rate)(struct inv_mpu_state *st);
 };
@@ -1212,6 +1215,7 @@ int set_inv_enable(struct iio_dev *indio_dev, bool enable);
 /* used to print i2c data using pr_debug */
 char *wr_pr_debug_begin(u8 const *data, u32 len, char *string);
 char *wr_pr_debug_end(char *string);
+void check_fifo_rate(int *fifo_rate);
 
 #define mem_w(a, b, c) \
 	mpu_memory_write(st, st->i2c_addr, a, b, c)
