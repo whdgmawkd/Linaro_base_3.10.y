@@ -1,6 +1,10 @@
 #!/res/bin/busybox sh
 P=/sys/devices/battery.26
+<<<<<<< HEAD:ramdisk/tw/res/synapse/json.gen.charge.sec
 source /res/synapse/config.general
+=======
+
+>>>>>>> 623c932... battery: add sec charger control:ramdisk/g850/res/synapse/json.gen.charge.sec
 cat << CTAG
 {
     name:{en:"Power", ko:"전원"},
