@@ -2097,7 +2097,7 @@ static bool __zone_watermark_ok(struct zone *z, int order, unsigned long mark,
 #ifdef CONFIG_ACCURATE_FREE_PAGES_CHECK
 	/*recaculate free_page cause by imbalancing between zone page state and free_area*/
 	free_pages = 0;
-	for (o = 0; o <= MAX_ORDER; o++)
+	for (o = 0; o < MAX_ORDER; o++)
 		free_pages += z->free_area[o].nr_free << o;
 #endif
 	for (o = 0; o < order; o++) {
