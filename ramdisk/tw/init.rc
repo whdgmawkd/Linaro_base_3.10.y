@@ -1388,3 +1388,22 @@ on property:service.vpnclientd.enable=0
 # Reactivation lock
 	service reactived /system/bin/reactived
 	class late_start
+
+# init.d
+service boot-init /system/bin/sh /sbin/boot-init.sh
+    class main
+    user root
+    group root
+    oneshot
+
+service boot-postinit /system/bin/sh /sbin/boot-postinit.sh
+    class main
+    user root
+    group root
+    disabled
+    oneshot
+
+on property:sys.boot_completed=1
+    setenforce 0
+    start boot-postinit
+# end of init.d

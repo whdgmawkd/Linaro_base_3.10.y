@@ -1,7 +1,7 @@
 import init.universal5433.usb.rc
 import init.wifi.rc
 import init.carrier.rc
-import init.baseband.rc
+import init.baseband-n910.rc
 
 on early-init
     mount debugfs /sys/kernel/debug /sys/kernel/debug
