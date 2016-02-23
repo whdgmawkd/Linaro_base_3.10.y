@@ -160,7 +160,7 @@ struct crypt_config {
 	 * correctly aligned.
 	 */
 	unsigned int dmreq_start;
-
+	unsigned int per_bio_data_size;
 	unsigned long flags;
 	unsigned int key_size;
 	unsigned int key_parts;
