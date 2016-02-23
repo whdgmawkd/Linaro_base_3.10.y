@@ -1731,15 +1731,9 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	} else {			/* root hub */
 		const struct hc_driver *drv = bus_to_hcd(hdev->bus)->driver;
 
-<<<<<<< HEAD
-	/* Hubs have proper suspend/resume support. */
-	if (!hdev->parent)
-		usb_enable_autosuspend(hdev);
-=======
 		if (drv->bus_suspend && drv->bus_resume)
 			usb_enable_autosuspend(hdev);
 	}
->>>>>>> lsk
 
 	if (hdev->level == MAX_TOPO_LEVEL) {
 		dev_err(&intf->dev,
@@ -3339,15 +3333,11 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
 		/* drive resume for USB_RESUME_TIMEOUT msec */
 		dev_dbg(&udev->dev, "usb %sresume\n",
 				(PMSG_IS_AUTO(msg) ? "auto-" : ""));
-<<<<<<< HEAD
 		/* Add the 5msec delay for Shannon300 resume fail case */
 		if (udev->quirks & USB_QUIRK_HSIC_TUNE)
 			msleep(30);
 		else
-			msleep(25);
-=======
-		msleep(USB_RESUME_TIMEOUT);
->>>>>>> lsk
+			msleep(USB_RESUME_TIMEOUT);
 
 		/* Virtual root hubs can trigger on GET_PORT_STATUS to
 		 * stop resume signaling.  Then finish the resume

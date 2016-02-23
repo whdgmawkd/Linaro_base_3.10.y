@@ -117,11 +117,7 @@ struct task_struct *find_lock_task_mm(struct task_struct *p)
 	t = NULL;
 found:
 	rcu_read_unlock();
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> lsk
 	return t;
 }
 
@@ -491,10 +487,7 @@ static struct task_struct *select_bad_process(unsigned int *ppoints,
 			chosen_points = points;
 		}
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> lsk
 	if (chosen)
 	{
 #ifdef CONFIG_OOM_SCAN_WA_PREVENT_WRONG_SEARCH

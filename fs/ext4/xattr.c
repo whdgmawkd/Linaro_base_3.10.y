@@ -1381,13 +1381,8 @@ retry:
 				    s_min_extra_isize) {
 					tried_min_extra_isize++;
 					new_extra_isize = s_min_extra_isize;
-<<<<<<< HEAD
-					kfree(is);
-					kfree(bs);
-=======
 					kfree(is); is = NULL;
 					kfree(bs); bs = NULL;
->>>>>>> lsk
 					brelse(bh);
 					goto retry;
 				}

@@ -35,12 +35,9 @@
 #include <asm/tls.h>
 #include <asm/system_misc.h>
 
-<<<<<<< HEAD
 #ifdef CONFIG_SEC_DEBUG
 #include <linux/sec_debug.h>
 #endif
-=======
->>>>>>> lsk
 static const char *handler[]= {
 	"prefetch abort",
 	"data abort",
