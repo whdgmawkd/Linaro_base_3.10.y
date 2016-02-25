@@ -19,12 +19,12 @@ DECLARE_PER_CPU(int, __preempt_count);
  */
 static __always_inline int preempt_count(void)
 {
-	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
+	return __this_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
 }
 
 static __always_inline void preempt_count_set(int pc)
 {
-	raw_cpu_write_4(__preempt_count, pc);
+	__this_cpu_write_4(__preempt_count, pc);
 }
 
 /*
@@ -53,17 +53,17 @@ static __always_inline void preempt_count_set(int pc)
 
 static __always_inline void set_preempt_need_resched(void)
 {
-	raw_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
+	__this_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
 }
 
 static __always_inline void clear_preempt_need_resched(void)
 {
-	raw_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
+	__this_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
 }
 
 static __always_inline bool test_preempt_need_resched(void)
 {
-	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
+	return !(__this_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
 }
 
 /*
@@ -72,12 +72,12 @@ static __always_inline bool test_preempt_need_resched(void)
 
 static __always_inline void __preempt_count_add(int val)
 {
-	raw_cpu_add_4(__preempt_count, val);
+	__this_cpu_add_4(__preempt_count, val);
 }
 
 static __always_inline void __preempt_count_sub(int val)
 {
-	raw_cpu_add_4(__preempt_count, -val);
+	__this_cpu_add_4(__preempt_count, -val);
 }
 
 /*
@@ -95,17 +95,7 @@ static __always_inline bool __preempt_count_dec_and_test(void)
  */
 static __always_inline bool should_resched(void)
 {
-	return unlikely(!raw_cpu_read_4(__preempt_count));
+	return unlikely(!__this_cpu_read_4(__preempt_count));
 }
-
-#ifdef CONFIG_PREEMPT
-  extern asmlinkage void ___preempt_schedule(void);
-# define __preempt_schedule() asm ("call ___preempt_schedule")
-  extern asmlinkage void preempt_schedule(void);
-# ifdef CONFIG_CONTEXT_TRACKING
-    extern asmlinkage void ___preempt_schedule_context(void);
-#   define __preempt_schedule_context() asm ("call ___preempt_schedule_context")
-# endif
-#endif
 
 #endif /* __ASM_PREEMPT_H */
