@@ -544,6 +544,8 @@ static inline u64 rq_clock_task(struct rq *rq)
 
 #ifdef CONFIG_SMP
 
+extern void sched_ttwu_pending(void);
+
 #define rcu_dereference_check_sched_domain(p) \
 	rcu_dereference_check((p), \
 			      lockdep_is_held(&sched_domains_mutex))
@@ -654,6 +656,10 @@ static LIST_HEAD(hmp_domains);
 DECLARE_PER_CPU(struct hmp_domain *, hmp_cpu_domain);
 #define hmp_cpu_domain(cpu)	(per_cpu(hmp_cpu_domain, (cpu)))
 #endif /* CONFIG_SCHED_HMP */
+
+#else
+
+static inline void sched_ttwu_pending(void) { }
 
 #endif /* CONFIG_SMP */
 
