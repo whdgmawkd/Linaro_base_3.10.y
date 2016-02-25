@@ -69,7 +69,6 @@ struct cpu_efficiency {
  * Processors that are not defined in the table,
  * use the default SCHED_CAPACITY_SCALE value for cpu_scale.
  */
-struct cpu_efficiency table_efficiency[] = {
 static const struct cpu_efficiency table_efficiency[] = {
 #ifdef CONFIG_SOC_EXYNOS5433
 	{"arm,cortex-a15", 3575},
