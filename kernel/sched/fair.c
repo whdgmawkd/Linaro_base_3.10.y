@@ -1835,10 +1835,9 @@ void idle_exit_fair(struct rq *this_rq)
 	update_rq_runnable_avg(this_rq, 0);
 }
 
-static int idle_balance(struct rq *this_rq);
+int idle_balance(struct rq *this_rq);
 
 #else /* CONFIG_SMP */
-
 static inline void update_entity_load_avg(struct sched_entity *se,
 					  int update_cfs_rq) {}
 static inline void update_rq_runnable_avg(struct rq *rq, int runnable) {}
@@ -5077,10 +5076,9 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev)
 	struct sched_entity *se;
 	struct task_struct *p;
 
-again:
 #ifdef CONFIG_FAIR_GROUP_SCHED
 	if (!cfs_rq->nr_running)
-		goto idle;
+		return NULL;
 
 	if (prev->sched_class != &fair_sched_class)
 		goto simple;
@@ -5156,7 +5154,7 @@ simple:
 #endif
 
 	if (!cfs_rq->nr_running)
-		goto idle;
+		return NULL;
 
 	put_prev_task(rq, prev);
 
@@ -5172,12 +5170,6 @@ simple:
 		hrtick_start_fair(rq, p);
 
 	return p;
-
-idle:
-	if (idle_balance(rq)) /* drops rq->lock */
-		goto again;
-
-	return NULL;
 }
 
 /*
@@ -6877,7 +6869,7 @@ static unsigned int hmp_idle_pull(int this_cpu);
  * idle_balance is called by schedule() if this_cpu is about to become
  * idle. Attempts to pull tasks from other CPUs.
  */
-static int idle_balance(struct rq *this_rq)
+int idle_balance(struct rq *this_rq)
 {
 	struct sched_domain *sd;
 	int pulled_task = 0;
