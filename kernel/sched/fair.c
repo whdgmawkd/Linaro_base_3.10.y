@@ -2186,6 +2186,8 @@ static __always_inline u64 decay_load(u64 val, u64 n)
 	return val >> 32;
 }
 
+unsigned long __weak arch_scale_freq_capacity(struct sched_domain *sd, int cpu);
+
 /*
  * For updates fully spanning n periods, the contribution to runnable
  * average will be: \Sum 1024*y^n
@@ -2335,15 +2337,15 @@ static struct cpufreq_extents freq_scale[CONFIG_NR_CPUS];
  *   load_avg = u_0` + y*(u_0 + u_1*y + u_2*y^2 + ... )
  *            = u_0 + u_1*y + u_2*y^2 + ... [re-labeling u_i --> u_{i+1}]
  */
-static __always_inline int __update_entity_runnable_avg(u64 now,
+static __always_inline int __update_entity_runnable_avg(u64 now, int cpu,
 							struct sched_avg *sa,
 							int runnable,
-							int running,
-							int cpu)
+							int running)
 {
 	u64 delta, periods;
 	u32 runnable_contrib;
 	int delta_w, decayed = 0;
+	unsigned long scale_freq = arch_scale_freq_capacity(NULL, cpu);
 #ifdef CONFIG_HMP_FREQUENCY_INVARIANT_SCALE
 	u64 scaled_delta;
 	u32 scaled_runnable_contrib;
@@ -2406,7 +2408,8 @@ static __always_inline int __update_entity_runnable_avg(u64 now,
 			sa->usage_avg_sum += delta_w;
 #endif /* #ifdef CONFIG_HMP_FREQUENCY_INVARIANT_SCALE */
 		if (running)
-			sa->running_avg_sum += delta_w;
+			sa->running_avg_sum += delta_w * scale_freq
+				>> SCHED_CAPACITY_SHIFT;
 		sa->avg_period += delta_w;
 
 		delta -= delta_w;
@@ -2443,7 +2446,8 @@ static __always_inline int __update_entity_runnable_avg(u64 now,
 			sa->usage_avg_sum += runnable_contrib;
 #endif /* CONFIG_HMP_FREQUENCY_INVARIANT_SCALE */
 		if (running)
-			sa->running_avg_sum += runnable_contrib;
+			sa->running_avg_sum += runnable_contrib * scale_freq
+				>> SCHED_CAPACITY_SHIFT;
 		sa->avg_period += runnable_contrib;
 
 		sa->remainder = delta;
@@ -2466,7 +2470,8 @@ static __always_inline int __update_entity_runnable_avg(u64 now,
 		sa->usage_avg_sum += delta;
 #endif /* CONFIG_HMP_FREQUENCY_INVARIANT_SCALE */
 	if (running)
-		sa->running_avg_sum += delta;
+		sa->running_avg_sum += delta * scale_freq
+			>> SCHED_CAPACITY_SHIFT;
 	sa->avg_period += delta;
 
 	return decayed;
@@ -2584,8 +2589,8 @@ static inline void update_rq_runnable_avg(struct rq *rq, int runnable)
 #ifdef CONFIG_HMP_FREQUENCY_INVARIANT_SCALE
 	cpu = rq->cpu;
 #endif
-	__update_entity_runnable_avg(rq_clock_task(rq), &rq->avg, runnable,
-				     runnable, cpu);
+	__update_entity_runnable_avg(rq_clock_task(rq), cpu_of(rq), &rq->avg,
+			runnable, runnable);
 	__update_tg_runnable_avg(&rq->avg, &rq->cfs);
 	trace_sched_rq_runnable_ratio(cpu_of(rq), rq->avg.load_avg_ratio);
 	trace_sched_rq_runnable_load(cpu_of(rq), rq->cfs.runnable_load_avg);
@@ -2702,8 +2707,8 @@ static inline void update_entity_load_avg(struct sched_entity *se,
 {
 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
 	long contrib_delta, ratio_delta, utilization_delta;
+	int cpu = cpu_of(rq_of(cfs_rq));
 	u64 now;
-	int cpu = -1;   /* not used in normal case */
 
 #ifdef CONFIG_HMP_FREQUENCY_INVARIANT_SCALE
 	cpu = cfs_rq->rq->cpu;
@@ -2717,8 +2722,8 @@ static inline void update_entity_load_avg(struct sched_entity *se,
 	else
 		now = cfs_rq_clock_task(group_cfs_rq(se));
 
-	if (!__update_entity_runnable_avg(now, &se->avg, se->on_rq,
-			cfs_rq->curr == se, cpu))
+	if (!__update_entity_runnable_avg(now, cpu, &se->avg, se->on_rq,
+			cfs_rq->curr == se))
 		return;
 
 	contrib_delta = __update_entity_load_avg_contrib(se, &ratio_delta);
