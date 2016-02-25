@@ -6386,6 +6386,18 @@ struct lb_env {
 };
 
 /*
+ * move_task - move a task from one runqueue to another runqueue.
+ * Both runqueues must be locked.
+ */
+static void move_task(struct task_struct *p, struct lb_env *env)
+{
+	deactivate_task(env->src_rq, p, 0);
+	set_task_cpu(p, env->dst_cpu);
+	activate_task(env->dst_rq, p, 0);
+	check_preempt_curr(env->dst_rq, p, 0);
+}
+
+/*
  * Is this task likely cache-hot:
  */
 static int task_hot(struct task_struct *p, struct lb_env *env)
