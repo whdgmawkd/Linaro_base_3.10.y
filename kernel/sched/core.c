@@ -4159,7 +4159,7 @@ void init_idle(struct task_struct *idle, int cpu)
 
 	__sched_fork(idle);
 #ifdef CONFIG_SCHED_HMP
-	idle->se.avg.runnable_avg_period = 0;
+	idle->se.avg.avg_period = 0;
 	idle->se.avg.runnable_avg_sum = 0;
 #endif
 	idle->state = TASK_RUNNING;
