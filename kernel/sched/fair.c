@@ -2186,8 +2186,6 @@ static __always_inline u64 decay_load(u64 val, u64 n)
 	return val >> 32;
 }
 
-unsigned long __weak arch_scale_freq_capacity(struct sched_domain *sd, int cpu);
-
 /*
  * For updates fully spanning n periods, the contribution to runnable
  * average will be: \Sum 1024*y^n
@@ -6997,16 +6995,6 @@ static inline int get_sd_load_idx(struct sched_domain *sd,
 	}
 
 	return load_idx;
-}
-
-static unsigned long default_scale_capacity(struct sched_domain *sd, int cpu)
-{
-	return SCHED_CAPACITY_SCALE;
-}
-
-unsigned long __weak arch_scale_freq_capacity(struct sched_domain *sd, int cpu)
-{
-	return default_scale_capacity(sd, cpu);
 }
 
 static unsigned long default_scale_cpu_capacity(struct sched_domain *sd, int cpu)
