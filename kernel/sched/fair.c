@@ -6974,10 +6974,11 @@ static inline int find_new_ilb(void)
 	int ilb = cpumask_first(nohz.idle_cpus_mask);
 #ifdef CONFIG_SCHED_HMP
 	int ilb_needed = 1;
+	struct rq *this_rq = this_rq();
 
 	/* restrict nohz balancing to occur in the same hmp domain */
 	ilb = cpumask_first_and(nohz.idle_cpus_mask,
-			&((struct hmp_domain *)hmp_cpu_domain(call_cpu))->cpus);
+			&((struct hmp_domain *)hmp_cpu_domain(this_rq->cpu))->cpus);
 
 #ifdef CONFIG_SCHED_HMP_LITTLE_PACKING
 	if (ilb < nr_cpu_ids)
