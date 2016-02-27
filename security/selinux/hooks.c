@@ -467,6 +467,9 @@ static int sb_finish_set_opts(struct super_block *sb)
 	 * setting SELinux context on in-core inodes.
 	 */
 	if (strncmp(sb->s_type->name, "rootfs", sizeof("rootfs")) == 0)
+
+	/* Special handling for f2fs */
+	if (strncmp(sb->s_type->name, "f2fs", sizeof("f2fs")) == 0)
 		sbsec->flags |= SE_SBLABELSUPP;
 
 	/* Initialize the root inode. */
