@@ -485,8 +485,14 @@ static void bmm_work_func(struct work_struct *work)
 
 	ts = ktime_to_timespec(ktime_get_boottime());
 	timestamp_end = ts.tv_sec * 1000000000ULL + ts.tv_nsec;
-
+#if defined(CONFIG_SOC_EXYNOS5430)
+	if(delay == BMM_DELAY_MIN)
+		delay -= (long)((int)(timestamp_end - timestamp_start) / 1000000 + delay/10);
+	else
+		delay -= (long)((int)(timestamp_end - timestamp_start) / 1000000);
+#else
 	delay -= (long)((int)(timestamp_end - timestamp_start) / 1000000);
+#endif
 	if (delay < 1)
 		delay = 1;
 

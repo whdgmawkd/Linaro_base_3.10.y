@@ -53,11 +53,12 @@ enum {
 #define SM5703_OPERATION_MODE_FLASH_BOOST_MODE      0x06//110
 #define SM5703_OPERATION_MODE_USB_OTG_MODE          0x07//111
 
-#define SM5703_BSTOUT       		0x0F
-#define SM5703_BSTOUT_MASK       	0x0F
+#define SM5703_BSTOUT				0x0F
+#define SM5703_BSTOUT_MASK			0x0F
 #define SM5703_BSTOUT_SHIFT			0
 
 #define SM5703_BSTOUT_4P5           0x05
+#define SM5703_BSTOUT_5P0           0x0A
 #define SM5703_BSTOUT_5P1           0x0B
 
 #define SM5703_AUTOSTOP             0x1

@@ -39,6 +39,8 @@ static struct snd_soc_codec *registered_codec;
 static struct class *codec_efs_class;
 static struct device *codec_efs_dev;
 
+u8 efs_mount_done = 0;
+
 /* Delay(ms) after powering on DMIC for avoiding pop */
 static int dmic_power_delay = 450;
 module_param(dmic_power_delay, int, 0644);
@@ -73,6 +75,8 @@ static struct reg_default init_list[] = {
 	{RT5659_4BTN_IL_CMD_1,		0x000b},
 	{RT5659_MONO_DRE_CTRL_2, 	0x003a},
 	{RT5659_DUMMY_2, 		0x001d},
+	{RT5659_STO_DRE_CTRL_2, 	0x0041},
+	{RT5659_STO_DRE_CTRL_3, 	0x040c},	
 };
 #define RT5659_INIT_REG_LEN ARRAY_SIZE(init_list)
 
@@ -1726,7 +1730,6 @@ static int rt5659_cal_data_write(struct rt5659_priv *rt5659,
 
 static void rt5659_noise_gate(struct snd_soc_codec *codec, bool enable)
 {
-	struct rt5659_priv *rt5659 = snd_soc_codec_get_drvdata(codec);
 
 	if (enable) {
 		snd_soc_update_bits(codec, RT5659_STO_DRE_CTRL_1,
@@ -1735,22 +1738,11 @@ static void rt5659_noise_gate(struct snd_soc_codec *codec, bool enable)
 			0x8800);
 		snd_soc_update_bits(codec, RT5659_DIG_MISC, 0x0080,
 			0x0080);
-		if (rt5659->v_id >= 0x3) {
-			snd_soc_update_bits(codec, RT5659_MICBIAS_2,
-				0x0100, 0x0100);
-			snd_soc_update_bits(codec, RT5659_DUMMY_2,
-				0x3000, 0x3000);
-		}
 	} else {
 		snd_soc_update_bits(codec, RT5659_STO_DRE_CTRL_1, 0x8000,
 			0x0000);
 		snd_soc_update_bits(codec, RT5659_SILENCE_CTRL, 0x8000, 0x0000);
 		snd_soc_update_bits(codec, RT5659_DIG_MISC, 0x0080, 0x0000);
-		if (rt5659->v_id >= 0x3) {
-			snd_soc_update_bits(codec, RT5659_MICBIAS_2, 0x0100,
-				0x0000);
-			snd_soc_update_bits(codec, RT5659_DUMMY_2, 0x3000, 0x0);
-		}
 	}
 }
 
@@ -4986,6 +4978,7 @@ static ssize_t rt5659_codec_efs_store(struct device *dev,
 	struct i2c_client *client = to_i2c_client(dev);
 	struct rt5659_priv *rt5659 = i2c_get_clientdata(client);
 
+	efs_mount_done = 1;
 	wake_up_interruptible(&rt5659->waitqueue_cal);
 
 	return count;
@@ -5625,26 +5618,9 @@ int rt5659_cal_data_read_efs(struct rt5659_cal_data *cal_data)
 
 int rt5659_check_efs_mounted(void)
 {
-	struct file *fp = NULL;
-	mm_segment_t oldfs = {0};
-	int ret = 0;
+	pr_info("%s : efs_mount_done - %d\n", __func__, efs_mount_done);
 
-	oldfs = get_fs();
-	set_fs(get_ds());
-
-	fp = filp_open("/efs/", O_RDONLY, 0);
-
-	if (IS_ERR(fp)) {
-		pr_err("%s : efs is not mount yet\n", __func__);
-		ret = false;
-	} else {
-		pr_info("%s : efs is mounted\n", __func__);
-		filp_close(fp, NULL);
-		ret = true;
-	}
-
-	set_fs(oldfs);
-	return ret;
+	return efs_mount_done;
 }
 
 static void rt5659_calibrate_handler(struct work_struct *work)
@@ -5746,10 +5722,6 @@ static int rt5659_i2c_probe(struct i2c_client *i2c,
 	}
 
 	regmap_write(rt5659->regmap, RT5659_RESET, 0);
-
-	regmap_update_bits(rt5659->regmap, RT5659_DUMMY_2, 0x0100, 0x0100);
-	regmap_read(rt5659->regmap, RT5659_VENDOR_ID, &rt5659->v_id);
-	regmap_update_bits(rt5659->regmap, RT5659_DUMMY_2, 0x0100, 0x0000);
 
 	pr_debug("%s: dmic1_data_pin = %d, dmic2_data_pin =%d",	__func__,
 		rt5659->pdata.dmic1_data_pin, rt5659->pdata.dmic2_data_pin);

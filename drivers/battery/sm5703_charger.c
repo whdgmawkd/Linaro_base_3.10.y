@@ -171,7 +171,7 @@ static void sm5703_charger_otg_control(struct sm5703_charger_data *charger,
 	} else {
 		sm5703_assign_bits(charger->sm5703->i2c_client,
 			SM5703_FLEDCNTL6, SM5703_BSTOUT_MASK,
-			SM5703_BSTOUT_5P1);
+			SM5703_BSTOUT_5P0);
 #ifdef CONFIG_FLED_SM5703
 		if (charger->fled_info == NULL)
 			charger->fled_info = sm_fled_get_info_by_name(NULL);

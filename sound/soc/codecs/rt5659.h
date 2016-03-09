@@ -1791,7 +1791,6 @@ struct rt5659_priv {
 	int lrck[RT5659_AIFS];
 	int bclk[RT5659_AIFS];
 	int master[RT5659_AIFS];
-	int v_id;
 
 	int pll_src;
 	int pll_in;
