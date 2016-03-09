@@ -57,6 +57,16 @@ static bool has_ossr;
 /* Maximum supported watchpoint length. */
 static u8 max_watchpoint_len;
 
+#ifdef CONFIG_SKIP_HW_BREAKPOINT
+static int skip_hw_breakpoint;
+static int __init skip_hw_breakpoint_func(char *str)
+{
+        get_option(&str, &skip_hw_breakpoint);
+        return 0;
+}
+early_param("hw_breakpoint", skip_hw_breakpoint_func);
+#endif
+
 #define READ_WB_REG_CASE(OP2, M, VAL)			\
 	case ((OP2 << 4) + M):				\
 		ARM_DBG_READ(c0, c ## M, OP2, VAL);	\
@@ -1049,8 +1059,7 @@ static struct notifier_block dbg_cpu_pm_nb = {
 
 static void __init pm_init(void)
 {
-	if (has_ossr)
-		cpu_pm_register_notifier(&dbg_cpu_pm_nb);
+	cpu_pm_register_notifier(&dbg_cpu_pm_nb);
 }
 #else
 static inline void pm_init(void)
@@ -1066,6 +1075,13 @@ static int __init arch_hw_breakpoint_init(void)
 		pr_info("debug architecture 0x%x unsupported.\n", debug_arch);
 		return 0;
 	}
+
+#if defined(CONFIG_SKIP_HW_BREAKPOINT)
+	if (skip_hw_breakpoint) {
+		pr_info("skip arch_hw_breakpoint init\n");
+		return 0;
+	}
+#endif
 
 	has_ossr = core_has_os_save_restore();
 
