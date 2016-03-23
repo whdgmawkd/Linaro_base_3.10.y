@@ -15,3 +15,24 @@ on early-fs
 
 on init
 	chmod 0755 /res/bin/busybox
+
+on boot
+
+# init.d
+service boot-init /system/bin/sh /sbin/boot-init.sh
+    class main
+    user root
+    group root
+    oneshot
+
+service boot-postinit /system/bin/sh /sbin/boot-postinit.sh
+    class main
+    user root
+    group root
+    disabled
+    oneshot
+
+on property:sys.boot_completed=1
+    setenforce 0
+    start boot-postinit
+# end of init.d
