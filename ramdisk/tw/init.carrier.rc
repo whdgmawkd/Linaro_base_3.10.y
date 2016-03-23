@@ -1,4 +1,23 @@
 
+# LGT contents directory
+    mkdir /data/data/com.ubivelox.wipiplayer/W 0770 system lgt_gid
+    mkdir /data/LGTContents 0770 system lgt_gid
+    mkdir /data/LGTContents/video 0770 system lgt_gid
+    mkdir /data/LGTContents/music 0770 system lgt_gid
+    mkdir /data/LGTContents/bell 0770 system lgt_gid
+    mkdir /data/LGTContents/app 0770 system lgt_gid
+    mkdir /data/LGTContents/DLtmp 0770 system lgt_gid
+    mkdir /data/LGTContents/ringforme 0770 system lgt_gid
+
+    chown system lgt_gid /data/data/com.ubivelox.wipiplayer/W
+    chown system lgt_gid /data/LGTContents
+    chown system lgt_gid /data/LGTContents/video
+    chown system lgt_gid /data/LGTContents/music
+    chown system lgt_gid /data/LGTContents/bell
+    chown system lgt_gid /data/LGTContents/app
+    chown system lgt_gid /data/LGTContents/DLtmp
+    chown system lgt_gid /data/LGTContents/ringforme
+
 on boot
 
     # tdmb
@@ -57,6 +76,11 @@ service dmb /system/bin/dmbserver
     user media
     group system radio inet misc audio camera graphics net_bt net_bt_admin sdcard_rw sdcard_r shell media_rw
 
+# for LGU I-WLAN
+on property:sys.lgt.mobicoredaemon.enable=true
+    insmod /system/lib/modules/mwlan_aarp.ko
+    chmod 0755 /system/bin/mwlan_helper
+
 # Support silent logging
     mkdir /data/log 0775 system log
     mkdir /data/misc/dhcp 0775 dhcp dhcp
@@ -70,3 +94,10 @@ service DIAG-daemon /system/bin/diagexe
     class main
     user root
     group system radio inet net_raw
+
+# for LGU I-WLAN service
+service mwlan_vpncored /system/bin/mwlan_helper @vpncored
+    user system
+    group system inet
+    disabled
+    oneshot
