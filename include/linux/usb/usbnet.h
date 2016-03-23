@@ -30,7 +30,7 @@ struct usbnet {
 	struct driver_info	*driver_info;
 	const char		*driver_name;
 	void			*driver_priv;
-	wait_queue_head_t	*wait;
+	wait_queue_head_t	wait;
 	struct mutex		phy_mutex;
 	unsigned char		suspend_count;
 	unsigned char		pkt_cnt, pkt_err;
@@ -60,6 +60,7 @@ struct usbnet {
 	struct mutex		interrupt_mutex;
 	struct usb_anchor	deferred;
 	struct work_struct	bh_w;
+	struct tasklet_struct	bh;
 
 	struct work_struct	kevent;
 	unsigned long		flags;

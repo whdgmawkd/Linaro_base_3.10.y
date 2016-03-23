@@ -560,7 +560,7 @@ static int bos_desc(struct usb_composite_dev *cdev)
 #ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
 	usb_ext->bmAttributes = 0;
 #else
-	usb_ext->bmAttributes = cpu_to_le32(USB_LPM_SUPPORT);
+	usb_ext->bmAttributes = cpu_to_le32(USB_LPM_SUPPORT | USB_BESL_SUPPORT);
 #endif
 
 	/*
@@ -626,6 +626,7 @@ static void reset_config(struct usb_composite_dev *cdev)
 		bitmap_zero(f->endpoints, 32);
 	}
 	cdev->config = NULL;
+	cdev->delayed_status = 0;
 }
 
 static int set_config(struct usb_composite_dev *cdev,
