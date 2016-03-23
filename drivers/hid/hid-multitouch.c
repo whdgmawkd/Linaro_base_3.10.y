@@ -101,9 +101,9 @@ struct mt_device {
 	unsigned last_slot_field;	/* the last field of a slot */
 	unsigned mt_report_id;	/* the report ID of the multitouch device */
 	unsigned pen_report_id;	/* the report ID of the pen device */
-	__s8 inputmode;		/* InputMode HID feature, -1 if non-existent */
-	__s8 inputmode_index;	/* InputMode HID feature index in the report */
-	__s8 maxcontact_report_id;	/* Maximum Contact Number HID feature,
+	__s16 inputmode;	/* InputMode HID feature, -1 if non-existent */
+	__s16 inputmode_index;	/* InputMode HID feature index in the report */
+	__s16 maxcontact_report_id;	/* Maximum Contact Number HID feature,
 				   -1 if non-existent */
 	__u8 num_received;	/* how many contacts we received */
 	__u8 num_expected;	/* expected last contact index */
@@ -317,19 +317,17 @@ static void mt_feature_mapping(struct hid_device *hdev,
 		struct hid_field *field, struct hid_usage *usage)
 {
 	struct mt_device *td = hid_get_drvdata(hdev);
-	int i;
 
 	switch (usage->hid) {
 	case HID_DG_INPUTMODE:
-		td->inputmode = field->report->id;
-		td->inputmode_index = 0; /* has to be updated below */
-
-		for (i=0; i < field->maxusage; i++) {
-			if (field->usage[i].hid == usage->hid) {
-				td->inputmode_index = i;
-				break;
-			}
+		/* Ignore if value index is out of bounds. */
+		if (usage->usage_index >= field->report_count) {
+			dev_err(&hdev->dev, "HID_DG_INPUTMODE out of range\n");
+			break;
 		}
+
+		td->inputmode = field->report->id;
+		td->inputmode_index = usage->usage_index;
 
 		break;
 	case HID_DG_CONTACTMAX:
@@ -546,6 +544,10 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
 			mt_store_field(usage, td, hi);
 			return 1;
 		case HID_DG_CONTACTCOUNT:
+			/* Ignore if indexes are out of bounds. */
+			if (field->index >= field->report->maxfield ||
+			    usage->usage_index >= field->report_count)
+				return 1;
 			td->cc_index = field->index;
 			td->cc_value_index = usage->usage_index;
 			return 1;
@@ -780,13 +782,12 @@ static void mt_touch_report(struct hid_device *hid, struct hid_report *report)
 		mt_sync_frame(td, report->field[0]->hidinput->input);
 }
 
-static int mt_touch_input_configured(struct hid_device *hdev,
+static void mt_touch_input_configured(struct hid_device *hdev,
 					struct hid_input *hi)
 {
 	struct mt_device *td = hid_get_drvdata(hdev);
 	struct mt_class *cls = &td->mtclass;
 	struct input_dev *input = hi->input;
-	int ret;
 
 	if (!td->maxcontacts)
 		td->maxcontacts = MT_DEFAULT_MAXCONTACT;
@@ -801,12 +802,9 @@ static int mt_touch_input_configured(struct hid_device *hdev,
 	if (cls->quirks & MT_QUIRK_NOT_SEEN_MEANS_UP)
 		td->mt_flags |= INPUT_MT_DROP_UNUSED;
 
-	ret = input_mt_init_slots(input, td->maxcontacts, td->mt_flags);
-	if (ret)
-		return ret;
+	input_mt_init_slots(input, td->maxcontacts, td->mt_flags);
 
 	td->mt_flags = 0;
-	return 0;
 }
 
 static int mt_input_mapping(struct hid_device *hdev, struct hid_input *hi,
@@ -939,21 +937,19 @@ static void mt_post_parse(struct mt_device *td)
 		cls->quirks &= ~MT_QUIRK_CONTACT_CNT_ACCURATE;
 }
 
-static int mt_input_configured(struct hid_device *hdev, struct hid_input *hi)
+static void mt_input_configured(struct hid_device *hdev, struct hid_input *hi)
 {
 	struct mt_device *td = hid_get_drvdata(hdev);
 	char *name = kstrdup(hdev->name, GFP_KERNEL);
-	int ret = 0;
 
 	if (name)
 		hi->input->name = name;
 
 	if (hi->report->id == td->mt_report_id)
-		ret = mt_touch_input_configured(hdev, hi);
+		mt_touch_input_configured(hdev, hi);
 
 	if (hi->report->id == td->pen_report_id)
 		mt_pen_input_configured(hdev, hi);
-	return ret;
 }
 
 static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
