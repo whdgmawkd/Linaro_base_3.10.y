@@ -1,0 +1,12 @@
+BB=/res/bin/busybox;
+INC=/data/PRIME-Kernel/bin/hmp.inc
+
+if [ -e $INC ]; then
+    source $INC
+else
+	if [ -e $1 ]; then
+		echo $(cat $1);
+	else
+		echo 0
+	fi
+fi

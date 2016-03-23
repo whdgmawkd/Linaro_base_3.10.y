@@ -1,0 +1,72 @@
+#!/system/bin/sh
+
+BB=/res/bin/busybox
+
+if [ -e /data/PRIME-Kernel/.here ] && [ -e /data/PRIME-Kernel/synapse/config.json.generate ]; then
+	STR=/data/PRIME-Kernel/synapse
+	chmod -R 0755 /data/PRIME-Kernel/synapse
+else
+	STR=/res/synapse
+fi
+CONFIG_JSON=$STR/config.json
+ACTION=$STR/actions/
+ACTION_SCRIPTS=$STR/actions/
+
+mount -t rootfs -o rw,remount rootfs
+
+$BB mkdir -p /res/synapse/settings
+$BB chmod -R 0755 /res/synapse/settings
+if [ ! -e /data/PRIME-Kernel/synapse/settings ]; then
+    $BB mkdir -p /data/PRIME-Kernel/synapse/settings
+    $BB chmod -R 0755 /data/PRIME-Kernel/synapse
+fi
+
+function initial_prof() {
+	if [ -f $1 ]; then
+		prof_value=`cat $1`
+		if [[ -z $prof_value ]] || [[ "$prof_value" == "null" ]]; then
+    		echo $2 > $1
+		fi
+	else
+		touch $1
+   		echo $2 > $1
+	fi
+}
+
+initial_prof /res/synapse/settings/dvfs_disabler 1
+initial_prof /res/synapse/settings/loader_unroot 1
+initial_prof /res/synapse/settings/extsd_patch_00 1
+initial_prof /res/synapse/settings/viper_patch_00 0
+initial_prof /res/synapse/settings/zram_prof 0
+initial_prof /res/synapse/settings/zram_old_size 1600
+initial_prof /res/synapse/settings/gms_drain 0
+initial_prof /res/synapse/settings/dcm_drain 0
+initial_prof /res/synapse/settings/tweak_perf 0
+initial_prof /res/synapse/settings/tweak_ram 0
+initial_prof /res/synapse/settings/tweak_net 0
+initial_prof /res/synapse/settings/tweak_touch 0
+initial_prof /res/synapse/settings/profile none
+initial_prof /res/synapse/settings/vnswap0 1
+initial_prof /data/PRIME-Kernel/synapse/settings/bbins_xbin 0
+initial_prof /data/PRIME-Kernel/synapse/settings/bbins_last 0
+initial_prof /res/synapse/settings/cpu0_max 1300000
+initial_prof /res/synapse/settings/cpu4_max 1900000
+
+chmod -R 0755 /res/synapse
+chmod -R 0755 /res/synapse
+chmod -R 0755 /sbin
+
+if [ ! -f $CONFIG_JSON ]; then
+	source $STR/config.json.generate > $CONFIG_JSON
+fi
+
+case "${1}" in
+  config)
+	cat $CONFIG_JSON;;
+  configpath)
+	echo $CONFIG_JSON;;
+  actionpath)
+	echo $ACTION_SCRIPTS;;
+  reset)
+   rm -f $STR/config.json;
+esac;
