@@ -553,6 +553,9 @@ on fs
     chmod 0600 /dev/batch_io
     chown system system /dev/batch_io
 
+# LCD ALPM Mode
+    chown system system /sys/class/lcd/panel/alpm
+
 # Permissions for MDNIE
     chown system media_rw /sys/class/mdnie/mdnie/mode
     chown system media_rw /sys/class/mdnie/mdnie/scenario
