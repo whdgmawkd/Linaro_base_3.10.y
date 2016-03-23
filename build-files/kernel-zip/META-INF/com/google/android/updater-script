@@ -1,0 +1,57 @@
+ui_print("*****************************");
+ui_print(" StockRider Kernel for Note4");
+ui_print("*****************************");
+
+ifelse(is_mounted("/system"), unmount("/system"));
+ifelse(is_mounted("/data"), unmount("/data"));
+package_extract_dir("script", "/tmp/script");
+#set_metadata_recursive("/tmp/script", "uid", 0, "gid", 0, "dmode", 0755, "fmode", 0755);
+set_perm_recursive(0, 0, 0755, 0755, "/tmp/script");
+run_program("/tmp/script/busybox", "mount", "/system");
+run_program("/tmp/script/busybox", "mount", "/data");
+
+run_program("/tmp/script/get_device.sh");
+if file_getprop("/tmp/script/device-name.prop", "detect") == "error"
+  then
+  ui_print(" ");
+  ui_print("  - error in determining device variant");
+  ui_print("  - try again in another recovery");
+  ui_print(" ");
+endif;
+assert(	file_getprop("/tmp/script/device-name.prop", "detect") == "yes");
+
+ui_print("  - remove old files");
+run_program("/tmp/script/busybox", "sh", "/tmp/script/remove.sh");
+
+package_extract_dir("system", "/system");
+package_extract_dir("data", "/data");
+
+ui_print(" ");
+if file_getprop("/tmp/script/device-name.prop", "device") == "N910" then
+  ui_print("  - your device name: N910*");
+  ui_print("  - flashing N910-boot.img");
+endif;
+if file_getprop("/tmp/script/device-name.prop", "device") == "N915" then
+  ui_print("  - your device name: N915*");
+  ui_print("  - flashing N915-boot.img");
+endif;
+if file_getprop("/tmp/script/device-name.prop", "device") == "N916" then
+  ui_print("  - your device name: N916*");
+  ui_print("  - flashing N916-boot.img");
+endif;
+
+#run_program("/tmp/script/busybox", "dd", "if=/tmp/boot.img", "of=/dev/block/mmcblk0p9");
+package_extract_file("bootimg.tar.xz","/tmp/bootimg.tar.xz");
+run_program("/tmp/script/busybox", "sh", "/tmp/script/unpackimg.sh");
+run_program("/tmp/script/busybox", "sh", "/tmp/script/set.sh");
+
+ui_print("  - extracting kernel modules...");
+delete_recursive("/system/lib/modules");
+package_extract_dir("system", "/system");
+set_perm_recursive(0, 0, 0755, 0755, "/system/lib/modules");
+ui_print("");
+
+#unmount("/system");
+#unmount("/data");
+ui_print(" ");
+
