@@ -1,5 +1,5 @@
 BB=/res/bin/busybox;
-INC=/data/PRIME-Kernel/bin/hmp.inc
+INC=/data/StockRider/bin/hmp.inc
 
 if [ -e $INC ]; then
     source $INC

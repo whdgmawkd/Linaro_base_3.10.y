@@ -9,8 +9,8 @@ VSIZE=1744830464
 ZSWAP=/sys/module/zswap/parameters
 
 RESET=/sys/devices/virtual/block/zram0/reset;
-PROF_FILE=/res/synapse/settings/zram_prof;
-SIZE_OLD=/res/synapse/settings/zram_old_size;
+PROF_FILE=/data/StockRider/synapse/settings/zram_prof;
+SIZE_OLD=/data/StockRider/synapse/settings/zram_old_size;
 SIZE_FILE=/sys/devices/virtual/block/zram0/disksize;
 
 vnOn() {
@@ -65,7 +65,7 @@ if [ $1 == $PROF_FILE ]; then
   echo $((`cat $PROF_FILE`));
 fi
 
-PROF=`cat /res/synapse/settings/zram_prof`;
+PROF=`cat /data/StockRider/synapse/settings/zram_prof`;
 if [ $PROF == 1 ]; then
   SIZE=$2
   if [ ! -z $2 ]; then

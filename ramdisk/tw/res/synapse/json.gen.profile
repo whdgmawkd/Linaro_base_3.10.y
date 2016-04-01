@@ -1,4 +1,4 @@
-#!/system/sbin/sh
+#!/res/bin/busybox sh
 
 cat << CTAG
 {

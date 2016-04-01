@@ -1,12 +1,12 @@
 #!/system/bin/sh
 
 BB=/res/bin/busybox;
-INC=/data/PRIME-Kernel/bin/profile.inc
+INC=/data/StockRider/bin/profile.inc
 ACT=/res/synapse/actions
 RESIZE_SCREEN=`wm size | grep "Override size:"`
 GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
-P=/res/synapse/settings/profile
-P_OLD=/res/synapse/settings/profile_old
+P=/data/StockRider/synapse/settings/profile
+P_OLD=/data/StockRider/synapse/settings/profile_old
 GOVERNOR0=/sys/devices/system/cpu/cpu0/cpufreq/interactive
 GOVERNOR4=/sys/devices/system/cpu/cpu4/cpufreq/interactive
 

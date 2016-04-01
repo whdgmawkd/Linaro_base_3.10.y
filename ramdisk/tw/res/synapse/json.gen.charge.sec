@@ -1,4 +1,4 @@
-#!/system/sbin/sh
+#!/res/bin/busybox sh
 P=/sys/devices/battery.30
 if [ ! -e $P ]; then
     P=/sys/devices/battery.29

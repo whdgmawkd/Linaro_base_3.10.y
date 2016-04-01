@@ -12,7 +12,7 @@ case $1 in
 	am force-stop com.af.synapse 2> /dev/null;
 	$BB sleep 1;
 	$BB rm -R /data/data/com.af.synapse/databases;
-	$BB rm /res/synapse/settings/*
+	$BB rm /data/StockRider/synapse/settings/*
     uci reset;
     uci
     sync
@@ -22,7 +22,7 @@ case $1 in
 	am force-stop com.af.synapse 2> /dev/null;
 	$BB sleep 1;
 	$BB rm -R /data/data/com.af.synapse/databases;
-	$BB rm /res/synapse/settings/*
+	$BB rm /data/StockRider/synapse/settings/*
     uci reset;
     uci
     sync

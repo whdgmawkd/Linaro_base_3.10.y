@@ -1,4 +1,4 @@
-#!/system/sbin/sh
+#!/res/bin/busybox sh
 
 BB=/res/bin/busybox
 SEC_BP=/sys/devices/battery.30/unstable_power_detection
