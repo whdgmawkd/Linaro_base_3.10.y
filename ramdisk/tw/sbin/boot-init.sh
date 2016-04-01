@@ -88,7 +88,7 @@ echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 1300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 700000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 echo 1900000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-echo 70 > /sys/module/zswap/parameters/max_pool_percent
+echo 30 > /sys/module/zswap/parameters/max_pool_percent
 echo 40960 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 echo 0 > /sys/module/mdnie_lite/parameters/enable_toggle_negative
 
