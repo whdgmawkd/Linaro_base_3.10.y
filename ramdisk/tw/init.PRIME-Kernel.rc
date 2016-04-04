@@ -14,3 +14,22 @@ on early-fs
     mount ext4 /dev/block/platform/15540000.dwmmc0/by-name/CACHE /cache wait noatime nodiratime nosuid nodev discard,journal_async_commit,errors=panic
     mount f2fs /dev/block/platform/15540000.dwmmc0/by-name/CACHE /cache wait noatime nodiratime nosuid nodev discard,background_gc=sync
 
+on boot
+
+# init.d
+service boot-init /system/bin/sh /sbin/boot-init.sh
+    class main
+    user root
+    group root
+    oneshot
+
+service boot-postinit /system/bin/sh /sbin/boot-postinit.sh
+    class main
+    user root
+    group root
+    disabled
+    oneshot
+
+on property:sys.boot_completed=1
+    start boot-postinit
+# end of init.d
