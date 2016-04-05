@@ -1,3 +1,4 @@
+import init.PRIME-Kernel.rc
 import init.universal5430.usb.rc
 import init.wifi.rc
 import init.fac.rc
@@ -1041,6 +1042,7 @@ on property:ro.debuggable=1
 # LPM
 on property:ro.bootmode=charger
     mount ext4 /dev/block/mmcblk0p18 /system wait ro
+    mount f2fs /dev/block/mmcblk0p18 /system wait ro
 
 on property:ro.bootmode=charger
     class_start sec-charger
