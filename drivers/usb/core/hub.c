@@ -3333,15 +3333,11 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
 		/* drive resume for USB_RESUME_TIMEOUT msec */
 		dev_dbg(&udev->dev, "usb %sresume\n",
 				(PMSG_IS_AUTO(msg) ? "auto-" : ""));
-<<<<<<< HEAD
 		/* Add the 5msec delay for Shannon300 resume fail case */
 		if (udev->quirks & USB_QUIRK_HSIC_TUNE)
 			msleep(30);
 		else
-			msleep(25);
-=======
-		msleep(USB_RESUME_TIMEOUT);
->>>>>>> 19d0bd71d5644484
+			msleep(USB_RESUME_TIMEOUT);
 
 		/* Virtual root hubs can trigger on GET_PORT_STATUS to
 		 * stop resume signaling.  Then finish the resume
