@@ -1,3 +1,4 @@
+import init.PRIME-Kernel.rc
 import init.universal5430.usb.rc
 import init.wifi.rc
 import init.fac.rc
@@ -1076,6 +1077,7 @@ on property:ro.debuggable=1
 # LPM
 on property:ro.bootmode=charger
     mount ext4 /dev/block/mmcblk0p19 /system wait ro
+    mount f2fs /dev/block/mmcblk0p19 /system wait ro
 
 on property:ro.bootmode=charger
     wait /dev/block/platform/15540000.dwmmc0/by-name/EFS
