@@ -128,6 +128,13 @@ if [ "$INS_LAST" -eq 1 ]; then
 	fi
 fi
 
+# Synapse Loader
+/sbin/synapse_loader.sh
+
+# Synapse Interface
+/sbin/uci reset
+/sbin/uci
+
 echo init.d script start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 if [ -d /system/etc/init.d ]; then

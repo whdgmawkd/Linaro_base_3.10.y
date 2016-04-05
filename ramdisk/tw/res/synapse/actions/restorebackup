@@ -1,0 +1,71 @@
+#!/system/bin/sh
+
+BB=/res/bin/busybox;
+INC=/data/PRIME-Kernel/bin/restorebackup.inc
+
+if [ -d /data/data/com.af.synapse ]; then
+  SYNAPSE_SD_DIR=/data/media/0/Synapse;
+  SYNAPSE_BOOT_DIR=$SYNAPSE_SD_DIR/kernel_backups;
+  SYNAPSE_CONFIG_DIR=$SYNAPSE_SD_DIR/saved_profiles;
+  SYNAPSE_DATA=/data/data/com.af.synapse/databases;
+
+  [ ! -d "$SYNAPSE_CONFIG_DIR" ] && $BB mkdir -p "$SYNAPSE_CONFIG_DIR";
+  [ ! -f "$SYNAPSE_CONFIG_DIR/.selected_config_profile" -o -z `cat "$SYNAPSE_CONFIG_DIR/.selected_config_profile" 2> /dev/null` ] && echo "None" > "$SYNAPSE_CONFIG_DIR/.selected_config_profile";
+  [ ! -d "$SYNAPSE_BOOT_DIR" ] && $BB mkdir -p "$SYNAPSE_BOOT_DIR";
+  [ ! -f "$SYNAPSE_BOOT_DIR/.selected_boot_img" -o -z `cat "$SYNAPSE_BOOT_DIR/.selected_boot_img" 2> /dev/null` ] && echo "None" > "$SYNAPSE_BOOT_DIR/.selected_boot_img";
+
+  SYNAPSE_CONFIG_PROFILE=`cat "$SYNAPSE_CONFIG_DIR/.selected_config_profile"`;
+  SYNAPSE_BOOT_IMG=`cat "$SYNAPSE_BOOT_DIR/.selected_boot_img"`;
+fi;
+
+if [ -e $INC ]; then
+    source $INC
+else
+  case "$1" in
+	listconfig)
+		echo `$BB ls "$SYNAPSE_CONFIG_DIR"`;
+	;;
+
+	pickconfig)
+		if [ -f "$SYNAPSE_CONFIG_DIR/$2" -o "$2" == "None" ]; then
+			echo "$2" > "$SYNAPSE_CONFIG_DIR/.selected_config_profile";
+		fi;
+		echo `cat "$SYNAPSE_CONFIG_DIR/.selected_config_profile"`;
+	;;
+
+	applyconfig)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+
+	keepconfig)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+
+	delconfig)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+
+	listboot)
+		echo `$BB ls "$SYNAPSE_BOOT_DIR"`;
+	;;
+
+	pickboot)
+		if [ -f "$SYNAPSE_BOOT_DIR/$2" -o "$2" == "None" ]; then
+			echo "$2" > "$SYNAPSE_BOOT_DIR/.selected_boot_img";
+		fi;
+		echo `cat "$SYNAPSE_BOOT_DIR/.selected_boot_img"`;
+	;;
+
+	flashboot)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+
+	keepboot)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+
+	delboot)
+		echo "기부하신 후 이용 가능합니다"
+	;;
+  esac;
+fi
