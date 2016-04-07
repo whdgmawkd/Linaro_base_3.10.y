@@ -42,7 +42,6 @@
 
 #if !defined(CONFIG_WIFI_CONTROL_FUNC)
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 58))
-#define WLAN_PLAT_NODFS_FLAG    0x01
 #endif /* LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 58) */
 struct wifi_platform_data {
 	int (*set_power)(int val);
@@ -58,6 +57,7 @@ struct wifi_platform_data {
 };
 #endif /* CONFIG_WIFI_CONTROL_FUNC */
 
+#define WLAN_PLAT_NODFS_FLAG    0x01
 #define WIFI_PLAT_NAME		"bcmdhd_wlan"
 #define WIFI_PLAT_NAME2		"bcm4329_wlan"
 #define WIFI_PLAT_EXT		"bcmdhd_wifi_platform"
