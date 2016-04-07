@@ -1,0 +1,109 @@
+#!/res/bin/busybox sh
+source /res/synapse/config.general
+cat << CTAG
+{
+    name:{en:"Utility", ko:"유틸리티"},
+    elements:[
+`
+  if [ ! -e $LOADER_VER_PATH ]; then
+    echo '    { SPane:{
+	    title:"기부하신 후 사용할 수 있는 기능입니다.",
+		description:"기부하신 분들께 제공되는 혜택입니다.\n기부는 간접적인 개발 참여 방법입니다.\n이 커널이 꾸준히 업데이트 되길 원한다면 기부에 동참해보세요.\n",
+    }},
+	{ SButton:{
+		label:"기부로 개발에 동참하기",
+		action:"am start -a android.intent.action.VIEW -d http://enfree.com/prime/?page=donate > /dev/null 2>&1 & echo '     웹브라우저를 실행합니다.     '"
+	}},
+	{ SSpacer:{ height:2 }},'
+  fi
+`
+
+    { SPane:{
+		title:"시냅스 로더",
+        description:"루팅 해제 했거나 시냅스를 제거한 기기에서 시냅스 설정 또는 프로파일을 기기에 적용하는 애드온.",
+    }},
+	{ SCheckBox:{
+		label:"시냅스 로더 애드온을 루팅 해제 상태일 때에만 실행합니다.",
+		default:1,
+		action:"hmp /res/synapse/settings/loader_unroot"
+	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:"시스템 트윅",
+        description:"시냅스 설정 변경 없이 커널 내부 값과 펌웨어의 숨겨진 설정을 조절하여 기기를 최적화 합니다.",
+    }},
+	{ SCheckBox:{
+        label:"성능 최적화",
+		default:0,
+		action:"tweak perf"
+	}},
+	{ SCheckBox:{
+        label:"RAM 최적화",
+		default:0,
+		action:"tweak ram"
+	}},
+	{ SCheckBox:{
+        label:"인터넷 속도 최적화",
+		default:0,
+		action:"tweak net"
+	}},
+	{ SCheckBox:{
+        label:"UI 반응성 향상",
+		default:0,
+		action:"tweak touch"
+	}},
+	{ SSpacer:{ height:1 }},
+	{ SDescription:{description:"트윅 활성화 시 기기를 재시작 하지 않아도 시스템에 바로 반영됩니다."}},
+	{ SDescription:{description:"트윅 해제를 시스템에 반영하려면 기기를 재시작 하셔야 합니다."}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:"시냅스 데이터",
+        description:"커널 플래싱 시 시냅스 앱 데이터를 초기화 하지 않도록 선택할 수 있습니다.\n오래된 이전 버전이나 타 커널을 사용후 새로 플래싱 할 때는 반드시 시냅스 앱 데이터를 초기화 해야만 정상적인 사용이 가능합니다.\n무슨 의미인지 이해 하셨고 문제 발생 시 직접 해결 가능하신 경우에만 이 기능을 활성화 하시기 바랍니다.\n",
+    }},
+	{ SCheckBox:{
+        label:"시냅스 앱 데이터를 초기화 하지 않습니다.",
+        description:"활성화 하면 TWRP에서 커널 플래싱 시 기존 시냅스 앱의 데이터를 초기화 하지 않습니다. 기본값은 '해제'입니다.",
+		default:0,
+		action:"func donotclear"
+	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:"Viper4Android 시스템 사운드 적용 패치",
+        description:"패치를 사용하면 Viper4Android의 음장 효과가 시스템 전체 사운드에 적용됩니다. 'Viper4Android'는 직접 설치하셔야합니다.",
+    }},
+	{ SCheckBox:{
+        label:"패치를 적용합니다.",
+        description:"이 패치는 /system/etc/audio_policy.conf 파일의 deep_buffer{ } 구문을 제거하고 사운드얼라이브를 해제합니다. 패치 해제 시 원래대로 복구됩니다. 설정 변경 시 디바이스 재시작이 필요합니다.",
+		default:`cat /res/synapse/settings/viper_patch_00`,
+		action:"hmp /res/synapse/settings/viper_patch_00"
+	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:"Busybox Install/Remove",
+        description:" Busybox는 루팅 권한을 요구하는 대부분의 앱에서 필요로 하지만 최근의 금융앱과 일부 게임에서는 루팅 검사 때 Busybox 설치 유무도 확인하고 있습니다.\n",
+    }},
+	{ SCheckBox:{
+        label:"Busybox를 /system/xbin 경로에 설치합니다.",
+        description:"해제 시 /res/bin/bb 경로에 설치합니다. (해제를 추천)\n\n",
+		default:0,
+		action:"hmp /data/PRIME-Kernel/synapse/settings/bbins_xbin"
+	}},
+	{ SButton:{
+		label:"Busybox Install",
+		action:"bbox install"
+	}},
+	{ SSpacer:{ height:1 }},
+	{ SButton:{
+		label:"Busybox Remove",
+		action:"bbox remove"
+	}},
+
+	{ SSpacer:{ height:2 }},
+
+    ]
+}
+CTAG

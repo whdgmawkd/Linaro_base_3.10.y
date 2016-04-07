@@ -14,8 +14,14 @@ on early-fs
     mount ext4 /dev/block/platform/15540000.dwmmc0/by-name/CACHE /cache wait noatime nodiratime nosuid nodev discard,journal_async_commit,errors=panic
     mount f2fs /dev/block/platform/15540000.dwmmc0/by-name/CACHE /cache wait noatime nodiratime nosuid nodev discard,background_gc=sync
 
-on boot
+on init
+    chmod 0755 /res/bin/busybox
+    chmod 0755 /res/bin/curl
+    chmod 0755 /res/bin/sqlite3
+    chmod 0755 /res/bin/sr
+    chmod 0755 /res/bin/stats
 
+on boot
 # init.d
 service boot-init /system/bin/sh /sbin/boot-init.sh
     class main

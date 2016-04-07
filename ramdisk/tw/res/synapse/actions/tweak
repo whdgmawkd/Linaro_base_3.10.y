@@ -1,0 +1,8 @@
+BB=/res/bin/busybox;
+INC=/data/PRIME-Kernel/bin/tweak.inc
+
+if [ -e $INC ]; then
+    source $INC
+else
+    echo 0;
+fi
