@@ -1267,7 +1267,6 @@ static int mmc_blk_err_check(struct mmc_card *card,
 	 * stop.error indicates a problem with the stop command.  Data
 	 * may have been transferred, or may still be transferring.
 	 */
-<<<<<<< HEAD
 	if (!card->ext_csd.cmdq_mode_en) {
 		if (brq->sbc.error || brq->cmd.error || brq->stop.error ||
 		    brq->data.error) {
@@ -1282,19 +1281,6 @@ static int mmc_blk_err_check(struct mmc_card *card,
 			case ERR_CONTINUE:
 				break;
 			}
-=======
-	if (brq->sbc.error || brq->cmd.error || brq->stop.error ||
-	    brq->data.error) {
-		switch (mmc_blk_cmd_recovery(card, req, brq, &ecc_err, &gen_err)) {
-		case ERR_RETRY:
-			return MMC_BLK_RETRY;
-		case ERR_ABORT:
-			return MMC_BLK_ABORT;
-		case ERR_NOMEDIUM:
-			return MMC_BLK_NOMEDIUM;
-		case ERR_CONTINUE:
-			break;
->>>>>>> 19d0bd71d
 		}
 	}
 
@@ -1336,35 +1322,11 @@ static int mmc_blk_err_check(struct mmc_card *card,
 				return MMC_BLK_CMD_ERR;
 			}
 
-<<<<<<< HEAD
-			/*
-			 * CMD25 -> CMD13 (WP violation) -> next CMD (illegal CMD)
-			 * need to change card status (rcv->tran)
-			 */
-			if ((status & R1_WP_VIOLATION) && 
-					(R1_CURRENT_STATE(status) == R1_STATE_RCV)) {
-				err = send_stop(card, &status);
-
-				pr_err("%s: WP violation. send CMD12 to "
-						"change card status (rcv->tran)\n",
-						req->rq_disk->disk_name);
-
-				/*
-				 * If the stop cmd also timed out, the card is probably
-				 * not present, so abort.  Other errors are bad news too.
-				 */
-				if (err) {
-					pr_err("%s: error %d sending stop command\n",
-							req->rq_disk->disk_name, err);
-					return MMC_BLK_ABORT;
-				}
-=======
 			if (status & R1_ERROR) {
 				pr_err("%s: %s: general error sending status command, card status %#x\n",
 				       req->rq_disk->disk_name, __func__,
 				       status);
 				gen_err = 1;
->>>>>>> 19d0bd71d
 			}
 
 			/* Timeout if the device never becomes ready for data
@@ -2373,11 +2335,8 @@ static int mmc_blk_issue_rq(struct mmc_queue *mq, struct request *req)
 			ret = mmc_blk_issue_secdiscard_rq(mq, req);
 		else
 			ret = mmc_blk_issue_discard_rq(mq, req);
-<<<<<<< HEAD
 		if (card->ext_csd.cmdq_mode_en)
 			mmc_release_host(card->host);
-=======
->>>>>>> 19d0bd71d
 	} else if (cmd_flags & REQ_FLUSH) {
 		/* complete ongoing async transfer before issuing flush */
 		if (card->host->areq || card->ext_csd.cmdq_mode_en)
@@ -2403,7 +2362,6 @@ static int mmc_blk_issue_rq(struct mmc_queue *mq, struct request *req)
 	}
 
 out:
-<<<<<<< HEAD
 	if (!card->ext_csd.cmdq_mode_en) {
 		if ((!req && !(mq->flags & MMC_QUEUE_NEW_REQUEST)) ||
 		     (cmd_flags & MMC_REQ_SPECIAL_MASK))
@@ -2415,17 +2373,6 @@ out:
 			 */
 			mmc_release_host(card->host);
 	}
-=======
-	if ((!req && !(mq->flags & MMC_QUEUE_NEW_REQUEST)) ||
-	     (cmd_flags & MMC_REQ_SPECIAL_MASK))
-		/*
-		 * Release host when there are no more requests
-		 * and after special request(discard, flush) is done.
-		 * In case sepecial request, there is no reentry to
-		 * the 'mmc_blk_issue_rq' with 'mqrq_prev->req'.
-		 */
-		mmc_release_host(card->host);
->>>>>>> 19d0bd71d
 	return ret;
 }
 
