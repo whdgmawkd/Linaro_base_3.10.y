@@ -1,10 +1,10 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 
-SYNAPSE_LOADER_SRC=/data/StockRider/bin/synapse_loader212
+SYNAPSE_LOADER_SRC=/data/PRIME-Kernel/bin/synapse_loader212
 SYNAPSE_LOADER_EXE=/data/local/tmp/synapse_loader.shx
 SYNAPSE_LOADER_ACT=1
 SYNAPSE_LOADER_LOG=/sdcard/synapse_loader.log
-LOADER_VER_PATH=/data/StockRider/synapse_loader_ver
+LOADER_VER_PATH=/data/PRIME-Kernel/synapse_loader_ver
 
 rm $SYNAPSE_LOADER_LOG
 rm $LOADER_VER_PATH
@@ -20,17 +20,17 @@ if [ ! -e $SYNAPSE_LOADER_SRC ] && [ ! -z $ADDON_LIST ]; then
 	mkdir $TMP_DIR
 	
 	$BB unzip -o $ADDON_FILE -d $TMP_DIR
-	cp -rf $TMP_DIR/data/. /data/StockRider/
-	$BB chmod -R 0755 /data/StockRider/.
+	cp -rf $TMP_DIR/data/. /data/PRIME-Kernel/
+	$BB chmod -R 0755 /data/PRIME-Kernel/.
 	rm -rf $TMP_DIR
 fi
 
-echo synapseloader start >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
+echo synapseloader start >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
 if [ -f $SYNAPSE_LOADER_SRC ] && [ -f /system/xbin/su ]; then
     echo - synapse_loader start: pase 0 - su detected >> $SYNAPSE_LOADER_LOG
-    UNROOT_ONLY=`cat /data/StockRider/synapse/settings/loader_unroot`
+    UNROOT_ONLY=`cat /res/synapse/settings/loader_unroot`
     if [ "$UNROOT_ONLY" == "1" ]; then
         echo - synapse_loader: disabled, using unroot only option >> $SYNAPSE_LOADER_LOG
         SYNAPSE_LOADER_ACT=0

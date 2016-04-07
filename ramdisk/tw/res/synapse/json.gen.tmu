@@ -1,4 +1,4 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 
 cat << CTAG
 {
@@ -11,8 +11,8 @@ cat << CTAG
 	{ SCheckBox:{
         label:"DVFS 사용",
 		description:"해제하면 벤치마크와 게임 성능이 향상됩니다. <주의!> 디바이스 온도가 너무 높으면 하드웨어에 치명적일 수 있으니 본인 책임하에 해제하셔야 합니다. 이 설정의 변경사항을 적용하려면 디바이스 재시작이 필요합니다.",
-		default:`cat /data/StockRider/synapse/settings/dvfs_disabler`,
-		action:"dvfs /data/StockRider/synapse/settings/dvfs_disabler"
+		default:`cat /res/synapse/settings/dvfs_disabler`,
+		action:"dvfs /res/synapse/settings/dvfs_disabler"
 	}},
 	{ SButton:{
 		label:{en:"Device Reboot", ko:"디바이스 재시작"},

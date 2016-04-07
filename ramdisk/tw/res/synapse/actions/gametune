@@ -1,6 +1,6 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 
-INC=/data/StockRider/bin/gametune.inc
+INC=/data/PRIME-Kernel/bin/gametune.inc
 
 if [ -e $INC ]; then
     source $INC

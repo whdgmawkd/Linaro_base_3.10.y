@@ -6,12 +6,12 @@ $BB mount -t rootfs -o rw,remount rootfs
 $BB mount -o rw,remount /system
 $BB mount -o rw,remount /system /system
 
-echo "" >> /data/StockRider/kernel.log
-echo ---- start postboot script ---- >> /data/StockRider/kernel.log
-echo "" >> /data/StockRider/kernel.log
+echo "" >> /data/PRIME-Kernel/kernel.log
+echo ---- start postboot script ---- >> /data/PRIME-Kernel/kernel.log
+echo "" >> /data/PRIME-Kernel/kernel.log
 
-echo init.d-postboot script is end >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
+echo init.d-postboot script is end >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
 # Init.d
 if [ ! -e /system/etc/init.d-postboot ]; then
@@ -20,8 +20,8 @@ if [ ! -e /system/etc/init.d-postboot ]; then
   $BB chmod -R 755 /system/etc/init.d-postboot
 fi;
 
-echo init.d-postboot script is start >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
+echo init.d-postboot script is start >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
 for i in $(ls /system/etc/init.d-postboot); do
     echo init.d-postboot @ /system/etc/init.d-postboot/$i

@@ -1,4 +1,4 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 
 cat << CTAG
 {
@@ -12,29 +12,29 @@ cat << CTAG
 	{ STitleBar:{ title:"기본 프리셋" }},
 	{ SButton:{
 		label:"성능 우선",
-        action:"profile /data/StockRider/synapse/settings/profile perfomance",
+        action:"profile /res/synapse/settings/profile perfomance",
 	}},
 	{ SButton:{
 		label:"배터리 효율 우선",
-        action:"profile /data/StockRider/synapse/settings/profile battery",
+        action:"profile /res/synapse/settings/profile battery",
 	}},
 	{ SSpacer:{ height:1 }},
 	{ STitleBar:{ title:"확장 프리셋" }},
 	{ SButton:{
 		label:"균형잡힌 최적화 (권장)",
-        action:"profile /data/StockRider/synapse/settings/profile balance",
+        action:"profile /res/synapse/settings/profile balance",
 	}},
 	{ SButton:{
 		label:"성능 최대화",
-        action:"profile /data/StockRider/synapse/settings/profile perfomanceext",
+        action:"profile /res/synapse/settings/profile perfomanceext",
 	}},
 	{ SButton:{
 		label:"배터리 효율 최대화",
-        action:"profile /data/StockRider/synapse/settings/profile batteryext",
+        action:"profile /res/synapse/settings/profile batteryext",
 	}},
 	{ SButton:{
 		label:"안정성 우선",
-        action:"profile /data/StockRider/synapse/settings/profile stability",
+        action:"profile /res/synapse/settings/profile stability",
 	}},
 	{ SSpacer:{ height:2 }},
 

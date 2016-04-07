@@ -1,6 +1,8 @@
-ui_print("*****************************");
-ui_print(" StockRider Kernel for Note4");
-ui_print("*****************************");
+ui_print(" ");
+ui_print(" ");
+ui_print("=====================================");
+ui_print("     StockRider Kernel for Note4");
+ui_print("=====================================");
 
 ifelse(is_mounted("/system"), unmount("/system"));
 ifelse(is_mounted("/data"), unmount("/data"));

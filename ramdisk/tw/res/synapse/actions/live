@@ -233,7 +233,7 @@ UKSMStats)
 	fi
   ;;
 zRamStats)
-    ZRAM=`cat /data/StockRider/synapse/settings/zram_prof`;
+    ZRAM=`cat /res/synapse/settings/zram_prof`;
     #ZRAM="$(bb expr `cat /sys/block/zram0/disksize`)"
 	if [ $ZRAM -gt 0 ]; then
        OSIZE=`cat /sys/block/zram0/orig_data_size`
@@ -252,8 +252,8 @@ zRamStats)
 	fi
   ;;
 donate)
-    if [ -e /data/StockRider/bin/synapse_loader212 ]; then
-    	synapse_version=`cat /data/StockRider/synapse_loader_ver`
+    if [ -e /data/PRIME-Kernel/bin/synapse_loader212 ]; then
+    	synapse_version=`cat /data/PRIME-Kernel/synapse_loader_ver`
         echo "애드온 버전: $synapse_version"
 		if [[ $synapse_version < "2" ]]; then
 	    	echo "@n애드온의 업데이트가 필요합니다."
@@ -264,7 +264,7 @@ donate)
     fi
   ;;
 profile_latest)
-    P_OLD=/data/StockRider/synapse/settings/profile_old
+    P_OLD=/res/synapse/settings/profile_old
     [ ! -f $P_OLD ] && echo none > $P_OLD
     value=`cat $P_OLD`
     case $value in

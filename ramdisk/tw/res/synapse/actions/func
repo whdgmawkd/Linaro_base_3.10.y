@@ -1,6 +1,6 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 BB=/res/bin/busybox;
-INC=/data/StockRider/bin/func.inc
+INC=/data/PRIME-Kernel/bin/func.inc
 
 if [ -e $INC ]; then
     source $INC

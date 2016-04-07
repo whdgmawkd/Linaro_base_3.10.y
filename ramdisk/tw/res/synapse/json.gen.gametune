@@ -1,11 +1,11 @@
-#!/res/bin/busybox sh
+#!/system/bin/sh
 
 cat << CTAG
 {
 name:{en:"GameTuner MOD", ko: "게임튜너 MOD"},
 elements:[
 `
-  if [ ! -e /data/StockRider/bin/synapse_loader212 ]; then
+  if [ ! -e /data/PRIME-Kernel/bin/synapse_loader212 ]; then
     echo '    { SPane:{
 	    title:"기부하신 후 사용할 수 있는 기능입니다.",
 		description:"기부하신 분들께 제공되는 혜택입니다.\n기부는 간접적인 개발 참여 방법입니다.\n이 커널이 꾸준히 업데이트 되길 원한다면 기부에 동참해보세요.\n",
