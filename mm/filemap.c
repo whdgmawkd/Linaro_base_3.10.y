@@ -1607,7 +1607,7 @@ static void do_sync_mmap_readahead(struct vm_area_struct *vma,
 	 */
 
 #if CONFIG_MMAP_READAROUND_LIMIT == 0
- 	ra_pages = max_sane_readahead(ra->ra_pages);
+	ra_pages = max_sane_readahead(ra->ra_pages);
 #else
 	if (ra->ra_pages > CONFIG_MMAP_READAROUND_LIMIT)
 		ra_pages = max_sane_readahead(CONFIG_MMAP_READAROUND_LIMIT);

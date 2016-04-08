@@ -193,7 +193,8 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 # "make" in the configured kernel build directory always uses that.
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
-ARCH		= arm
+export KBUILD_BUILDHOST := $(SUBARCH)
+ARCH			?= arm
 CROSS_COMPILE	?= $(CCACHE) $(CONFIG_CROSS_COMPILE:"%"=%)
 
 # Architecture as present in compile.h
@@ -687,6 +688,11 @@ ifeq ($(CONFIG_TIMA),y)
     KBUILD_CFLAGS += -DTIMA_LKM_AUTH_ENABLED -Idrivers/gud/gud-exynos5433/MobiCoreKernelApi/include/
     KBUILD_AFLAGS += -DTIMA_LKM_AUTH_ENABLED
 endif
+endif
+
+#ICCC
+ifeq ($(CONFIG_TZ_ICCC),y)
+    KBUILD_CFLAGS += -Idrivers/gud/gud-exynos5433/MobiCoreKernelApi/include/
 endif
 
 # Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
