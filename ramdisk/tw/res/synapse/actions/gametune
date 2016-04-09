@@ -1,0 +1,9 @@
+#!/system/bin/sh
+
+INC=/data/PRIME-Kernel/bin/gametune.inc
+
+if [ -e $INC ]; then
+    source $INC
+else
+	echo 0;
+fi

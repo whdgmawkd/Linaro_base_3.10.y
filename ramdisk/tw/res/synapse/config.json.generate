@@ -30,6 +30,7 @@ cat << CTAG
       `. $STR/json.gen.wakelock`,
       `. $STR/json.gen.advanced`,
       `. $STR/json.gen.km`
+      `. $STR/json.gen.gametune`
       `. $STR/json.gen.utility`
       `. $STR/json.gen.preset`
       `. $STR/json.gen.profile`,
