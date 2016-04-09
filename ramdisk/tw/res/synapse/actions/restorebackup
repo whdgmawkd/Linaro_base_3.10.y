@@ -2,7 +2,7 @@ BB=/res/bin/busybox;
 
 if [ -d /data/data/com.af.synapse ]; then
 
-  SYNAPSE_SD_DIR=/data/media/0/Synapse;
+  SYNAPSE_SD_DIR=/sdcard/Synapse;
   SYNAPSE_BOOT_DIR=$SYNAPSE_SD_DIR/kernel_backups;
   SYNAPSE_CONFIG_DIR=$SYNAPSE_SD_DIR/saved_profiles;
 

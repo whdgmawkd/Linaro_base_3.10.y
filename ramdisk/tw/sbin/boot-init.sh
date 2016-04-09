@@ -205,6 +205,7 @@ $BB mount -t rootfs -o remount,rw rootfs
 $BB chmod -R 0755 /res/bin
 $BB chmod -R 0755 /res/synapse
 $BB chmod 0755 /sbin/uci
+$BB chown -R media_rw.media_rw /data/media/0/Synapse
 
 # busybox install
 INS_XBIN=`cat /data/PRIME-Kernel/synapse/settings/bbins_xbin`
