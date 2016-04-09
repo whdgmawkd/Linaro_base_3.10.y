@@ -636,13 +636,7 @@ retry:
 	}
 
 	ret = xmm626x_gpio_l2tol0_resume(pmdata);
-	if (ret < 0 ) {
-		if(udev->remote_wake) {
-			printk(KERN_INFO "CP remote wake up");
-			msleep(5);
-			udev->remote_wake = 0;
-			goto generic_resume;
-		}
+	if (ret < 0) {
 		if (cnt--) {
 			mif_err("xmm626x_gpio_l2tol0_resume fail(%d)\n", ret);
 			goto retry;

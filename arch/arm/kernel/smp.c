@@ -47,7 +47,6 @@
 #include <asm/virt.h>
 #include <asm/mach/arch.h>
 
-#include <mach/exynos-ss.h>
 #include <linux/sec_debug.h>
 /*
  * as from 2.5, kernels no longer have an init_tasks structure
@@ -593,7 +592,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
 /*
  * ipi_cpu_stop - handle IPI from smp_send_stop()
  */
-static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+static void ipi_cpu_stop(unsigned int cpu)
 {
 	if (system_state == SYSTEM_BOOTING ||
 	    system_state == SYSTEM_RUNNING) {
@@ -610,8 +609,6 @@ static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
 
 	local_fiq_disable();
 	local_irq_disable();
-
-	exynos_ss_save_context(regs);
 
 #ifdef CONFIG_SEC_DEBUG
 	local_flush_tlb_all();
@@ -690,7 +687,6 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 		__inc_irq_stat(cpu, ipi_irqs[ipinr]);
 	}
 
-	exynos_ss_irq(ipinr, do_IPI, irqs_disabled(), ESS_FLAG_IN);
 	sec_debug_irq_log(ipinr, do_IPI, 1);
 
 	switch (ipinr) {
@@ -723,7 +719,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 
 	case IPI_CPU_STOP:
 		irq_enter();
-		ipi_cpu_stop(cpu, regs);
+		ipi_cpu_stop(cpu);
 		irq_exit();
 		break;
 
@@ -744,7 +740,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 		       cpu, ipinr);
 		break;
 	}
-	exynos_ss_irq(ipinr, do_IPI, irqs_disabled(), ESS_FLAG_OUT);
+
 	sec_debug_irq_log(ipinr, (void *)do_IPI, 2);
 
 

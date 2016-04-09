@@ -161,7 +161,9 @@ static void arizona_irq_dummy(struct irq_data *data)
 
 static int arizona_irq_set_wake(struct irq_data *data, unsigned int on)
 {
-	return 0;
+	struct arizona *arizona = irq_data_get_irq_chip_data(data);
+
+	return irq_set_irq_wake(arizona->irq, on);
 }
 
 static struct irq_chip arizona_irq_chip = {
@@ -410,13 +412,6 @@ int arizona_irq_init(struct arizona *arizona)
 		dev_err(arizona->dev, "Failed to request primary IRQ %d: %d\n",
 			arizona->irq, ret);
 		goto err_main_irq;
-	}
-
-	ret = irq_set_irq_wake(arizona->irq, 1);
-
-	if (ret != 0) {
-		dev_err(arizona->dev,
-			"Failed to set arizona->irq as a wake source\n");
 	}
 
 	return 0;

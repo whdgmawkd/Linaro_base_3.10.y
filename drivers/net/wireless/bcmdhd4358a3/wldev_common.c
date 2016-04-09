@@ -21,7 +21,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: wldev_common.c 585466 2015-09-10 12:51:45Z $
+ * $Id: wldev_common.c 467328 2014-04-03 01:23:40Z $
  */
 
 #include <osl.h>
@@ -41,16 +41,9 @@
 
 #define	WLDEV_ERROR(args)						\
 	do {										\
-		printk(KERN_ERR "WLDEV-ERROR) ");	\
+		printk(KERN_ERR "WLDEV-ERROR) %s : ", __func__);	\
 		printk args;							\
 	} while (0)
-
-#define	WLDEV_INFO(args)						\
-	do {										\
-		printk(KERN_INFO "WLDEV-INFO) ");	\
-		printk args;							\
-	} while (0)
-
 
 extern int dhd_ioctl_entry_local(struct net_device *net, wl_ioctl_t *ioc, int cmd);
 
@@ -361,7 +354,7 @@ int wldev_set_country(
 	}
 
 	if ((error < 0) ||
-	    (strncmp(country_code, cspec.ccode, WLC_CNTRY_BUF_SZ) != 0)) {
+	    (strncmp(country_code, cspec.country_abbrev, WLC_CNTRY_BUF_SZ) != 0)) {
 
 		if (user_enforced) {
 			bzero(&scbval, sizeof(scb_val_t));
@@ -385,7 +378,7 @@ int wldev_set_country(
 			return error;
 		}
 		dhd_bus_country_set(dev, &cspec, notify);
-		WLDEV_INFO(("%s: set country for %s as %s rev %d\n",
+		WLDEV_ERROR(("%s: set country for %s as %s rev %d\n",
 			__FUNCTION__, country_code, cspec.ccode, cspec.rev));
 	}
 	return 0;

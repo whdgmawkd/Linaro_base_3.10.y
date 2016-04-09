@@ -564,10 +564,10 @@ static int resolve_dedicated_dev(muic_data_t *pmuic, muic_attached_dev_t *pdev, 
 		pr_info("%s : JIG_USB_ON DETECTED\n", MUIC_DEV_NAME);
 		break;
 	case DEV_TYPE2_TTY:
-		/* MM-dock is handled in an attachment function with vbus */
+		if (!vbvolt) break;
 		intr = MUIC_INTR_ATTACH;
 		new_dev = ATTACHED_DEV_UNIVERSAL_MMDOCK_MUIC;
-		pr_info("%s : UNIVERSAL_MMDOCK DETECTED(%d)\n", MUIC_DEV_NAME, vbvolt);
+		pr_info("%s : UNIVERSAL_MMDOCK DETECTED\n", MUIC_DEV_NAME);
 		break;
 
 	default:
@@ -577,15 +577,8 @@ static int resolve_dedicated_dev(muic_data_t *pmuic, muic_attached_dev_t *pdev, 
 	if (val3 & DEV_TYPE3_CHG_TYPE)
 	{
 		intr = MUIC_INTR_ATTACH;
-
-		if (val3 & DEV_TYPE3_NO_STD_CHG) {
-			new_dev = ATTACHED_DEV_USB_MUIC;
-			pr_info("%s : TYPE3 DCD_OUT_TIMEOUT DETECTED\n", MUIC_DEV_NAME);
-
-		} else {
-			new_dev = ATTACHED_DEV_TA_MUIC;
-			pr_info("%s : TYPE3_CHARGER DETECTED\n", MUIC_DEV_NAME);
-		}
+		new_dev = ATTACHED_DEV_TA_MUIC;
+		pr_info("%s : TYPE3_CHARGER DETECTED\n", MUIC_DEV_NAME);
 	}
 
 	if (val2 & DEV_TYPE2_AV || val3 & DEV_TYPE3_AV_WITH_VBUS)

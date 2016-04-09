@@ -47,13 +47,11 @@ struct sec_therm_info {
 enum sec_thermistor_type {
 	TYPE_SEC_THREM_AP,
 	TYPE_SEC_THREM_GN,	/* Generic */
-	TYPE_SEC_THREM_CAM_FLASH,	/* Close to CAM_FLASH */
 };
 
 static const struct platform_device_id sec_thermistor_id[] = {
 	{ "sec-ap-thermistor", TYPE_SEC_THREM_AP },
 	{ "sec-thermistor", TYPE_SEC_THREM_GN },
-	{ "sec-cf-thermistor", TYPE_SEC_THREM_CAM_FLASH },
 	{ },
 };
 
@@ -62,8 +60,6 @@ static const struct of_device_id sec_therm_match[] = {
 		.data = &sec_thermistor_id[TYPE_SEC_THREM_AP] },
 	{ .compatible = "samsung,sec-thermistor",
 		.data = &sec_thermistor_id[TYPE_SEC_THREM_GN] },
-	{ .compatible = "samsung,sec-cf-thermistor",
-		.data = &sec_thermistor_id[TYPE_SEC_THREM_CAM_FLASH] },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, sec_therm_match);
@@ -289,8 +285,7 @@ static int sec_therm_probe(struct platform_device *pdev)
 
 	switch (pdev_id->driver_data) {
 	case TYPE_SEC_THREM_AP:
-	case TYPE_SEC_THREM_CAM_FLASH:
-		info->dev = sec_device_create(info,  pdev_id->name);
+		info->dev = sec_device_create(info, "sec-thermistor");
 		if (IS_ERR(info->dev)) {
 			dev_err(info->dev, "%s: fail to create sec_dev\n",
 					__func__);

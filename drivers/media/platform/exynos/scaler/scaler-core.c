@@ -2692,7 +2692,6 @@ static int sc_runtime_resume(struct device *dev)
 			return ret;
 		}
 	}
-
 	if (sc->qosreq_int_level > 0)
 		pm_qos_update_request(&sc->qosreq_int, sc->qosreq_int_level);
 

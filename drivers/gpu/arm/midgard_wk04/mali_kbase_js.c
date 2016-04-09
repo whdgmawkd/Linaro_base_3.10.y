@@ -1150,10 +1150,6 @@ STATIC kbasep_js_release_result kbasep_js_runpool_release_ctx_internal(kbase_dev
 	KBASE_DEBUG_ASSERT(kctx_as_nr != KBASEP_AS_NR_INVALID);
 	js_per_as_data = &js_devdata->runpool_irq.per_as_data[kctx_as_nr];
 	KBASE_DEBUG_ASSERT(js_per_as_data->as_busy_refcount > 0);
-	
-    if (kctx->as_nr == KBASEP_AS_NR_INVALID || js_per_as_data->as_busy_refcount <= 0) {
-        return release_result;
-    }
 
 	/*
 	 * Transaction begins on AS and runpool_irq
@@ -1774,7 +1770,7 @@ void kbasep_js_try_run_next_job_on_slot_nolock(kbase_device *kbdev, int js)
 	}
 }
 
-int kbasep_js_try_schedule_head_ctx(kbase_device *kbdev)
+void kbasep_js_try_schedule_head_ctx(kbase_device *kbdev)
 {
 	kbasep_js_device_data *js_devdata;
 	mali_bool has_kctx;
@@ -1803,8 +1799,7 @@ int kbasep_js_try_schedule_head_ctx(kbase_device *kbdev)
 
 	if (has_kctx == MALI_FALSE) {
 		/* No ctxs to run - nothing to do */
-		/* MALI_SEC_INTEGRATION */
-		return MALI_FALSE;
+		return;
 	}
 	js_kctx_info = &head_kctx->jctx.sched_info;
 
@@ -1843,8 +1838,7 @@ int kbasep_js_try_schedule_head_ctx(kbase_device *kbdev)
 		kbasep_js_runpool_requeue_or_kill_ctx(kbdev, head_kctx, !pm_active_err);
 
 		mutex_unlock(&js_kctx_info->ctx.jsctx_mutex);
-		/* MALI_SEC_INTEGRATION */
-		return MALI_FALSE;
+		return;
 	}
 
 	/* From the point on, the Power Management active reference is released
@@ -1944,8 +1938,7 @@ int kbasep_js_try_schedule_head_ctx(kbase_device *kbdev)
 		 * to prevent a risk of recursion back into this function */
 		kbasep_js_runpool_release_ctx_no_schedule(kbdev, head_kctx);
 	}
-	/* MALI_SEC_INTEGRATION */
-	return MALI_TRUE;
+	return;
 }
 
 void kbasep_js_schedule_privileged_ctx(kbase_device *kbdev, kbase_context *kctx)
@@ -1996,12 +1989,10 @@ void kbasep_js_schedule_privileged_ctx(kbase_device *kbdev, kbase_context *kctx)
 			kbasep_js_runpool_attempt_fast_start_ctx(kbdev, NULL);
 		}
 		/* Try to schedule the context in */
-		/* MALI_SEC_INTEGRATION */
-		if (kbasep_js_try_schedule_head_ctx(kbdev) == MALI_TRUE) {
+		kbasep_js_try_schedule_head_ctx(kbdev);
 
-			/* Wait for the context to be scheduled in */
-			wait_event(kctx->jctx.sched_info.ctx.is_scheduled_wait, kctx->jctx.sched_info.ctx.is_scheduled == MALI_TRUE);
-		}
+		/* Wait for the context to be scheduled in */
+		wait_event(kctx->jctx.sched_info.ctx.is_scheduled_wait, kctx->jctx.sched_info.ctx.is_scheduled == MALI_TRUE);
 	} else {
 		/* Already scheduled in - We need to retain it to keep the corresponding address space */
 		kbasep_js_runpool_retain_ctx(kbdev, kctx);

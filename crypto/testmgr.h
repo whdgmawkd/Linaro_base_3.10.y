@@ -32,11 +32,7 @@
 #define MAX_DIGEST_SIZE		64
 #define MAX_TAP			8
 
-#ifdef CONFIG_CRYPTO_DRBG
 #define MAX_KEYLEN		160
-#else
-#define MAX_KEYLEN		56
-#endif
 #define MAX_IVLEN		32
 
 struct hash_testvec {
@@ -96,7 +92,6 @@ struct cprng_testvec {
 	unsigned short loops;
 };
 
-#ifdef CONFIG_CRYPTO_DRBG
 struct drbg_testvec {
 	unsigned char *entropy;
 	size_t entropylen;
@@ -111,7 +106,6 @@ struct drbg_testvec {
 	unsigned char *expected;
 	size_t expectedlen;
 };
-#endif
 
 static char zeroed_string[48];
 
@@ -19174,7 +19168,6 @@ static struct cprng_testvec ansi_cprng_aes_tv_template[] = {
 	},
 };
 
-#ifdef CONFIG_CRYPTO_DRBG
 /*
  * SP800-90A DRBG Test vectors from
  * http://csrc.nist.gov/groups/STM/cavp/documents/drbg/drbgtestvectors.zip
@@ -20014,7 +20007,7 @@ static struct drbg_testvec drbg_nopr_ctr_aes128_tv_template[] = {
 		.perslen = 16,
 	},
 };
-#endif
+
 /* Cast5 test vectors from RFC 2144 */
 #define CAST5_ENC_TEST_VECTORS		4
 #define CAST5_DEC_TEST_VECTORS		4

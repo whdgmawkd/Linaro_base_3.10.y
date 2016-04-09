@@ -295,13 +295,13 @@ int argos_task_affinity_apply(int dev_num, bool enable)
 	list_for_each_entry(this, head, entry) {
 		if (enable) {
 			if (*hotplug_disable == false) {
-				argos_dm_hotplug_disable();
+				exynos_dm_hotplug_disable();
 				*hotplug_disable = true;
 			}
 			mask = this->affinity_cpu_mask;
 		} else {
 			if (*hotplug_disable == true) {
-				argos_dm_hotplug_enable();
+				exynos_dm_hotplug_enable();
 				*hotplug_disable = false;
 			}
 			mask = this->default_cpu_mask;
@@ -333,13 +333,13 @@ int argos_irq_affinity_apply(int dev_num, bool enable)
 	list_for_each_entry(this, head, entry) {
 		if (enable) {
 			if (*hotplug_disable == false) {
-				argos_dm_hotplug_disable();
+				exynos_dm_hotplug_disable();
 				*hotplug_disable = true;
 			}
 			mask = this->affinity_cpu_mask;
 		} else {
 			if (*hotplug_disable == true) {
-				argos_dm_hotplug_enable();
+				exynos_dm_hotplug_enable();
 				*hotplug_disable = false;
 			}
 			mask = this->default_cpu_mask;

@@ -384,10 +384,6 @@ int init_lcd_mic(struct mipi_dsim_device *dsim)
 	s5p_mipi_dsi_wr_data(dsim, MIPI_DSI_DCS_SHORT_WRITE,
 		0x35, 0x0);
 
-	if (s5p_mipi_dsi_wr_data(dsim_base, MIPI_DSI_DCS_SHORT_WRITE,
-			0x29, 0x0) == -1)
-		printk(KERN_ERR "fail to write Disp_on init command.\n");
-
 	return 1;
 }
 #else
@@ -483,10 +479,6 @@ static void init_lcd(struct mipi_dsim_device *dsim)
 				ARRAY_SIZE(D29)) == -1)
 		dev_err(dsim->dev, "fail to send SEQ_DISPCTL command.\n");
 	mdelay(12);
-
-	if (s5p_mipi_dsi_wr_data(dsim_base, MIPI_DSI_DCS_SHORT_WRITE,
-			0x29, 0x0) == -1)
-		printk(KERN_ERR "fail to write Disp_on init command.\n");
 
 	update_brightness(bd->props.brightness);
 }

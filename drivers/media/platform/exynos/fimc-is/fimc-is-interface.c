@@ -1534,11 +1534,8 @@ static void wq_func_group_3a0(struct fimc_is_groupmgr *groupmgr,
 
 		fimc_is_frame_trans_pro_to_com(sub_framemgr, sub_frame);
 		queue_done(vctx, dst_queue, sub_frame->index, done_state);
-	} else {
-		if (test_bit(FIMC_IS_SENSOR_BACK_START, &group->device->state)
-			|| test_bit(FIMC_IS_SENSOR_FRONT_START, &group->device->state))
-			err("done is occured without request(%p, %d)", sub_frame, ldr_frame->fcount);
-	}
+	} else
+		err("done is occured without request(%p, %d)", sub_frame, ldr_frame->fcount);
 
 	framemgr_x_barrier_irqr(sub_framemgr, 0, flags);
 
@@ -1751,20 +1748,17 @@ void wq_func_group(struct fimc_is_groupmgr *groupmgr,
 {
 	u32 lindex, hindex;
 	struct fimc_is_framemgr *sub_framemgr;
-	struct fimc_is_device_ischain *device;
 
 	BUG_ON(!groupmgr);
 	BUG_ON(!group);
 	BUG_ON(!ldr_framemgr);
 	BUG_ON(!ldr_frame);
 	BUG_ON(!vctx);
-	BUG_ON(!group->device);
 
 	/*
 	 * complete count should be lower than 3 when
 	 * buffer is queued or overflow can be occured
 	 */
-	device = group->device;
 	if (ldr_framemgr->frame_com_cnt >= 2)
 		warn("remained completes is %d(%X)", (ldr_framemgr->frame_com_cnt + 1), group->id);
 
@@ -1775,12 +1769,8 @@ void wq_func_group(struct fimc_is_groupmgr *groupmgr,
 		hindex &= ~ldr_frame->shot->dm.entry.highIndexParam;
 		if (lindex || hindex)
 			err("cause : %d : invalid parameter(%08X %08X)", status2, lindex, hindex);
-		/* skip err log when changing mode like as 'stop preview and start recording' */
-		else if (test_bit(FIMC_IS_SENSOR_BACK_START, &device->state)
-			|| test_bit(FIMC_IS_SENSOR_FRONT_START, &device->state))
-			err("cause : %d", status2);
 		else
-			warn("cause : %d", status2);
+			err("cause : %d", status2);
 	}
 
 	switch (group->id) {

@@ -516,8 +516,6 @@ enum stats_lowlightmode {
     STATE_LLS_LEVEL_HIGH = 2,
     STATE_LLS_LEVEL_SIS = 3,
     STATE_LLS_LEVEL_ZSL_LIKE = 4,
-    STATE_LLS_LEVEL_SHARPEN_DR = 10,
-    STATE_LLS_LEVEL_SHARPEN_IMA = 11,
     STATE_LLS_LEVEL_ZSL_FLASH = 16,
 };
 
@@ -769,9 +767,7 @@ struct camera2_aa_ctl {
 	uint32_t			isoValue;
 	int32_t			awbValue;
 	float				aeExpCompensationStep;
-	uint32_t			vendor_touchAeDone;
-	uint32_t			vendor_touchBvChange;
-	uint32_t			reserved[7];
+	uint32_t			reserved[9];
 };
 
 struct camera2_aa_dm {
@@ -796,9 +792,7 @@ struct camera2_aa_dm {
 	enum aa_afstate				afState;
 	enum aa_isomode				isoMode;
 	uint32_t				isoValue;
-	uint32_t				vendor_touchAeDone;
-	uint32_t				vendor_touchBvChange;
-	uint32_t				reserved[8];
+	uint32_t				reserved[10];
 };
 
 struct camera2_aa_sm {

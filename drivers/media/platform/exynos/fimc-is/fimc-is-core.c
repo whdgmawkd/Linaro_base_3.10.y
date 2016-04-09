@@ -111,7 +111,6 @@ extern bool crc32_check_front;
 extern bool crc32_header_check_front;
 extern bool crc32_check_factory_front;
 extern bool is_final_cam_module_front;
-extern bool is_latest_cam_module_front;
 #endif
 #if defined(CONFIG_SOC_EXYNOS5433)
 extern bool is_right_prj_name;
@@ -660,32 +659,6 @@ static ssize_t camera_front_camfw_full_show(struct device *dev,
 }
 static DEVICE_ATTR(front_camfw_full, S_IRUGO, camera_front_camfw_full_show, NULL);
 
-static ssize_t camera_front_checkfw_user_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	read_from_front_firmware_version();
-
-	if (!fimc_is_sec_check_from_ver(sysfs_core, SENSOR_POSITION_FRONT)) {
-		err(" NG, invalid FROM version");
-#if defined(CONFIG_CAMERA_SYSFS_V2) && defined(CAMERA_EXIT_NOT_PROPER_VERSION)
-		return sprintf(buf, "%s\n", "NG_SENSOR");
-#else
-		return sprintf(buf, "%s\n", "NG");
-#endif
-	}
-
-	if (crc32_check_factory_front) {
-		if (!is_latest_cam_module_front) {
-			return sprintf(buf, "%s\n", "NG");
-		} else {
-			return sprintf(buf, "%s\n", "OK");
-		}
-	} else {
-		return sprintf(buf, "%s\n", "NG");
-	}
-}
-static DEVICE_ATTR(front_checkfw_user, S_IRUGO, camera_front_checkfw_user_show, NULL);
-
 static ssize_t camera_front_checkfw_factory_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -696,11 +669,7 @@ static ssize_t camera_front_checkfw_factory_show(struct device *dev,
 	if (!fimc_is_sec_check_from_ver(sysfs_core, SENSOR_POSITION_FRONT)) {
 		err(" NG, invalid FROM version");
 #ifdef CONFIG_CAMERA_SYSFS_V2
-#ifdef CAMERA_EXIT_NOT_PROPER_VERSION
-		return sprintf(buf, "%s\n", "NG_SENSOR");
-#else
 		return sprintf(buf, "%s\n", "NG_VER");
-#endif
 #else
 		return sprintf(buf, "%s\n", "NG");
 #endif
@@ -870,11 +839,7 @@ static ssize_t camera_rear_checkfw_user_show(struct device *dev,
 
 	if (!fimc_is_sec_check_from_ver(sysfs_core, SENSOR_POSITION_REAR)) {
 		err(" NG, invalid FROM version");
-#if defined(CONFIG_CAMERA_SYSFS_V2) && defined(CAMERA_EXIT_NOT_PROPER_VERSION)
-		return sprintf(buf, "%s\n", "NG_SENSOR");
-#else
 		return sprintf(buf, "%s\n", "NG");
-#endif
 	}
 
 	if(fw_version_crc_check) {
@@ -910,11 +875,7 @@ static ssize_t camera_rear_checkfw_factory_show(struct device *dev,
 	if (!fimc_is_sec_check_from_ver(sysfs_core, SENSOR_POSITION_REAR)) {
 		err(" NG, invalid FROM version");
 #ifdef CONFIG_CAMERA_SYSFS_V2
-#ifdef CAMERA_EXIT_NOT_PROPER_VERSION
-		return sprintf(buf, "%s\n", "NG_SENSOR");
-#else
 		return sprintf(buf, "%s\n", "NG_VER");
-#endif
 #else
 		return sprintf(buf, "%s\n", "NG");
 #endif
@@ -1808,9 +1769,6 @@ static int fimc_is_probe(struct platform_device *pdev)
 #endif /* CONFIG_OIS_USE */
 	core->use_ois_hsi2c = pdata->use_ois_hsi2c;
 	core->use_module_check = pdata->use_module_check;
-#ifdef CONFIG_CAMERA_VARIABLE_MIPI_LANES
-	core->vtcam_mipi_lane_num = pdata->vtcam_mipi_lane_num;
-#endif
 #endif
 
 #ifdef USE_ION_ALLOC
@@ -2172,12 +2130,6 @@ static int fimc_is_probe(struct platform_device *pdev)
 				"failed to create front device file, %s\n",
 				dev_attr_front_checkfw_factory.attr.name);
 		}
-		if (device_create_file(camera_front_dev,
-				&dev_attr_front_checkfw_user) < 0) {
-			printk(KERN_ERR
-				"failed to create front device file, %s\n",
-				dev_attr_front_checkfw_user.attr.name);
-		}
 #endif
 #ifdef CONFIG_CAMERA_SYSFS_V2
 		if (device_create_file(camera_front_dev,
@@ -2386,7 +2338,6 @@ static int fimc_is_remove(struct platform_device *pdev)
 #if defined(CONFIG_CAMERA_EEPROM_SUPPORT_FRONT)
 		device_remove_file(camera_front_dev, &dev_attr_front_camfw_full);
 		device_remove_file(camera_front_dev, &dev_attr_front_checkfw_factory);
-		device_remove_file(camera_front_dev, &dev_attr_front_checkfw_user);
 #endif
 #ifdef CONFIG_CAMERA_SYSFS_V2
 		device_remove_file(camera_front_dev, &dev_attr_front_caminfo);

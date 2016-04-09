@@ -441,20 +441,17 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	if ((button->code == KEY_POWER)) {
 		printk(KERN_INFO "GPIO-KEY : PWR key is %s[%d]\n",
 					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
-	} else if ((button->code == KEY_HOMEPAGE)) {
+	}
+
+	if ((button->code == KEY_HOMEPAGE)) {
 		printk(KERN_INFO "GPIO-KEY : HOME key is %s[%d]\n",
-					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
-	} else if ((button->code == KEY_VOLUMEUP)) {
-		printk(KERN_INFO "GPIO-KEY : VOL_UP key is %s[%d]\n",
-					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
-	} else if ((button->code == KEY_VOLUMEDOWN)) {
-		printk(KERN_INFO "GPIO-KEY : VOL_DOWN key is %s[%d]\n",
 					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
 	}
 #else
 	if ((button->code == KEY_POWER) && !!state) {
 		printk(KERN_INFO "GPIO-KEY : key is pressed!!\n");
-	} else if ((button->code == KEY_HOMEPAGE) && !!state) {
+	}
+	if ((button->code == KEY_HOMEPAGE) && !!state) {
 		printk(KERN_INFO "GPIO-KEY : key is pressed!\n");
 	}
 #endif

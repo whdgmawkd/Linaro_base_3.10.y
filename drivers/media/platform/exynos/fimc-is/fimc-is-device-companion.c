@@ -469,7 +469,6 @@ p_err:
 int fimc_is_companion_close(struct fimc_is_device_companion *device)
 {
 	int ret = 0;
-	struct fimc_is_spi_gpio *spi_gpio;
 #if defined(CONFIG_SOC_EXYNOS5430) || defined(CONFIG_SOC_EXYNOS5433)
 	u32 timeout;
 #endif
@@ -478,7 +477,7 @@ int fimc_is_companion_close(struct fimc_is_device_companion *device)
 		err("core is NULL");
 		return -EINVAL;
 	}
-	spi_gpio = &core->spi_gpio;
+
 	BUG_ON(!device);
 
 	if (!test_bit(FIMC_IS_COMPANION_OPEN, &device->state)) {
@@ -511,7 +510,6 @@ int fimc_is_companion_close(struct fimc_is_device_companion *device)
 	clear_bit(FIMC_IS_COMPANION_OPEN, &device->state);
 
 p_err:
-	fimc_is_set_spi_config(spi_gpio, FIMC_IS_SPI_OUTPUT, true);
 	core->running_rear_camera = false;
 	device->companion_status = FIMC_IS_COMPANION_IDLE;
 	info("[COMP:D] %s(%d)\n", __func__, ret);
