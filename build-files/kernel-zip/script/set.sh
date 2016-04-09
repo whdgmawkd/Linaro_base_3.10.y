@@ -33,12 +33,3 @@ $BB chown -R root.root /system/etc/init.d
 $BB chmod -R 0755 /system/etc/init.d-postboot
 $BB chown -R root.root /system/etc/init.d-postboot
 
-PKG_IGNORE=/data/media/0/Synapse/pakage_list_ignore.txt
-PKG_SYSTEM=/data/media/0/Synapse/pakage_list_system.txt
-PKG_GOOGLE=/data/media/0/Synapse/pakage_list_google.txt
-PKG_AVAIL=/data/media/0/Synapse/pakage_list.txt
-cp -f /tmp/script/pakage_list_ignore.txt $PKG_IGNORE
-cp -f /tmp/script/pakage_list_system.txt $PKG_SYSTEM
-cp -f /tmp/script/pakage_list_google.txt $PKG_GOOGLE
-[ ! -f $PKG_AVAIL ] && cp -f /tmp/script/pakage_list.txt $PKG_AVAIL
-
