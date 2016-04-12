@@ -23,3 +23,4 @@ com.sec.android.easyMover=Smart Switch
 com.adsk.sketchbookhd.galaxy.oem=SketchBook for Galaxy
 com.sec.android.app.voicenote=음성 녹음
 com.sec.punup=PEN.UP
+com.android.settings=설정
