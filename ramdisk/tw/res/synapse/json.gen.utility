@@ -25,7 +25,7 @@ cat << CTAG
 	{ SCheckBox:{
 		label:"시냅스 로더 애드온을 루팅 해제 상태일 때에만 실행합니다.",
 		default:1,
-		action:"hmp /res/synapse/settings/loader_unroot"
+		action:"hmp /data/PRIME-Kernel/synapse/settings/loader_unroot"
 	}},
 	{ SSpacer:{ height:1 }},
 

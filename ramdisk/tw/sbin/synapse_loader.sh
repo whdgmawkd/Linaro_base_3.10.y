@@ -30,7 +30,7 @@ echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
 if [ -f $SYNAPSE_LOADER_SRC ] && [ -f /system/xbin/su ]; then
     echo - synapse_loader start: pase 0 - su detected >> $SYNAPSE_LOADER_LOG
-    UNROOT_ONLY=`cat /res/synapse/settings/loader_unroot`
+    UNROOT_ONLY=`cat /data/PRIME-Kernel/synapse/settings/loader_unroot`
     if [ "$UNROOT_ONLY" == "1" ]; then
         echo - synapse_loader: disabled, using unroot only option >> $SYNAPSE_LOADER_LOG
         SYNAPSE_LOADER_ACT=0
