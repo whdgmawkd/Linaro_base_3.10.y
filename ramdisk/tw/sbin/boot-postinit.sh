@@ -2,9 +2,9 @@
 
 BB=/res/bin/busybox
 
-$BB mount -t rootfs -o rw,remount rootfs
-$BB mount -o rw,remount /system
-$BB mount -o rw,remount /system /system
+$BB mount -t rootfs -o remount,rw rootfs
+$BB mount -o remount,rw /system
+$BB mount -o remount,rw /system /system
 
 echo "" >> /data/PRIME-Kernel/kernel.log
 echo ---- start postboot script ---- >> /data/PRIME-Kernel/kernel.log
@@ -28,7 +28,7 @@ for i in $(ls /system/etc/init.d-postboot); do
     sh /system/etc/init.d-postboot/$i
 done
 
-/res/bin/busybox mount -t rootfs -o ro,remount rootfs
+/res/bin/busybox mount -t rootfs -o remount,rw rootfs
 /res/bin/busybox mount -o remount,ro /system
 /res/bin/busybox mount -o remount,ro /system /system
 

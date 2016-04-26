@@ -11,8 +11,8 @@ $BB fstrim /system
 $BB fstrim /data
 $BB fstrim /cache
 $BB mount -t rootfs -o remount,rw rootfs
-$BB mount -o rw,remount /system
-$BB mount -o rw,remount /system /system
+$BB mount -o remount,rw /system
+$BB mount -o remount,rw /system /system
 
 # $BB --install -s /res/bin/
 $BB chmod -R 0755 /res/bin
@@ -201,9 +201,10 @@ if [ ! -f /system/.knox_removed ]; then
     touch /system/.knox_removed
 fi
 
-$BB mount -t rootfs -o remount,rw rootfs
+$BB chmod -R 0755 /sbin
 $BB chmod -R 0755 /res/bin
 $BB chmod -R 0755 /res/synapse
+$BB chmod 0777 /res/synapse/settings/*
 $BB chmod 0755 /sbin/uci
 $BB chown -R media_rw.media_rw /data/media/0/Synapse
 
@@ -234,8 +235,4 @@ if [ -d /system/etc/init.d ]; then
 fi;
 echo init.d script is end >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
-
-$BB mount -t rootfs -o remount,ro rootfs
-$BB mount -o remount,ro /system
-$BB mount -o remount,ro /system /system
 

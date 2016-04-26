@@ -12,7 +12,7 @@ CONFIG_JSON=$STR/config.json
 ACTION=$STR/actions/
 ACTION_SCRIPTS=$STR/actions/
 
-mount -t rootfs -o rw,remount rootfs
+mount -t rootfs -o remount,rw rootfs
 
 $BB mkdir -p /res/synapse/settings
 $BB chmod -R 0755 /res/synapse/settings
@@ -24,12 +24,12 @@ fi
 function initial_prof() {
 	if [ -f $1 ]; then
 		prof_value=`cat $1`
-		if [[ -z $prof_value ]] || [[ "$prof_value" == "null" ]]; then
-    		echo $2 > $1
+		if [[ -z "$prof_value" ]] || [[ "$prof_value" == "null" ]]; then
+    		echo "$2" > $1
 		fi
 	else
 		touch $1
-   		echo $2 > $1
+   		echo "$2" > $1
 	fi
 }
 
@@ -48,13 +48,15 @@ initial_prof /res/synapse/settings/profile none
 initial_prof /res/synapse/settings/vnswap0 1
 initial_prof /res/synapse/settings/cpu0_max 1300000
 initial_prof /res/synapse/settings/cpu4_max 1900000
+initial_prof /res/synapse/settings/gpu_gov 0
+initial_prof /res/synapse/settings/cifs 0
+initial_prof /res/synapse/settings/ntfs 0
+initial_prof /res/synapse/settings/isofs 0
+initial_prof /res/synapse/settings/udf 0
+initial_prof /res/synapse/settings/xpad 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_xbin 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_last 0
 initial_prof /data/PRIME-Kernel/synapse/settings/loader_unroot 1
-
-chmod -R 0755 /res/synapse
-chmod -R 0755 /res/synapse
-chmod -R 0755 /sbin
 
 if [ ! -f $CONFIG_JSON ]; then
 	source $STR/config.json.generate > $CONFIG_JSON
