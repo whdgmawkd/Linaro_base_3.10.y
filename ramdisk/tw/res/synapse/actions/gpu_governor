@@ -1,5 +1,15 @@
+#!/system/bin/sh
+
 case $1 in
 gpu_gov)
+  echo 1 > /res/test.dat
+  ERR=$?
+  if [ $ERR -ne 0 ]; then
+    $BB mount -t rootfs -o remount,rw rootfs
+  else
+    rm /res/test.dat 2>/dev/null
+  fi
+
   P=/res/synapse/settings/gpu_gov
   if [ ! -z $2 ]; then
   if [ $2 == Default ]; then

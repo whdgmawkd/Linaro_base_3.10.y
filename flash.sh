@@ -29,7 +29,7 @@ echo - push boot.img to /device/sdcard/ ...
 adb shell "rm -f /data/local/tmp/boot.img"
 adb push $TMPDIR/boot.img /data/local/tmp/boot.img
 echo - flashing image...
-adb shell "su -c dd if=/data/local/tmp/boot.img of=/dev/block/mmcblk0p9"
+adb shell "su --mount-master -c dd if=/data/local/tmp/boot.img of=/dev/block/mmcblk0p9"
 adb shell "dd if=/data/local/tmp/boot.img of=/dev/block/mmcblk0p9"
 adb shell "rm -f /data/local/tmp/boot.img && mount /system"
 echo - flashing done. device reboot after 2s
