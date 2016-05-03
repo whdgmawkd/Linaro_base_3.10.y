@@ -301,12 +301,8 @@ ok:
 	if (task->mm)
 		dumpable = get_dumpable(task->mm);
 	rcu_read_lock();
-<<<<<<< HEAD
-	if (!dumpable && !ptrace_has_cap(__task_cred(task), mode)) {
-=======
 	if (dumpable != SUID_DUMP_USER &&
-	    !ptrace_has_cap(__task_cred(task)->user_ns, mode)) {
->>>>>>> 19d0bd7
+	    !ptrace_has_cap(__task_cred(task), mode)) {
 		rcu_read_unlock();
 		return -EPERM;
 	}
