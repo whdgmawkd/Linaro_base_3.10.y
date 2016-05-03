@@ -252,7 +252,7 @@ zRamStats)
 	fi
   ;;
 donate)
-    if [ -e /data/PRIME-Kernel/bin/synapse_loader212 ]; then
+    if [ -e /data/PRIME-Kernel/synapse_loader_ver ]; then
     	synapse_version=`cat /data/PRIME-Kernel/synapse_loader_ver`
         echo "애드온 버전: $synapse_version"
 		if [[ $synapse_version < "2" ]]; then
