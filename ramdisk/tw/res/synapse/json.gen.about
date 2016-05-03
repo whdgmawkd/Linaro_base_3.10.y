@@ -1,0 +1,52 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:"About",
+    elements:[
+		{ SLiveLabel:{
+			refresh:10000000,
+			style:"bold",
+			action:"about title"
+		}},
+		{ SLiveLabel:{
+			refresh:10000000,
+			style:"normal",
+			action:"about current_version"
+		}},
+		{ SLiveLabel:{
+			refresh:10000000,
+			style:"normal",
+			action:"about new_version"
+		}},
+		{ SDescription:{ description:" " }},
+
+		{ SButton:{
+		   label:{en:"change log", ko:"변경내역 / 다운로드"},
+		   action:"about changelog"
+		}},
+		{ SDescription:{ description:" " }},
+		{ SDescription:{ description:" " }},
+		{ SButton:{
+		   label:"이 커널을 유용하게 사용하신다면...",
+		   action:"am start -a android.intent.action.VIEW -d http://enfree.com/stockrider/?page=donate > /dev/null 2>&1 & echo '     웹브라우저를 실행합니다.     '"
+		}},
+		{ SButton:{
+		   label:"이메일로 피드백 하기",
+		   action:"am start -a android.intent.action.VIEW -d mailto:dqstyle@gmail.com > /dev/null 2>&1& echo '     이메일 앱을 실행합니다.     '"
+		}},
+	{ SSpacer:{ height:2 }},
+	{ SPane:{
+        title:"애드온 설치 상태",
+	}},
+	{ SSpacer:{ height:1 }},
+    {SLiveLabel:{
+		refresh:5000,
+        action:"live donate"
+    }},
+	{ SSpacer:{ height:2 }},
+
+    ]
+}
+
+CTAG

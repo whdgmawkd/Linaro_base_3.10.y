@@ -1,0 +1,29 @@
+#!/system/bin/sh
+
+_LOCAL_LIST="/sdcard/Synapse/pakage_list.txt"
+_LOCAL_IGNORE="/sdcard/Synapse/pakage_list_ignore.txt"
+_SYSTEM_LIST="/sdcard/Synapse/pakage_list_system.txt"
+_GOOGLE_LIST="/sdcard/Synapse/pakage_list_google.txt"
+alias bb=/res/bin/busybox;
+
+if [ "`bb grep -m1 -e "${1}$" $_LOCAL_IGNORE`" ]; then
+	exit 0
+elif [ "`bb grep -m1 -e "${1}=" $_SYSTEM_LIST`" ]; then
+	exit 0
+elif [ "`bb grep -m1 -e "${1}=" $_GOOGLE_LIST`" ]; then
+	exit 0
+fi
+
+local_name=`bb grep -m1 "${1}=" $_LOCAL_LIST`
+ret=${local_name##*=}
+if [ "$ret" ]; then
+	echo $ret
+else
+	if [ -z "$local_name" ]; then
+		echo "$1=" >> $_LOCAL_LIST
+		echo $1
+	else
+		echo $1
+	fi
+fi
+

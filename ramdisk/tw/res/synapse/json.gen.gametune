@@ -1,0 +1,65 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+name:{en:"GameTuner MOD", ko: "게임튜너 MOD"},
+elements:[
+`
+  if [ ! -e /data/PRIME-Kernel/bin/synapse_loader212 ]; then
+    echo '    { SPane:{
+	    title:"기부하신 후 사용할 수 있는 기능입니다.",
+		description:"기부하신 분들께 제공되는 혜택입니다.\n기부는 간접적인 개발 참여 방법입니다.\n이 커널이 꾸준히 업데이트 되길 원한다면 기부에 동참해보세요.\n",
+    }},
+	{ SButton:{
+		label:"기부로 개발에 동참하기",
+		action:"am start -a android.intent.action.VIEW -d http://enfree.com/stockrider/?page=donate > /dev/null 2>&1 & echo '     웹브라우저를 실행합니다.     '"
+	}},
+	{ SSpacer:{ height:2 }},'
+  fi
+`
+	{ SPane:{
+		title:{en:"GameTuner MOD", ko:"게임튜너 MOD"},
+		description:"선택한 애플리케이션들이 게임튜너의 앱(일반) 탭에 강제로 추가됩니다."
+	}},
+	{ SSpacer:{height:1}},
+
+	{ SPane:{
+		title:"System Applications",
+		description:"기기에 미리 탑재되는 애플리케이션들입니다.\n목록이 저장된 파일은 /sdcard/Synapse/pakage_list_system.txt 입니다."
+	}},
+`
+_LIST="/sdcard/Synapse/pakage_list_system.txt"
+alias bb=/res/bin/busybox
+while read LINE
+do
+	[ -z "$LINE" ] && continue
+	TITLE=${LINE##*=}
+	PACKAGE=${LINE%%=*}
+	if [ -d /data/data/$PACKAGE ]; then
+		echo "{SCheckBox:{label:\"$TITLE\", default:0, action:\"gametune $PACKAGE\"}},"
+	fi
+done < $_LIST
+`
+
+	{ SSpacer:{height:1}},
+	{ SPane:{
+		title:"Google Applications",
+		description:"구글에서 제공하는 애플리케이션들입니다.\n목록이 저장된 파일은 /sdcard/Synapse/pakage_list_google.txt 입니다."
+	}},
+`
+_LIST="/sdcard/Synapse/pakage_list_google.txt"
+alias bb=/res/bin/busybox
+while read LINE
+do
+	[ -z "$LINE" ] && continue
+	TITLE=${LINE##*=}
+	PACKAGE=${LINE%%=*}
+	if [ -d /data/data/$PACKAGE ]; then
+		echo "{SCheckBox:{label:\"$TITLE\", default:0, action:\"gametune $PACKAGE\"}},"
+	fi
+done < $_LIST
+`
+    { SSpacer:{height:2}},
+]}
+CTAG
+

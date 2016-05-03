@@ -1,0 +1,44 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:{en:"CPU Volt", ko: "CPU 전압"},
+    elements:[
+	{ SPane:{
+		title:"주의사항",
+		description:"경고! 전압조절은 시스템 불안정과 기기 손상의 위험이 있습니다.\n전압을 낮추면 기기에 공급되는 전력이 감소합니다.\n오버클럭 시 안정성을 위해서는 전압을 올려야합니다.\n낮은 전압 설정은 시스템을 불안정과 프리징을 유발할 수 있으며, 성능(벤치마크 점수) 저하의 원인이 됩니다.",
+    }},
+
+	{ SDescription:{
+		description:""
+	}},
+        { STitleBar:{ title:"A57 빅 코어" }},
+`
+while read FREQ VOLT; do
+LABEL=$(/res/bin/busybox expr $FREQ / 1000)
+        echo '{ SSeekBar:{'
+                echo 'title:"'$LABEL' MHz", default:'$VOLT', '
+                echo 'action:"cpuvolt '${FREQ}'", unit:" mV", weight:0.001, min:700000, max:1312500, step:6250 }}, '
+done < /sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_volt_table
+`
+	{ SDescription:{
+		description:""
+	}},
+        { STitleBar:{ title:"A53 리틀 코어" }},
+`
+while read FREQ VOLT; do
+LABEL=$(/res/bin/busybox expr $FREQ / 1000)
+        echo '{ SSeekBar:{'
+                echo 'title:"'$LABEL' MHz", default:'$VOLT', '
+                echo 'action:"kfcvolt '${FREQ}'", unit:" mV", weight:0.001, min:700000, max:1300000, step:6250 }}, '
+done < /sys/devices/system/cpu/cpufreq/mp-cpufreq/kfc_volt_table
+`
+	{ SDescription:{
+		description:""
+	}},
+
+
+    ]
+}
+CTAG
+

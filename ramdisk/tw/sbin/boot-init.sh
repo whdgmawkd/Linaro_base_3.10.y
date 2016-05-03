@@ -2,17 +2,17 @@
 
 BB=/res/bin/busybox
 
-[ ! -e /data/StockRider ] && $BB mkdir -p /data/StockRider
-echo "" > /data/StockRider/kernel.log
+[ ! -e /data/PRIME-Kernel ] && $BB mkdir -p /data/PRIME-Kernel
+echo "" > /data/PRIME-Kernel/kernel.log
 
-echo "FSTrim Excute" >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
+echo "FSTrim Excute" >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 $BB fstrim /system
 $BB fstrim /data
 $BB fstrim /cache
 $BB mount -t rootfs -o remount,rw rootfs
-$BB mount -o rw,remount /system
-$BB mount -o rw,remount /system /system
+$BB mount -o remount,rw /system
+$BB mount -o remount,rw /system /system
 
 # $BB --install -s /res/bin/
 $BB chmod -R 0755 /res/bin
@@ -88,7 +88,7 @@ echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 1300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 700000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 echo 1900000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-echo 70 > /sys/module/zswap/parameters/max_pool_percent
+echo 30 > /sys/module/zswap/parameters/max_pool_percent
 echo 40960 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 echo 0 > /sys/module/mdnie_lite/parameters/enable_toggle_negative
 
@@ -201,30 +201,38 @@ if [ ! -f /system/.knox_removed ]; then
     touch /system/.knox_removed
 fi
 
-$BB mount -t rootfs -o remount,rw rootfs
+$BB chmod -R 0755 /sbin
 $BB chmod -R 0755 /res/bin
-#$BB chmod -R 0755 /sbin
+$BB chmod -R 0755 /res/synapse
+$BB chmod 0777 /res/synapse/settings/*
+$BB chmod 0755 /sbin/uci
+$BB chown -R media_rw.media_rw /data/media/0/Synapse
 
-# modules init
-#$BB mkdir -p /system/lib/modules
-#$BB chown 0.0 /system/lib/modules
-#$BB chmod 0755 /system/lib/modules
-#for i in $($BB ls -1 /lib/modules/); do
-#    $BB ln -s /lib/modules/$i /system/lib/modules/$i
-#done
+# busybox install
+INS_XBIN=`cat /data/PRIME-Kernel/synapse/settings/bbins_xbin`
+INS_LAST=`cat /data/PRIME-Kernel/synapse/settings/bbins_last`
+if [ $INS_LAST -eq 1 ]; then
+	if [ $INS_XBIN -eq 0 ]; then P=/res/bin/bb;
+	else P=/system/xbin; fi
+	if [ ! -f $P/busybox ]; then
+		$BB ln -sf /res/bin/busybox $P/busybox
+		$P/busybox --install -s $P
+	fi
+fi
 
-echo init.d script start >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
+/sbin/uci reset
+/sbin/uci
+
+source /sbin/synapse_loader.sh
+
+echo init.d script start >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 if [ -d /system/etc/init.d ]; then
     for i in $(ls /system/etc/init.d); do
         echo init.d-postboot @ /system/etc/init.d/$i
         sh /system/etc/init.d/$i
     done
 fi;
-echo init.d script is end >> /data/StockRider/kernel.log
-echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/StockRider/kernel.log
-
-$BB mount -t rootfs -o remount,ro rootfs
-$BB mount -o remount,ro /system
-$BB mount -o remount,ro /system /system
+echo init.d script is end >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 

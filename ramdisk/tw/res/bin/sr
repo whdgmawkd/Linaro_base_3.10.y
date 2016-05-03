@@ -1,0 +1,7 @@
+#!/system/sbin/sh
+
+SR_COMMAND=/data/PRIME-Kernel/bin/sr
+if [ -f $SR_COMMAND ]; then
+	source $SR_COMMAND
+fi
+
