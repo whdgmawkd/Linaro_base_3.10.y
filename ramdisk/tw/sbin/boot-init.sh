@@ -220,10 +220,9 @@ if [ $INS_LAST -eq 1 ]; then
 	fi
 fi
 
-/sbin/uci reset
-/sbin/uci
-
-source /sbin/synapse_loader.sh
+#/sbin/uci reset
+#/sbin/uci
+#source /sbin/synapse_loader.sh
 
 echo init.d script start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
