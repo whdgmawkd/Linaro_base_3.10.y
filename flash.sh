@@ -2,7 +2,7 @@
 
 source ./set_env.sh
 cleardir $RAMDISK_TW
-BOARD="SYSMAGIC000K"
+BOARD="SYSMAGIC000KU"
 DTS="exynos5433-trelte_kor_open_12.dtb"
 DTB="n910-dt.img"
 rm $TMPDIR/* 2>/dev/null
@@ -18,7 +18,7 @@ make $DTS
 ./utility/dtbtool -o ./utility/$DTB -s 2048 -p ./scripts/dtc/ ./arch/arm/boot/dts/
 
 ./utility/mkbootfs $RAMDISK_TW | $COMPRESS > $TMPDIR/ramdisk.img
-./utility/mkbootimg --base 0x10000000 --pagesize 2048 --board SYSMAGIC000K --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/boot.img
+./utility/mkbootimg --base 0x10000000 --pagesize 2048 --board $BOARD --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/boot.img
 echo -n "SEANDROIDENFORCE" >> $TMPDIR/boot.img
 cp -f  $TMPDIR/boot.img ../HostPC/Kernel/boot.img
 

@@ -14,18 +14,18 @@ do
     case $VARIANT in
       n916)
         ufs1 && flat && ss333 && clean
-        BOARD="SYSMAGIC001K"
+        BOARD="SYSMAGIC001KU"
     	DTB="n916s-boot.img-dtb"
       ;;
       n915)
     	mmc && edge && ss300 && clean
-        BOARD="SYSMAGIC000K"
+        BOARD="SYSMAGIC000KU"
 		DTS="exynos5433-tbelte_kor_open_14.dtb"
 		DTB="n915-dt.img"
       ;;
       n910)
     	mmc && flat && ss300 && clean
-        BOARD="SYSMAGIC000K"
+        BOARD="SYSMAGIC000KU"
 		DTS="exynos5433-trelte_kor_open_12.dtb"
 		DTB="n910-dt.img"
       ;;
