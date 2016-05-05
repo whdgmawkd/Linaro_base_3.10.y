@@ -171,7 +171,7 @@ if [ ! -f /system/.knox_removed ]; then
 #    $BB rm -rf /knox_data
 #    $BB rm -rf /storage/knox-emulated
 #    pm disable com.sec.knox.seandroid
-#    pm disable com.samsung.android.securitylogagent
+    pm disable com.samsung.android.securitylogagent
 #    $BB rm -rf /system/priv-app/SecurityLogAgent
 #    $BB rm -rf /system/priv-app/SecurityManagerService
 #    $BB rm -rf /system/priv-app/SecurityProviderSEC
