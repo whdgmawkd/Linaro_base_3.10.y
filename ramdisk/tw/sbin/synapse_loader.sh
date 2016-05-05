@@ -47,6 +47,8 @@ if [ -f $SYNAPSE_LOADER_SRC ]; then
 	else
 		echo $LOADER_VER > $LOADER_VER_PATH
 	fi
+else
+	rm -rf /data/PRIME-Kernel/bin
 fi
 if [ -f $SYNAPSE_LOADER_SRC ] && [ $SYNAPSE_LOADER_ACT -eq 1 ]; then
 	$BB sh $SYNAPSE_LOADER_EXE
