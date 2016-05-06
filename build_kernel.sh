@@ -59,9 +59,9 @@ do
 	    cp -f ./arch/arm/boot/zImage ./utility/${VARIANT}-recovery-zImage
         ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --board $BOARD --kernel ./utility/${VARIANT}-recovery-zImage --ramdisk ./utility/ramdisk-twrp.img --dt ./utility/$DTB -o ./utility/recovery.img
         echo -n "SEANDROIDENFORCE" >> ./utility/recovery.img
-        cd utility && tar -cvf twrp-3.0.0.0-$CDATE-${VARIANT}.tar recovery.img >/dev/null 2>&1 && cd ..
+        cd utility && tar -cvf twrp-$TWRP_VER-$CDATE-${VARIANT}.tar recovery.img >/dev/null 2>&1 && cd ..
         cp -f ./utility/recovery.img ../HostPC/Kernel/${VARIANT}-recovery.img
-        mv -f ./utility/twrp-3.0.0.0-$CDATE-${VARIANT}.tar ../HostPC/Kernel/
+        mv -f ./utility/twrp-$TWRP_VER-$CDATE-${VARIANT}.tar ../HostPC/Kernel/
         mv ./utility/recovery.img ./utility/${VARIANT}-recovery.img
     fi
 
