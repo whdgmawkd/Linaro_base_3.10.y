@@ -139,7 +139,7 @@ cat << CTAG
     }},
 	{ SCheckBox:{
         label:"Busybox를 /system/xbin 경로에 설치합니다.",
-        description:"해제 시 /res/bin/bb 경로에 설치합니다. (해제를 추천)\n\n",
+        description:"해제시 /res/bin/bb 경로에 설치하지만 시스템에서 지원하지 않을 경우 /system/xbin에 설치됩니다.\n* xbin에 설치하면 루팅 상태로 감지될 확률이 높아집니다.\n\n",
 		default:0,
 		action:"hmp /data/PRIME-Kernel/synapse/settings/bbins_xbin"
 	}},
