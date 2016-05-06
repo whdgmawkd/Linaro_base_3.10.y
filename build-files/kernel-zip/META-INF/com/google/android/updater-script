@@ -1,8 +1,8 @@
 ui_print(" ");
 ui_print(" ");
-ui_print("*****************************");
-ui_print(" StockRider Kernel for Note4");
-ui_print("*****************************");
+ui_print("==============================");
+ui_print("   PRIME-Kernel for Note4");
+ui_print("==============================");
 
 ifelse(is_mounted("/system"), unmount("/system"));
 ifelse(is_mounted("/data"), unmount("/data"));
@@ -28,7 +28,6 @@ run_program("/tmp/script/busybox", "sh", "/tmp/script/remove.sh");
 package_extract_dir("system", "/system");
 package_extract_dir("data", "/data");
 
-ui_print(" ");
 if file_getprop("/tmp/script/device-name.prop", "device") == "N910" then
   ui_print("  - your device name: N910*");
   ui_print("  - flashing N910-boot.img");
