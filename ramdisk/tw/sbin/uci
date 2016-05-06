@@ -59,6 +59,7 @@ initial_prof /data/PRIME-Kernel/synapse/settings/bbins_last 0
 initial_prof /data/PRIME-Kernel/synapse/settings/loader_unroot 1
 
 if [ ! -f $CONFIG_JSON ]; then
+	chmod -R 0755 /res/synapse
 	source $STR/config.json.generate > $CONFIG_JSON
 fi
 
