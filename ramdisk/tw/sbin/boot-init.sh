@@ -218,6 +218,7 @@ $BB chown -R media_rw.media_rw /data/media/0/Synapse
 # busybox install
 INS_XBIN=`cat /data/PRIME-Kernel/synapse/settings/bbins_xbin`
 INS_LAST=`cat /data/PRIME-Kernel/synapse/settings/bbins_last`
+! (echo "$PATH" | grep "/res/bin/bb") && INS_XBIN=1;
 if [ $INS_LAST -eq 1 ]; then
 	if [ $INS_XBIN -eq 0 ]; then P=/res/bin/bb;
 	else P=/system/xbin; fi

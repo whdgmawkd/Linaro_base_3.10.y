@@ -11,7 +11,7 @@ rm $LOADER_VER_PATH
 
 # Addon install
 ADDON_LIST=$( ls /sdcard/Synapse/StockRider-DonateAddon_*|/res/bin/busybox sort )
-if [ ! -e $SYNAPSE_LOADER_SRC ] && [ ! -z $ADDON_LIST ]; then
+if [ ! -e $SYNAPSE_LOADER_SRC ] && [ ! -z "$ADDON_LIST" ]; then
 	ADDON_COUNT=`/res/bin/busybox expr ${#ADDON_LIST[@]} - 1`
 	[[ -z $ADDON_COUNT ]] && ADDON_COUNT=0
 	ADDON_FILE=${ADDON_LIST[$ADDON_COUNT]}
