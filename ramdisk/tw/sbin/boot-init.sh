@@ -170,14 +170,16 @@ if [ ! -f /system/.knox_removed ]; then
 #    $BB rm -rf /mnt/shell/knox-emulated
 #    $BB rm -rf /knox_data
 #    $BB rm -rf /storage/knox-emulated
-#    pm disable com.sec.knox.seandroid
-    pm disable com.samsung.android.securitylogagent
 #    $BB rm -rf /system/priv-app/SecurityLogAgent
 #    $BB rm -rf /system/priv-app/SecurityManagerService
 #    $BB rm -rf /system/priv-app/SecurityProviderSEC
     
     touch /system/.knox_removed
 fi
+
+# disable knox & securitylogagent
+pm disable com.sec.knox.seandroid
+pm disable com.samsung.android.securitylogagent
 
 # Allow untrusted apps to read from debugfs
 if [ ! -f /data/PRIME-Kernel/.allow_AppPermit ]; then
