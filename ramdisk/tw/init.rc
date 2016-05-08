@@ -338,7 +338,7 @@ on post-fs
 
 on post-fs-data
     # Reload SE Android Policy
-    setprop selinux.reload_policy 1
+    setprop selinux.reload_policy 0
 
     # sec_efs_file
     mkdir /efs/sec_efs 0775 radio system
@@ -1077,11 +1077,6 @@ on property:vold.decrypt=trigger_shutdown_framework
     class_reset late_start
     class_reset main
 
-on property:selinux.reload_policy=1
-    chown system system /sys/fs/selinux/enforce
-    chown -R system system /sys/fs/selinux/booleans
-    chown system system /sys/fs/selinux/commit_pending_bools
-
 # SEC_SELINUX
 on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
@@ -1111,10 +1106,6 @@ service compact_memory /sbin/bgcompact
 # "tcp_default_init_rwnd" Is too long!
 on property:sys.sysctl.tcp_def_init_rwnd=*
     write /proc/sys/net/ipv4/tcp_default_init_rwnd ${sys.sysctl.tcp_def_init_rwnd}
-
-# Reload SE Android Policy for MDM
-on property:persist.security.mdm.policy=1
-    setprop selinux.reload_policy 1
 
 ## Daemon processes to be run by init.
 ##
@@ -1603,20 +1594,6 @@ on property:persist.security.tlc.esecomm=1
 
 on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
-    
-# Reload SE Android Policy for MDM
-on property:persist.security.mdm.policy=1
-    setprop selinux.reload_policy 1
-# ] SEC_SELINUX_PORTING COMMON
-
-on property:selinux.sec.restorecon=1
-    restorecon_msc -RF /data
-    chown system system_access /data/security/aasa
-    chmod 2750 /data/security/aasa   
-    
-# Reload SE Android Policy for MDM
-on property:persist.security.mdm.policy=1
-    setprop selinux.reload_policy 1
 # ] SEC_SELINUX_PORTING COMMON
 
 on property:sys.boot_completed=1

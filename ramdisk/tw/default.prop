@@ -20,4 +20,6 @@ ro.adb.secure=1
 # Security Functions (Add)
 ro.securestorage.support=false
 wlan.wfd.hdcp=disable
+ro.boot.selinux=permissive
+ro.build.selinux.enforce=0
 
