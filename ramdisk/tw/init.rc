@@ -1112,10 +1112,6 @@ service compact_memory /sbin/bgcompact
 on property:sys.sysctl.tcp_def_init_rwnd=*
     write /proc/sys/net/ipv4/tcp_default_init_rwnd ${sys.sysctl.tcp_def_init_rwnd}
 
-
-on property:sys.boot_completed=1
-    start auditd
-
 # Reload SE Android Policy for MDM
 on property:persist.security.mdm.policy=1
     setprop selinux.reload_policy 1
@@ -1605,18 +1601,8 @@ on property:persist.security.tlc.esecomm=1
   start esecomm
   setprop persist.security.tlc.esecomm 0
 
-# SEC_SELINUX
-service auditd /system/bin/auditd -k
-    class main
-    seclabel u:r:auditd:s0
-    disabled
-    oneshot
-
 on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
-    
-on property:sys.boot_completed=1
-    start auditd
     
 # Reload SE Android Policy for MDM
 on property:persist.security.mdm.policy=1
@@ -1627,9 +1613,6 @@ on property:selinux.sec.restorecon=1
     restorecon_msc -RF /data
     chown system system_access /data/security/aasa
     chmod 2750 /data/security/aasa   
-    
-on property:sys.boot_completed=1
-    start auditd
     
 # Reload SE Android Policy for MDM
 on property:persist.security.mdm.policy=1
