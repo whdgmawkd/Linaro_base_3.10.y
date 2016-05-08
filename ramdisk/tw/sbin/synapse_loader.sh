@@ -1,5 +1,3 @@
-#!/system/bin/sh
-
 SYNAPSE_LOADER_SRC=/data/PRIME-Kernel/bin/synapse_loader_400
 SYNAPSE_LOADER_EXE=/data/local/tmp/synapse_loader.shx
 SYNAPSE_LOADER_ACT=1
@@ -8,22 +6,6 @@ LOADER_VER_PATH=/data/PRIME-Kernel/synapse_loader_ver
 
 rm $SYNAPSE_LOADER_LOG
 rm $LOADER_VER_PATH
-
-# Addon install
-ADDON_LIST=$( ls /sdcard/Synapse/StockRider-DonateAddon_*|/res/bin/busybox sort )
-if [ ! -e $SYNAPSE_LOADER_SRC ] && [ ! -z "$ADDON_LIST" ]; then
-	ADDON_COUNT=`/res/bin/busybox expr ${#ADDON_LIST[@]} - 1`
-	[[ -z $ADDON_COUNT ]] && ADDON_COUNT=0
-	ADDON_FILE=${ADDON_LIST[$ADDON_COUNT]}
-	TMP_DIR=/data/local/tmp/stockrider
-	
-	mkdir $TMP_DIR
-	
-	$BB unzip -o $ADDON_FILE -d $TMP_DIR
-	cp -rf $TMP_DIR/data/. /data/PRIME-Kernel/
-	$BB chmod -R 0755 /data/PRIME-Kernel/.
-	rm -rf $TMP_DIR
-fi
 
 echo synapseloader start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
@@ -55,6 +37,5 @@ if [ -f $SYNAPSE_LOADER_SRC ] && [ $SYNAPSE_LOADER_ACT -eq 1 ]; then
 	echo - synapse_loader: pase 2 : done >> $SYNAPSE_LOADER_LOG
 fi
 
-sleep 20
 rm -f $SYNAPSE_LOADER_EXE
 

@@ -70,17 +70,24 @@ device_name=`echo $variant|awk '{print tolower($0)}'`
 device=${device_name:0:4}
 tar -Jxf ./bootimg.tar.xz $device-boot.img
 ui_print "   FILE  : $device-boot.img"
-dd of=/dev/block/mmcblk0p9 if=/tmp/$device-boot.img
+TARGET_BLOCK=`readlink /dev/block/platform/*/by-name/BOOT`
+[ -z $TARGET_BLOCK ] && TARGET_BLOCK="/dev/block/mmcblk0p9"
+dd of=$TARGET_BLOCK if=/tmp/prime_kernel/$device-boot.img
 rm bootimg.tar.xz $device-boot.img
 sync
-
 
 
 ui_print " - Extracting kernel modules..."
 rm -rf /system/lib/modules
 cp -rf ./system/* /system
 
-
+ui_print " - Install Synapse..."
+rm -rf /data/app/com.af.synapse-1/*
+mkdir /data/app/com.af.synapse-1
+chmod 0755 /data/app/com.af.synapse-1
+cp -rf ./data/app/com.af.synapse-1/base.apk /data/app/com.af.synapse-1/base.apk
+chmod 0644 data/app/com.af.synapse-1/base.apk
+sync
 
 ui_print " - Remove old data..."
 if [ ! -e /data/media/0/Synapse/.do_not_remove_data ]; then
@@ -111,8 +118,8 @@ chmod -R 0755 /system/etc/init.d-postboot
 chown -R root.root /system/etc/init.d-postboot
 PKG_SYSTEM=/data/media/0/Synapse/pakage_list_system.txt
 PKG_GOOGLE=/data/media/0/Synapse/pakage_list_google.txt
-cp -f /tmp/script/pakage_list_system.txt $PKG_SYSTEM
-cp -f /tmp/script/pakage_list_google.txt $PKG_GOOGLE
+cp -f /tmp/prime_kernel/script/pakage_list_system.txt $PKG_SYSTEM
+cp -f /tmp/prime_kernel/script/pakage_list_google.txt $PKG_GOOGLE
 
 ui_print " - Installing SuperSU..."
 BASEDIR=$(dirname $ZIP)
@@ -125,10 +132,15 @@ if [ -f $BASEDIR/SuperSU.zip ];then
 	chmod 0755 /tmp/supersu/META-INF/com/google/android/update-binary
 	/tmp/supersu/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/SuperSU.zip;
 	sleep 5
+	rm -rf /data/app/eu.chainfire.supersu-*
+	mkdir -p /data/app/eu.chainfire.supersu-1
+	chmod 0755 /data/app/eu.chainfire.supersu-1
+	cp /tmp/supersu/common/Superuser.apk /data/app/eu.chainfire.supersu-1/base.apk
+	chmod 0644 /data/app/eu.chainfire.supersu-1/base.apk
 else
 	ui_print "   Not detected SuperSU.zip"
 fi
-
+sync
 
 ui_print " "
 
