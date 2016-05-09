@@ -19,7 +19,20 @@ ro.adb.secure=1
 
 # Security Functions (Add)
 ro.securestorage.support=false
+ro.config.tima=0
+ro.securestorage.knox=false
 wlan.wfd.hdcp=disable
-ro.boot.selinux=permissive
-ro.build.selinux.enforce=0
+
+#ro.config.timaversion=0
+#ro.boot.selinux=permissive
+#ro.build.selinux.enforce=0
+#ro.build.selinux=0
+#androidboot.selinux=0
+#ro.security.mdpp.ux=Disabled
+#security.mdpp=None
+#security.mdpp.result=None
+#persist.security.mdm.policy=0
+#selinux.reload_policy=0
+#ro.config.knox=0
+#security.knox_kap_mode=false
 
