@@ -25,7 +25,9 @@ if [ -f $1 ];then
 			echo 75 > $cpufreq0/$NEW/target_loads
 			echo 20000 > $cpufreq0/$NEW/timer_rate
 			echo 20000 > $cpufreq0/$NEW/timer_slack
-#			echo 100000 > $cpufreq0/$NEW/max_freq_hysteresis
+			if [ -e $cpufreq0/$NEW/max_freq_hysteresis ]; then
+			  echo 100000 > $cpufreq0/$NEW/max_freq_hysteresis
+			fi
 
 			echo 59000 1200000:119000 1700000:19000 > $cpufreq4/$NEW/above_hispeed_delay
 			echo 0 > $cpufreq4/$NEW/boost
@@ -37,7 +39,9 @@ if [ -f $1 ];then
 			echo 60 1300000:63 1500000:65 190000:70 > $cpufreq4/$NEW/target_loads
 			echo 20000 > $cpufreq4/$NEW/timer_rate
 			echo 20000 > $cpufreq4/$NEW/timer_slack
-#			echo 100000 > $cpufreq4/$NEW/max_freq_hysteresis
+			if [ -e $cpufreq0/$NEW/max_freq_hysteresis ]; then
+			  echo 100000 > $cpufreq4/$NEW/max_freq_hysteresis
+			fi
 
 	    else
 		    echo $NEW > $1
