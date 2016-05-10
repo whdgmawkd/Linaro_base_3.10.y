@@ -106,9 +106,9 @@ rm /system/etc/init.d-postboot/patch-GMS_Drain
 
 ui_print " - Setup environment..."
 if [ ! `grep "SYSTEMLESS" /data/.supersu` ]; then
-    echo SYSTEMLESS=false>>/data/.supersu
+    echo SYSTEMLESS=true>>/data/.supersu
 else
-    $sed -i -e "s/SYSTEMLESS=.*/SYSTEMLESS=false/g" /data/.supersu
+    $sed -i -e "s/SYSTEMLESS=.*/SYSTEMLESS=true/g" /data/.supersu
 fi
 mkdir /system/etc/init.d
 chmod -R 0755 /data/PRIME-Kernel/*
