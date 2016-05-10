@@ -231,6 +231,12 @@ $SUPOL --live \
 	"allow debuggerd app_data_file dir search"
 fi;
 
+# fix Namespace mount separator of SuperSU
+sucfg=/data/data/eu.chainfire.supersu/files/supersu.cfg
+if [ ! -z $sucfg ]; then
+	/res/bin/busybox sed -i -e "s/enablemountnamespaceseparation=.*/enablemountnamespaceseparation=0/g" $sucfg
+fi
+
 chmod -R 0755 /sbin
 chmod -R 0755 /res/bin
 chmod -R 0755 /res/synapse
