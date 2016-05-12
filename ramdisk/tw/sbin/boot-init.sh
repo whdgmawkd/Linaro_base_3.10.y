@@ -24,41 +24,65 @@ if [ $carrier == "L" ]; then
 	setprop sys.lgt.mobicoredaemon.enable true
 fi
 
-# Configure interactive
+echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo interactive > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+
+# Configure interactive - cpu0
+echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
+echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
+echo 85 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+echo 900000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+echo 75 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
+#echo 100000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
+
+# Configure interactive - cpu4
+echo 59000 1200000:119000 1700000:19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
+echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration
+echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+echo 1000000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
 echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
-echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
-echo 900000 > /sys/devices/system/cpu/cpu0/interactive/hispeed_freq
-echo 1200000 > /sys/devices/system/cpu/cpu4/interactive/hispeed_freq
-echo 140 > /sys/devices/system/cpu/cpu0/interactive/go_hispeed_load
+echo 99000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+echo 60 1300000:63 1500000:65 190000:70 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_slack
+#echo 90000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
 
 # Configure cafactive
 echo cafactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 echo cafactive > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/timer_rate
-echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/timer_slack
-echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/min_sample_time
-echo 900000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/hispeed_freq
-echo 140 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/go_hispeed_load
-echo 75 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/target_loads
+
+# Configure cafactive - cpu0
 echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/above_hispeed_delay
-echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/boostpulse_duration
-echo 100000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/max_freq_hysteresis
+echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/boost
+echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/boostpulse_duration
+echo 85 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/go_hispeed_load
+echo 900000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/hispeed_freq
+echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/io_is_busy
+echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/min_sample_time
+echo 75 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/target_loads
+echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/timer_rate
+echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/timer_slack
+#echo 100000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/max_freq_hysteresis
+# Configure cafactive - cpu4
+echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/above_hispeed_delay
+echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/boost
+echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/boostpulse_duration
+echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/go_hispeed_load
+echo 1600000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/hispeed_freq
+echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/io_is_busy
+echo 99000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/min_sample_time
+echo 60 1300000:63 1500000:65 190000:70 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/target_loads
 echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/timer_rate
 echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/timer_slack
-echo 80000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/min_sample_time
-echo 1200000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/hispeed_freq
-echo 89 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/go_hispeed_load
-echo "60 1300000:63 1500000:65 1900000:70" > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/target_loads
-echo "20000 1300000:39000 1700000:19000" > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/above_hispeed_delay
-echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/boostpulse_duration
-echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/max_freq_hysteresis
-echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/max_freq_hysteresis
+#echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/max_freq_hysteresis
 
 # io_is_busy
-echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/cafactive/io_is_busy
-echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/cafactive/io_is_busy
 echo 1 > /sys/devices/virtual/sec/sec_slow/io_is_busy
 
 # default governor by interactive
@@ -77,7 +101,7 @@ if [ -e /sys/block/zram0 ]; then
 		echo lz4 > $i/comp_algorithm
     done;
 fi;
-echo 0 > /sys/devices/14ac0000.mali/dvfs_governor
+echo Default > /sys/devices/14ac0000.mali/dvfs_governor
 echo Y > /sys/module/mmc_core/parameters/use_spi_crc
 echo 0 > /sys/kernel/dyn_fsync/Dyn_fsync_active
 echo 0 > /proc/sys/vm/dynamic_dirty_writeback
@@ -208,6 +232,12 @@ $SUPOL --live \
 	"allow debuggerd app_data_file dir search"
 fi;
 
+# fix Namespace mount separator of SuperSU
+sucfg=/data/data/eu.chainfire.supersu/files/supersu.cfg
+if [ ! -z $sucfg ]; then
+	/res/bin/busybox sed -i -e "s/enablemountnamespaceseparation=.*/enablemountnamespaceseparation=0/g" $sucfg
+fi
+
 chmod -R 0755 /sbin
 chmod -R 0755 /res/bin
 chmod -R 0755 /res/synapse
@@ -223,7 +253,7 @@ if [ $INS_LAST -eq 1 ]; then
 	if [ $INS_XBIN -eq 0 ]; then P=/res/bin/bb;
 	else P=/system/xbin; fi
 	if [ ! -f $P/busybox ]; then
-		$BB ln -sf /res/bin/busybox $P/busybox
+		$BB cp -f /res/bin/busybox $P/busybox
 		$P/busybox --install -s $P
 	fi
 fi
