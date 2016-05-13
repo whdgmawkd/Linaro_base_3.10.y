@@ -28,7 +28,7 @@ function set_val() {
 
 RET_VALUE=$2
 
-if [ -e $INC ]; then
+if [ $RET_VALUE != "perfomance" ] && [ $RET_VALUE != "battery" ] && [ -e $INC ]; then
     source $INC
 else
   case $RET_VALUE in
@@ -63,8 +63,8 @@ else
 	  set_val N /sys/module/workqueue/parameters/power_efficient
 	  set_val 61440 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 	  set_val 1 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-	  set_val 200000 $GOVERNOR0/max_freq_hysteresis
-	  set_val 50000 $GOVERNOR4/max_freq_hysteresis
+	  set_val 0 $GOVERNOR0/max_freq_hysteresis
+	  set_val 0 $GOVERNOR4/max_freq_hysteresis
 	  set_val 160 /sys/kernel/hmp/up_perf_threshold
 	  set_val 1 /sys/kernel/hmp/power_migration
    	  echo "    프리셋이 적용되었습니다. 시냅스 재시작 버튼을 누르세요.    "
@@ -108,7 +108,7 @@ else
 	  set_val 40960 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 	  set_val 0 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	  set_val 100000 $GOVERNOR0/max_freq_hysteresis
-	  set_val 50000 $GOVERNOR4/max_freq_hysteresis
+	  set_val 90000 $GOVERNOR4/max_freq_hysteresis
 	  set_val 597 /sys/kernel/hmp/up_perf_threshold
 	  set_val 1 /sys/kernel/hmp/power_migration
    	  echo "    프리셋이 적용되었습니다. 시냅스 재시작 버튼을 누르세요.    "
