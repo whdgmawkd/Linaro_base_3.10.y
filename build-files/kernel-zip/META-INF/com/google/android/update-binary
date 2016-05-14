@@ -108,7 +108,7 @@ ui_print " - Setup environment..."
 if [ ! `grep "SYSTEMLESS" /data/.supersu` ]; then
     echo SYSTEMLESS=false>>/data/.supersu
 else
-    $sed -i -e "s/SYSTEMLESS=.*/SYSTEMLESS=false/g" /data/.supersu
+    sed -i -e "s/SYSTEMLESS=.*/SYSTEMLESS=false/g" /data/.supersu
 fi
 mkdir /system/etc/init.d
 chmod -R 0755 /data/PRIME-Kernel/*
