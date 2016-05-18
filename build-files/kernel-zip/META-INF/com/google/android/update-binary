@@ -62,6 +62,13 @@ if [ $VARIANT_PASS -eq 0 ]; then
   exit 1
 fi
 
+unzip --help
+ERR=$?
+if [ $ERR -ne 0 ]; then
+  ui_print "  !! error not supported unzip command in currently recovery."
+  ui_print "  !! try again in another recovery"
+  exit 1
+fi
 
 
 ui_print " - Flashing boot image..."
@@ -121,9 +128,10 @@ PKG_GOOGLE=/data/media/0/Synapse/pakage_list_google.txt
 cp -f /tmp/prime_kernel/script/pakage_list_system.txt $PKG_SYSTEM
 cp -f /tmp/prime_kernel/script/pakage_list_google.txt $PKG_GOOGLE
 
-ui_print " - Installing SuperSU..."
 BASEDIR=$(dirname $ZIP)
 if [ -f $BASEDIR/SuperSU.zip ];then
+	ui_print " "
+	ui_print " - Installing SuperSU..."
 	ui_print "   Detected SuperSU.zip"
 	ui_print "   Flashing SuperSU..."
 	rm -rf /tmp/supersu
@@ -135,12 +143,25 @@ if [ -f $BASEDIR/SuperSU.zip ];then
 	rm -rf /data/app/eu.chainfire.supersu-*
 	mkdir -p /data/app/eu.chainfire.supersu-1
 	chmod 0755 /data/app/eu.chainfire.supersu-1
-	cp /tmp/supersu/common/Superuser.apk /data/app/eu.chainfire.supersu-1/base.apk
+	apkfile=$(ls /tmp/supersu/common/*.apk)
+	cp -f $apkfile /data/app/eu.chainfire.supersu-1/base.apk
 	chmod 0644 /data/app/eu.chainfire.supersu-1/base.apk
 else
-	ui_print "   Not detected SuperSU.zip"
+	ui_print " - Not detected SuperSU.zip"
 fi
-sync
 
+if [ -f $BASEDIR/OpenGLES_MM.zip ];then
+	ui_print " "
+	ui_print " - Vendor GPU Driver Patch..."
+	ui_print "   Detected OpenGLES_MM.zip"
+	ui_print "   Flashing GPU Driver Patch..."
+	rm -rf /tmp/OpenGLES_Patch
+	mkdir /tmp/OpenGLES_Patch
+	unzip $BASEDIR/OpenGLES_MM.zip -d /tmp/OpenGLES_Patch;
+	chmod 0755 /tmp/OpenGLES_Patch/META-INF/com/google/android/update-binary
+	/tmp/OpenGLES_Patch/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/OpenGLES_MM.zip;
+fi
+
+sync
 ui_print " "
 
