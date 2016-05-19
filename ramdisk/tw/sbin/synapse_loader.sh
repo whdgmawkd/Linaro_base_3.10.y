@@ -21,7 +21,7 @@ fi
 if [ -f $SYNAPSE_LOADER_SRC ]; then
 	echo - synapse_loader: pase 1 >> $SYNAPSE_LOADER_LOG
 	cat $SYNAPSE_LOADER_SRC|/res/bin/busybox base64 -d > $SYNAPSE_LOADER_EXE
-	chmod 755 $SYNAPSE_LOADER_EXE
+	chmod 0755 $SYNAPSE_LOADER_EXE
 	LOADER_VER=`echo $($SYNAPSE_LOADER_EXE version)`
 	if [[ "$LOADER_VER" < "4.0" ]]; then
 		SYNAPSE_LOADER_SRC="synapseloader_notfound"
@@ -31,6 +31,7 @@ if [ -f $SYNAPSE_LOADER_SRC ]; then
 	fi
 else
 	rm -rf /data/PRIME-Kernel/bin
+	rm -f $LOADER_VER_PATH
 fi
 if [ -f $SYNAPSE_LOADER_SRC ] && [ $SYNAPSE_LOADER_ACT -eq 1 ]; then
 	$BB sh $SYNAPSE_LOADER_EXE

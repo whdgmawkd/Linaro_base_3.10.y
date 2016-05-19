@@ -42,7 +42,11 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
     {SLiveLabel:{
 		refresh:5000,
-        action:"live donate"
+        action:"addon donate"
+    }},
+    {SLiveLabel:{
+		refresh:5000,
+        action:"blacklist dummy"
     }},
 	{ SSpacer:{ height:2 }},
 

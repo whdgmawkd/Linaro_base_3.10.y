@@ -8,8 +8,6 @@ U=${U##*-}
 U=${U##*_}
 URL="http://enfree.com/stockrider"
 
-[ -e /sdcard/Synapse/betatester ] && URL="http://enfree.com/stockrider-beta"
-
 GET_LATEST=$($CURL -L $URL/?page=get_latest 2> /dev/null|$BB awk '{print tolower($0)}')
 GET_NEWBUILD=$($CURL -L $URL/?page=get_newbuild 2> /dev/null|$BB awk '{print tolower($0)}')
 
@@ -21,8 +19,9 @@ current_version)
   echo "ver $U"
   ;;
 new_version)
-  [ -z "$GET_LATEST" ] && echo "서버 접속 문제로 버전확인 불가"
-  if [ ! -z "$GET_LATEST" ]; then
+  if [ -z "$GET_LATEST" ]; then
+    echo "서버 접속 문제로 버전확인 불가"
+  else
     if [[ "$GET_NEWBUILD" != $GET_LATEST ]]; then 
     	echo "$GET_NEWBUILD 버전이 대기 상태입니다.@n"
     	echo "다운로드 가능한 최신 버전은 $GET_LATEST 입니다."

@@ -251,18 +251,6 @@ zRamStats)
 		echo Z-RAM 비활성화
 	fi
   ;;
-donate)
-    if [ -e /data/PRIME-Kernel/synapse_loader_ver ]; then
-    	synapse_version=`cat /data/PRIME-Kernel/synapse_loader_ver`
-        echo "애드온 버전: $synapse_version"
-		if [[ $synapse_version < "2" ]]; then
-	    	echo "@n애드온의 업데이트가 필요합니다."
-    	fi
-    else
-        echo "기부 애드온이 설치되지 않았습니다.@n"
-        echo "일부 기능은 기부 애드온을 필요로 합니다."
-    fi
-  ;;
 profile_latest)
     P_OLD=/res/synapse/settings/profile_old
     [ ! -f $P_OLD ] && echo none > $P_OLD
