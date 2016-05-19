@@ -91,8 +91,8 @@ donate)
 		if [ -z $GET_ACCOUNT ]; then
 			echo "계정 동기화 실패.@n네트워크 연결을 확인하세요."
 		elif [ $GET_ACCOUNT == "NO_ACCOUNTS" ]; then
-			#bb rm -f $loaderver
-			#bb rm -rf /data/PRIME-Kernel/bin
+			bb rm -f $loaderver
+			bb rm -rf /data/PRIME-Kernel/bin
 			echo "NO_ACCOUNT"
 		else
 	        echo "uid: ${GET_ACCOUNT:0:4}***@gmail.com"
