@@ -54,6 +54,18 @@ cat << CTAG
 		default:0,
 		action:"lab /res/synapse/settings/dcm_drain"
 	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:"CPU Hotplug Hack",
+        description:"CPU Hot-Plug는 런타임 중에 CPU 코어를 온/오프 합니다. 코어가 오프상태로 전환되면 해당 코어의 전원을 완전히 차단합니다.",
+    }},
+	{ SCheckBox:{
+        label:{en:"Enabled Hotplug Hack", ko:"Hotplug Hack을 사용합니다."},
+        description:"Exynos5433 SoC는 화면이 꺼진 상태에서만 CPU 핫플러깅을 사용합니다.\n이 트릭은 CPU 핫플러깅 모듈이 디스플레이 장치의 상태를 확인할때 디스플레이가 꺼진 상태로 속여 디스플레이 장치가 켜진 상황에도 핫플러깅이 가능하도록 합니다.\n활성화 하면 AOD, 전화 등의 CPU자원을 적게 사용하는 앱에서 배터리 사용 시간이 증가합니다.",
+		default:`cat /sys/power/hotplug_hack`,
+		action:"generic /sys/power/hotplug_hack"
+	}},
 
 	{ SSpacer:{ height:2 }},
 
