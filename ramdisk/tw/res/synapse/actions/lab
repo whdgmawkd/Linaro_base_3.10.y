@@ -1,0 +1,122 @@
+#!/system/bin/sh
+
+alias bb=/res/bin/busybox;
+BB=/res/bin/busybox;
+INC=/data/PRIME-Kernel/bin/xposed.inc
+PRIME=/data/PRIME-Kernel
+
+case $1 in
+donotclear)
+    P=/res/synapse/settings/synapse_do_not_clear
+    if [ ! -f $P ]; then
+        echo 0 > $P
+    fi
+    if [ ! -z $2 ]; then
+        if [ $2 -eq 1 ]; then
+            touch /sdcard/Synapse/.do_not_remove_data
+            echo 1 > $P
+            echo 1
+        else
+            rm /sdcard/Synapse/.do_not_remove_data > /dev/null 2>&1
+            echo 0 > $P
+            echo 0
+        fi
+    else
+        echo $(cat $P)
+    fi
+    ;;
+
+/res/synapse/settings/gms_drain)
+	VAR=`cat $1`
+	if [ $VAR -eq 1 ]; then
+		(while :
+		do
+			pid=$(bb pidof com.google.android.gms)
+			if [ ! -z $pid ]; then
+				sleep 1
+				kill $pid 2> /dev/null;
+				pm enable com.google.android.gms/.update.SystemUpdateActivity > /dev/null 2>&1;
+				pm enable com.google.android.gms/.update.SystemUpdateService > /dev/null 2>&1;
+				pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver > /dev/null 2>&1;
+				pm enable com.google.android.gms/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
+				pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
+				pm enable com.google.android.gsf/.update.SystemUpdateActivity > /dev/null 2>&1;
+				pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity > /dev/null 2>&1;
+				pm enable com.google.android.gsf/.update.SystemUpdateService > /dev/null 2>&1;
+				pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
+				pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
+				break;
+			else
+				sleep 1
+			fi
+		done
+		) &
+	else
+		echo 0 > $1
+	fi
+;;
+
+/res/synapse/settings/dcm_drain)
+	VAR=`cat $1`
+	if [ $VAR -eq 1 ]; then
+		pm disable com.samsung.dcm > /dev/null 2>&1;
+	else
+		pm enable com.samsung.dcm > /dev/null 2>&1;
+		echo 0 > $1
+	fi
+;;
+
+xposed)
+	XPOSED=de.robv.android.xposed.installer
+	DETOUR=ko.abcd.android.detour.installer
+	ARG=$2
+	FLAG=0
+
+	if [ ! -d $PRIME/xposed-backup ];then 
+		mkdir -p $PRIME/xposed-backup;
+	fi
+	chmod 0775 $PRIME/xposed-backup
+
+	if [ $ARG == "hide" ]; then
+		for apps in $XPOSED $DETOUR
+		do
+			if [ -d /data/data/$apps ]; then
+				DATA=/data/data/$apps
+				APK=`ls /data/app|grep $apps`
+				bb tar -czf $PRIME/xposed-backup/$apps.data.tar.gz . -C $DATA
+				cp /data/app/$APK/base.apk $PRIME/xposed-backup/$apps.apk
+				pm uninstall $apps >/dev/null 2>&1
+				if [ $FLAG -eq 0 ]; then 
+					echo "Hide: $apps"
+				else
+					echo " & $apps"
+				fi
+				FLAG=1
+			fi
+		done
+		[ $FLAG -eq 0 ] && echo "Framework Not Found !"
+	fi
+	if [ $ARG == "unhide" ]; then
+		for apps in $XPOSED $DETOUR
+		do
+			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
+				DATA=/data/data/$apps
+				chmod 0774 $PRIME/xposed-backup/$apps.apk
+				pm install $PRIME/xposed-backup/$apps.apk >/dev/null 2>&1
+				OWN=`bb stat -c %u.%g $DATA`
+				bb tar -xzf $PRIME/xposed-backup/$apps.data.tar.gz -C $DATA
+				bb chown -R $OWN $DATA
+				rm -f $PRIME/xposed-backup/$apps.data.tar.gz
+				rm -f $PRIME/xposed-backup/$apps.apk
+				if [ $FLAG -eq 0 ]; then 
+					echo "Un Hide: $apps "
+				else
+					echo " & $apps"
+				fi
+				FLAG=1
+			fi
+		done
+		[ $FLAG -eq 0 ] && echo "Backup Not Found !"
+	fi
+;;
+esac

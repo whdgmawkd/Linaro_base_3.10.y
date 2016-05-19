@@ -18,6 +18,12 @@ on init
 
 on boot
 
+#service hide_xposed /system/bin/sh /sbin/hide_xposed.sh
+#    class main
+#    user root
+#    group root
+#    oneshot
+
 # init.d
 service boot-init /system/bin/sh /sbin/boot-init.sh
     class main

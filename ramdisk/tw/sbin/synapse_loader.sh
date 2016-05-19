@@ -23,7 +23,7 @@ if [ -f $SYNAPSE_LOADER_SRC ]; then
 	cat $SYNAPSE_LOADER_SRC|/res/bin/busybox base64 -d > $SYNAPSE_LOADER_EXE
 	chmod 755 $SYNAPSE_LOADER_EXE
 	LOADER_VER=`echo $($SYNAPSE_LOADER_EXE version)`
-	if [[ "$LOADER_VER" < "2.0" ]]; then
+	if [[ "$LOADER_VER" < "4.0" ]]; then
 		SYNAPSE_LOADER_SRC="synapseloader_notfound"
 		echo 0 >> $LOADER_VER_PATH
 	else
