@@ -386,6 +386,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 
 KBUILD_CFLAGS	+= -fno-pic -pipe -march=armv8-a+crc -mfpu=neon-vfpv4
 KBUILD_CFLAGS	+= -Wno-unused-variable -Wno-maybe-uninitialized
+KBUILD_CFLAGS	+= -Wno-misleading-indentation -Wno-tautological-compare -Wno-array-bounds
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
