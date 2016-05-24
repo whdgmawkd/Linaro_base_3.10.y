@@ -1,8 +1,126 @@
-BB=/res/bin/busybox;
-INC=/data/PRIME-Kernel/bin/tweak.inc
+#!/system/bin/sh
 
-if [ -e $INC ]; then
-    source $INC
+BB=/res/bin/busybox;
+[[ ! -f $BB ]] && BB=/sbin/busybox;
+
+alias sysctl="/sbin/busybox sysctl -w";
+if [ -f /data/PRIME-Kernel/synapse_loader_ver ]; then
+if [ ! -z $1 ]; then
+    P=/res/synapse/settings/tweak_$1
+    $BB chmod 0777 $P
+
+    if [ ! -z "$2" ]; then
+      echo $2 > $P
+    fi
+    RET_VALUE=`cat $P`
+
+    if [ $RET_VALUE -eq 1 ]; then
+      case $1 in
+      perf)
+        setprop ENFORCE_PROCESS_LIMIT false
+        setprop MAX_ACTIVITIES 24
+        setprop MAX_HIDDEN_APPS 12
+        setprop MAX_PROCESSES 2
+        setprop MIN_HIDDEN_APPS 2
+        setprop framework.ENFORCE_PROCESS_LIMIT false
+        setprop framework.MAX_ACTIVITIES 24
+        setprop framework.MAX_HIDDEN_APPS 12
+        setprop framework.MAX_PROCESSES 2
+        setprop framework.MIN_HIDDEN_APPS 2
+        setprop sys.mem.max_hidden_apps 12
+        setprop sys.mem.min_hidden_apps 2
+        sysctl vm.drop_caches="3" >/dev/null 2>&1
+        sysctl vm.page-cluster="0" >/dev/null 2>&1
+        ;;
+      ram)
+        sysctl vm.dirty_expire_centisecs="2000" >/dev/null 2>&1
+        sysctl vm.dirty_writeback_centisecs="1000" >/dev/null 2>&1
+        sysctl vm.overcommit_ratio="70" >/dev/null 2>&1
+        sysctl vm.min_free_kbytes="4096" >/dev/null 2>&1
+        setprop dalvik.vm.check-dex-sum false
+        setprop dalvik.vm.checkjni false
+        setprop dalvik.vm.execution-mode int:jit
+        setprop dalvik.vm.verify-bytecode false
+        sysctl vm.overcommit_ratio="100" >/dev/null 2>&1
+        sysctl vm.vfs_cache_pressure="20" >/dev/null 2>&1
+        ;;
+      dvfs)
+        setprop dev.ssrm.init 0
+        ;;
+      net)
+        setprop persist.radio.add_power_save 0
+        setprop net.tcp.buffersize.default 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.edge 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.ehrpd 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.evdo 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.evdo_a 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.evdo_b 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.gprs 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.hsdpa 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.hspa 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.hsupa 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.lte 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.umts 4096,65280,261120,4096,65280,261120
+        setprop net.tcp.buffersize.wifi 4096,65280,261120,4096,65280,261120
+        setprop persist.data_dsc_mtu 1500
+        setprop persist.data_netmgrd_mtu 1500
+        sysctl net.core.rmem_default="163840" >/dev/null 2>&1
+        sysctl net.core.rmem_max="2097152" >/dev/null 2>&1
+        sysctl net.core.wmem_default="163840" >/dev/null 2>&1
+        sysctl net.core.wmem_max="2097152" >/dev/null 2>&1
+        sysctl net.ipv4.conf.all.accept_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.all.secure_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.default.accept_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.default.accept_source_route="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.default.secure_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.ip6tnl0.accept_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.ip6tnl0.accept_source_route="0" >/dev/null 2>&1
+        sysctl net.ipv4.conf.ip6tnl0.secure_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.lo.accept_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.lo.accept_source_route="0" >/dev/null 2>&1
+        sysctl net.ipv4.conf.lo.secure_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.sit0.accept_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.conf.sit0.accept_source_route="0" >/dev/null 2>&1
+        sysctl net.ipv4.conf.sit0.secure_redirects="1" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_ecn="2" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_fin_timeout="60" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_keepalive_intvl="75" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_keepalive_probes="9" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_keepalive_time="7200" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_no_metrics_save="0" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_rfc1337="0" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_syn_retries="6" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_synack_retries="5" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_timestamps="1" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_tw_recycle="1" >/dev/null 2>&1
+        sysctl net.ipv4.tcp_tw_reuse="1" >/dev/null 2>&1
+        sysctl net.ipv6.conf.rmnet0.mtu="1500" >/dev/null 2>&1
+        sysctl net.ipv6.conf.wlan0.mtu="1500" >/dev/null 2>&1
+        ;;
+      touch)
+        setprop debug.egl.hw 1
+        setprop debug.egl.swapinterval 1
+        setprop debug.gr.hw 1
+        setprop debug.gr.swapinterval 1
+        setprop debug.performance.tuning 1
+        setprop debug.sf.hw 1
+        setprop debug.ui.hw 1
+        setprop persist.sys.sf.hw 1
+        #setprop persist.sys.ui.hw 1
+        setprop ro.config.disable.hw_accel false
+        setprop video.accelerate.hw 1
+        setprop view.fading_edge_length 8
+        setprop view.maximum_fling_velocity 150
+        setprop view.minimum_fling_velocity 150
+        setprop view.scroll_friction 0.001
+        setprop view.touch_slop 8
+        setprop persist.sys.scrollingcache 4
+        setprop windowsmgr.max_events_per_sec 150
+        ;;
+      esac
+    fi
+
+    echo $RET_VALUE
 else
-    echo 0;
-fi
+	echo "0";
+fi; fi;
