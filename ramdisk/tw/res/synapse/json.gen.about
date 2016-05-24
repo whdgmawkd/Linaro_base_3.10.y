@@ -1,5 +1,5 @@
-#!/res/bin/busybox sh
-LOADER_VER_PATH=/data/PRIME-Kernel/synapse_loader_ver
+#!/system/bin/sh
+
 cat << CTAG
 {
     name:"About",
@@ -22,21 +22,19 @@ cat << CTAG
 		{ SDescription:{ description:" " }},
 
 		{ SButton:{
-		   label:{en:"change log", ko:"변경내역 확인 / 다운로드"},
+		   label:{en:"change log", ko:"변경내역 / 다운로드"},
 		   action:"about changelog"
 		}},
-
-	{ SSpacer:{ height:2 }},
-
+		{ SDescription:{ description:" " }},
+		{ SDescription:{ description:" " }},
 		{ SButton:{
 		   label:"이 커널을 유용하게 사용하신다면...",
-		   action:"am start -a android.intent.action.VIEW -d $URL/?page=donate > /dev/null 2>&1 & echo $DMSG4"
+		   action:"am start -a android.intent.action.VIEW -d http://enfree.com/stockrider/?page=donate > /dev/null 2>&1 & echo '     웹브라우저를 실행합니다.     '"
 		}},
 		{ SButton:{
 		   label:"이메일로 피드백 하기",
 		   action:"am start -a android.intent.action.VIEW -d mailto:dqstyle@gmail.com > /dev/null 2>&1& echo '     이메일 앱을 실행합니다.     '"
 		}},
-
 	{ SSpacer:{ height:2 }},
 	{ SPane:{
         title:"애드온 설치 상태",
@@ -44,7 +42,11 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
     {SLiveLabel:{
 		refresh:5000,
-        action:"live donate"
+        action:"addon donate"
+    }},
+    {SLiveLabel:{
+		refresh:5000,
+        action:"blacklist dummy"
     }},
 	{ SSpacer:{ height:2 }},
 
