@@ -50,8 +50,9 @@ donate)
 		  if [ "${prime:0:12}" == "Prime-Kernel" ]; then
 			CURRTIME=$(bb date +%s)
 			OLDTIME=${prime:13:10}
+			NEWTIME=$(bb expr $OLDTIME + 604800)
 			EXPIRE_FLAG=0
-			if [ $CURRTIME -lt $(bb expr $OLDTIME + 604800) ]; then
+			if [ $(bb expr $CURRTIME \< $NEWTIME) -eq 1  ]; then
 				GET_ACCOUNT=${prime:24:128}
 				ACCOUNT_FLAG=1
 				# fix error by return of accounts
