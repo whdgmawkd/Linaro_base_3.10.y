@@ -8,21 +8,6 @@ cat << CTAG
 		description: "검증되지 않은 기능들이며, 사용도중 문제를 일으킬 수 있습니다."
     }},
 	{ SSpacer:{ height:1 }},
-
- 	{ SPane:{
-		title:{en:"Hide Xposed Framework", ko:"Xposed 프레임워크 숨기기"},
-        description:" Xposed 프레임워크를 안전하게 숨깁니다.\nUn-Hide 실행시 예상치 못한 오류로 백업 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 프레임워크를 백업 해두시기 바랍니다.",
-    }},
-	{ SButton:{
-		label:"Hide Xposed Framework",
-		action:"lab xposed hide"
-	}},
-	{ SSpacer:{ height:1 }},
-	{ SButton:{
-		label:"Un-Hide Xposed Framework",
-		action:"lab xposed unhide"
-	}},
-	{ SSpacer:{ height:1 }},
 	
  	{ SPane:{
 		title:"시냅스 데이터",
@@ -53,6 +38,21 @@ cat << CTAG
         description:"주의!. 갤러리에서 사진종류 보기 시 사람/풍경/동물/음식/문서 등의 분류가 사라집니다.\n",
 		default:0,
 		action:"lab /res/synapse/settings/dcm_drain"
+	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:{en:"Hide Xposed Framework", ko:"Xposed 프레임워크 숨기기"},
+        description:" Xposed 프레임워크를 안전하게 숨깁니다.\nUn-Hide 실행시 예상치 못한 오류로 백업 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 프레임워크를 백업 해두시기 바랍니다.",
+    }},
+	{ SButton:{
+		label:"Hide Xposed Framework",
+		action:"lab xposed hide"
+	}},
+	{ SSpacer:{ height:1 }},
+	{ SButton:{
+		label:"Un-Hide Xposed Framework",
+		action:"lab xposed unhide"
 	}},
 
 	{ SSpacer:{ height:2 }},

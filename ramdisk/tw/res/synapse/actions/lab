@@ -27,48 +27,54 @@ donotclear)
     ;;
 
 /res/synapse/settings/gms_drain)
-	VAR=`cat $1`
-	if [ $VAR -eq 1 ]; then
-		(while :
-		do
-			pid=$(bb pidof com.google.android.gms)
-			if [ ! -z $pid ]; then
-				sleep 1
-				kill $pid 2> /dev/null;
-				pm enable com.google.android.gms/.update.SystemUpdateActivity > /dev/null 2>&1;
-				pm enable com.google.android.gms/.update.SystemUpdateService > /dev/null 2>&1;
-				pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver > /dev/null 2>&1;
-				pm enable com.google.android.gms/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
-				pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
-				pm enable com.google.android.gsf/.update.SystemUpdateActivity > /dev/null 2>&1;
-				pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity > /dev/null 2>&1;
-				pm enable com.google.android.gsf/.update.SystemUpdateService > /dev/null 2>&1;
-				pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
-				pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
-				break;
-			else
-				sleep 1
-			fi
-		done
-		) &
-	else
-		echo 0 > $1
+	if [ ! -z $2 ]; then
+		echo $2 > $1
+		VAR=$(cat $1)
+		if [ $VAR -eq 1 ]; then
+			(while :
+			do
+				pid=$(bb pidof com.google.android.gms)
+				if [ ! -z $pid ]; then
+					sleep 1
+					kill $pid 2> /dev/null;
+					pm enable com.google.android.gms/.update.SystemUpdateActivity > /dev/null 2>&1;
+					pm enable com.google.android.gms/.update.SystemUpdateService > /dev/null 2>&1;
+					pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver > /dev/null 2>&1;
+					pm enable com.google.android.gms/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
+					pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
+					pm enable com.google.android.gsf/.update.SystemUpdateActivity > /dev/null 2>&1;
+					pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity > /dev/null 2>&1;
+					pm enable com.google.android.gsf/.update.SystemUpdateService > /dev/null 2>&1;
+					pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver > /dev/null 2>&1;
+					pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver > /dev/null 2>&1;
+					break;
+				else
+					sleep 1
+				fi
+			done
+			) &
+		fi
 	fi
+	echo $(cat $1)
 ;;
 
 /res/synapse/settings/dcm_drain)
-	VAR=`cat $1`
-	if [ $VAR -eq 1 ]; then
-		pm disable com.samsung.dcm > /dev/null 2>&1;
-	else
-		pm enable com.samsung.dcm > /dev/null 2>&1;
-		echo 0 > $1
+	if [ ! -z $2 ]; then
+		echo $2 > $1
+		VAR=$(cat $1)
+		if [ $VAR -eq 1 ]; then
+			pm disable com.samsung.dcm > /dev/null 2>&1;
+		else
+			pm enable com.samsung.dcm > /dev/null 2>&1;
+		fi
 	fi
+	echo $(cat $1)
 ;;
 
 xposed)
 	XPOSED=de.robv.android.xposed.installer
 	DETOUR=ko.abcd.android.detour.installer
+	DETOUR_02=qw.erty.android.asdfgh.installer
 	ARG=$2
 	FLAG=0
 
@@ -78,7 +84,7 @@ xposed)
 	chmod 0775 $PRIME/xposed-backup
 
 	if [ $ARG == "hide" ]; then
-		for apps in $XPOSED $DETOUR
+		for apps in $XPOSED $DETOUR $DETOUR_02
 		do
 			if [ -d /data/data/$apps ]; then
 				DATA=/data/data/$apps
@@ -97,7 +103,7 @@ xposed)
 		[ $FLAG -eq 0 ] && echo "Framework Not Found !"
 	fi
 	if [ $ARG == "unhide" ]; then
-		for apps in $XPOSED $DETOUR
+		for apps in $XPOSED $DETOUR $DETOUR_02
 		do
 			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
 				DATA=/data/data/$apps
