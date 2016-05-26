@@ -20,7 +20,8 @@ com.samsung.android.gametuner.thin=게임튜너
 com.sec.android.app.bcocr=명함 인식
 com.sec.android.app.translator=S번역
 com.sec.android.easyMover=Smart Switch
-com.adsk.sketchbookhd.galaxy.oem=SketchBook for Galaxy
 com.sec.android.app.voicenote=음성 녹음
 com.sec.punup=PEN.UP
 com.android.settings=설정
+com.samsung.android.app.cocktailbarservice=Edge Screen
+
