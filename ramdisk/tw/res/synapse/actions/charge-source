@@ -90,7 +90,10 @@ case $((`cat $PSRC/power_supply/battery/batt_charging_source`)) in
 28)	echo "MDock TA charging"
 	;;
 
-29)	echo "Wireless Remove"
+29)	echo "MDock USB charging"
+	;;
+
+30)	echo "Wireless Remove"
 	;;
 
 esac

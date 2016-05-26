@@ -35,6 +35,7 @@ cat << CTAG
       `. $STR/json.gen.preset`
       `. $STR/json.gen.profile`,
       `. $STR/json.gen.log`,
+      `. $STR/json.gen.lab`,
       `. $STR/json.gen.reboot`,
     ]
 

@@ -5,7 +5,7 @@ cat << CTAG
     name:{en:"Utility", ko:"유틸리티"},
     elements:[
 `
-  if [ ! -e /data/PRIME-Kernel/bin/synapse_loader212 ]; then
+  if [ ! -e /data/PRIME-Kernel/synapse_loader_ver ]; then
     echo '    { SPane:{
 	    title:"기부하신 후 사용할 수 있는 기능입니다.",
 		description:"기부하신 분들께 제공되는 혜택입니다.\n기부는 간접적인 개발 참여 방법입니다.\n이 커널이 꾸준히 업데이트 되길 원한다면 기부에 동참해보세요.\n",
@@ -41,6 +41,16 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 
  	{ SPane:{
+		title:{en:"Display Density Patch", ko:"디스플레이 밀도 패치"},
+        description:" 노트5와 동일한 560 dpi로 수정합니다. 패치 적용시 카메라 등의 일부 순정 앱은 화면 일부가 잘려서 표시되므로 Xposed 모듈 App Settings 앱을 사용하여 640dpi로 설정해야 정상적인 사용이 가능합니다.\n",
+    }},
+	{ SButton:{
+		label: "560dpi Toggle",
+		action:"dpi 560"
+	}},
+	{ SSpacer:{ height:1 }},
+	
+ 	{ SPane:{
 		title:"시스템 트윅",
         description:"시냅스 설정 변경 없이 커널 내부 값과 펌웨어의 숨겨진 설정을 조절하여 기기를 최적화 합니다.",
     }},
@@ -70,38 +80,6 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 
  	{ SPane:{
-		title:"시냅스 데이터",
-        description:"커널 플래싱 시 시냅스 앱 데이터를 초기화 하지 않도록 선택할 수 있습니다.\n오래된 이전 버전이나 타 커널을 사용후 새로 플래싱 할 때는 반드시 시냅스 앱 데이터를 초기화 해야만 정상적인 사용이 가능합니다.\n무슨 의미인지 이해 하셨고 문제 발생 시 직접 해결 가능하신 경우에만 이 기능을 활성화 하시기 바랍니다.\n",
-    }},
-	{ SCheckBox:{
-        label:"시냅스 앱 데이터를 초기화 하지 않습니다.",
-        description:"활성화 하면 TWRP에서 커널 플래싱 시 기존 시냅스 앱의 데이터를 초기화 하지 않습니다. 기본값은 '해제'입니다.",
-		default:0,
-		action:"func donotclear"
-	}},
-	{ SSpacer:{ height:1 }},
-
- 	{ SPane:{
-		title:"배터리 드레인 패치",
-        description:"백그라운드 앱에 의해 발생하는 배터리 드레인 현상을 해결합니다.",
-    }},
-	{ SCheckBox:{
-        label:"Google Play 서비스 패치",
-        description:"특정 버전에서 발생하는 배터리 드레인을 해결합니다.\n",
-		default:0,
-		action:"hmp /res/synapse/settings/gms_drain"
-	}},
-	{ SSpacer:{ height:1 }},
-
-	{ SCheckBox:{
-        label:"DCMProvider 사용중지",
-        description:"갤러리에서 사진종류 보기 시 사람/풍경/동물/음식/문서 등의 분류를 생성하고 관리하는 역할을 합니다.\n",
-		default:0,
-		action:"hmp /res/synapse/settings/dcm_drain"
-	}},
-	{ SSpacer:{ height:1 }},
-
- 	{ SPane:{
 		title:"외부 SD카드 쓰기권한",
         description:"외부 SD카드에 읽기와 쓰기 권한을 부여합니다.",
     }},
@@ -124,6 +102,16 @@ cat << CTAG
 		action:"hmp /res/synapse/settings/viper_patch_00"
 	}},
 	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
+		title:{en:"Private Mode patch", ko:"프라이빗 모드 패치"},
+        description:" 순정 상태가 아닌 기기에서 프라이빗 모드가 작동하지 않는 문제를 패치합니다.\n이 패치는 180kb의 데이터 다운로드가 발생합니다.\n",
+    }},
+	{ SButton:{
+		label:"install / remove",
+		action:"priv custom"
+	}},
+	{ SSpacer:{ height:1 }},
 	
  	{ SPane:{
 		title:"Busybox Install/Remove",
@@ -131,7 +119,7 @@ cat << CTAG
     }},
 	{ SCheckBox:{
         label:"Busybox를 /system/xbin 경로에 설치합니다.",
-        description:"해제 시 /res/bin/bb 경로에 설치합니다. (해제를 추천)\n\n",
+        description:"해제시 /res/bin/bb 경로에 설치하지만 시스템에서 지원하지 않을 경우 /system/xbin에 설치됩니다.\n* xbin에 설치하면 루팅 상태로 감지될 확률이 높아집니다.\n\n",
 		default:0,
 		action:"hmp /data/PRIME-Kernel/synapse/settings/bbins_xbin"
 	}},

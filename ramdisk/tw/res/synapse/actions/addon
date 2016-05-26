@@ -1,0 +1,112 @@
+#!/system/bin/sh
+
+alias bb=/res/bin/busybox
+sqlite="/res/bin/sqlite3";
+BB=/res/bin/busybox
+CURL=/res/bin/curl
+_DB="/data/system/users/0/accounts.db";
+URL="http://enfree.com/prime"
+
+in_array(){
+    el=$1
+    shift
+    while test $# -gt 0; do
+        test $el = $1 && return 0
+        shift
+    done
+    return 1
+}
+
+if [ ! -e $_DB ]; then
+	echo "ERROR: Accounts Not Found"
+	exit 0
+fi
+
+test=`$sqlite -version 2>/dev/null`
+err=$?
+if [ $err -ne 0 ]; then
+	echo "ERROR: can not access sqlite3 binary!"
+fi
+test=`$CURL -V 2>/dev/null`
+err=$?
+if [ $err -ne 0 ]; then
+	echo "ERROR: can not access curl binary!"
+fi
+
+google=`$sqlite $_DB "SELECT name FROM accounts WHERE type='com.google'"`
+
+case $1 in
+donate)
+	loaderver=/data/PRIME-Kernel/synapse_loader_ver
+    if [ -e $loaderver ]; then
+		synapse_version=$(cat /data/PRIME-Kernel/synapse_loader_ver)
+        echo "version: $synapse_version@n"
+
+		ACCOUNT_FLAG=0
+		if [ ! -z "$google" ]; then
+		  prime=`$sqlite $_DB "SELECT name, \
+		  last_password_entry_time_millis_epoch, previous_name \
+		  FROM accounts WHERE type='com.dq.prime.kernel'"`
+		  if [ "${prime:0:12}" == "Prime-Kernel" ]; then
+			CURRTIME=$(bb date +%s)
+			OLDTIME=${prime:13:10}
+			NEWTIME=$(bb expr $OLDTIME + 604800)
+			EXPIRE_FLAG=0
+			if [ $(bb expr $CURRTIME \< $NEWTIME) -eq 1  ]; then
+				GET_ACCOUNT=${prime:24:128}
+				ACCOUNT_FLAG=1
+				# fix error by return of accounts
+				if [ $GET_ACCOUNT == "NO_ACCOUNTS" ]; then
+					EXPIRE_FLAG=1
+				fi
+			else
+				EXPIRE_FLAG=1
+			fi
+			if [ $EXPIRE_FLAG -eq 1 ]; then
+				$sqlite $_DB "DELETE FROM accounts WHERE \
+				name='Prime-Kernel' \
+				AND type='com.dq.prime.kernel'" 2> /dev/null
+				ACCOUNT_FLAG=0
+				GET_ACCOUNT=""
+			fi
+		  fi
+
+		  if [ $ACCOUNT_FLAG -eq 0 ]; then
+			for v in ${google[@]}; do
+				GET_ACCOUNT=$($CURL "http://enfree.com/prime/?page=account&uid=$v" 2> /dev/null)
+				if [ $GET_ACCOUNT ] && [ $v == "$GET_ACCOUNT" ]; then
+					ACCOUNT_FLAG=1
+					break;
+				fi
+			done
+			if [ ! -z $GET_ACCOUNT ] && [ $GET_ACCOUNT != "NO_ACCOUNTS" ]; then
+				TIMESTAMP=$(bb date +%s)
+				[ $ACCOUNT_FLAG == 1 ] && ret=`$sqlite $_DB "INSERT INTO accounts \
+				(name, type, password, previous_name, last_password_entry_time_millis_epoch) \
+				VALUES ('Prime-Kernel', 'com.dq.prime.kernel', '', \
+				'$GET_ACCOUNT', '$TIMESTAMP');" 2> /dev/null`
+			fi
+		  fi
+		fi
+
+		if [ -z $GET_ACCOUNT ]; then
+			echo "계정 동기화 실패.@n네트워크 연결을 확인하세요."
+		elif [ $GET_ACCOUNT == "NO_ACCOUNTS" ]; then
+			bb rm -f $loaderver
+			bb rm -rf /data/PRIME-Kernel/bin
+			echo "NO_ACCOUNT"
+		else
+	        echo "uid: ${GET_ACCOUNT:0:4}***@gmail.com"
+			if [[ "$synapse_version" < "4.1.0" ]]; then
+		    	echo "@n애드온의 업데이트가 필요합니다."
+   			fi
+   		fi
+    else
+        echo "애드온이 설치되지 않았습니다.@n"
+        echo "일부 기능은 기부 애드온을 필요로 합니다."
+    fi
+  ;;
+test)
+	echo "..."
+  ;;
+esac

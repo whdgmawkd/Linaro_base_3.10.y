@@ -28,7 +28,7 @@ function set_val() {
 
 RET_VALUE=$2
 
-if [ -e $INC ]; then
+if [ $RET_VALUE != "perfomance" ] && [ $RET_VALUE != "battery" ] && [ -e $INC ]; then
     source $INC
 else
   case $RET_VALUE in
@@ -41,11 +41,11 @@ else
 	  set_val 70 $GOVERNOR4/go_hispeed_load
 	  set_val 1100000 $GOVERNOR0/hispeed_freq
 	  set_val 1500000 $GOVERNOR4/hispeed_freq
-	  set_val 80000 $GOVERNOR0/min_sample_time
+	  set_val 60000 $GOVERNOR0/min_sample_time
 	  set_val 20000 $GOVERNOR0/timer_rate
 	  set_val 0 $GOVERNOR0/boost
 	  set_val 0 /sys/devices/14ac0000.mali/tmu
-	  set_val 1 /sys/devices/14ac0000.mali/dvfs_governor
+	  set_val Interactive /sys/devices/14ac0000.mali/dvfs_governor
 	  set_val N /sys/module/mmc_core/parameters/use_spi_crc
 	  set_val 1 /sys/kernel/dyn_fsync/Dyn_fsync_active
 	  for i in /sys/block/*/queue/add_random; do echo 0 > $i; done > /dev/null 2>&1
@@ -63,8 +63,8 @@ else
 	  set_val N /sys/module/workqueue/parameters/power_efficient
 	  set_val 61440 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 	  set_val 1 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-	  set_val 200000 $GOVERNOR0/max_freq_hysteresis
-	  set_val 50000 $GOVERNOR4/max_freq_hysteresis
+	  set_val 0 $GOVERNOR0/max_freq_hysteresis
+	  set_val 0 $GOVERNOR4/max_freq_hysteresis
 	  set_val 160 /sys/kernel/hmp/up_perf_threshold
 	  set_val 1 /sys/kernel/hmp/power_migration
    	  echo "    프리셋이 적용되었습니다. 시냅스 재시작 버튼을 누르세요.    "
@@ -89,7 +89,7 @@ else
 	  set_val 40000 $GOVERNOR0/timer_rate
 	  set_val 0 $GOVERNOR0/boost
 	  set_val 1 /sys/devices/14ac0000.mali/tmu
-	  set_val 2 /sys/devices/14ac0000.mali/dvfs_governor
+	  set_val Static /sys/devices/14ac0000.mali/dvfs_governor
 	  set_val N /sys/module/mmc_core/parameters/use_spi_crc
 	  set_val 1 /sys/kernel/dyn_fsync/Dyn_fsync_active
 	  for i in /sys/block/*/queue/add_random; do echo 0 > $i; done > /dev/null 2>&1
@@ -108,7 +108,7 @@ else
 	  set_val 40960 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 	  set_val 0 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	  set_val 100000 $GOVERNOR0/max_freq_hysteresis
-	  set_val 50000 $GOVERNOR4/max_freq_hysteresis
+	  set_val 90000 $GOVERNOR4/max_freq_hysteresis
 	  set_val 597 /sys/kernel/hmp/up_perf_threshold
 	  set_val 1 /sys/kernel/hmp/power_migration
    	  echo "    프리셋이 적용되었습니다. 시냅스 재시작 버튼을 누르세요.    "
