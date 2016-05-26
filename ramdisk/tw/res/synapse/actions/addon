@@ -44,16 +44,15 @@ donate)
 
 		ACCOUNT_FLAG=0
 		if [ ! -z "$google" ]; then
-		  prime=`$sqlite $_DB "SELECT name, \
-		  last_password_entry_time_millis_epoch, previous_name \
+		  prime=`$sqlite $_DB "SELECT name, previous_name \
 		  FROM accounts WHERE type='com.dq.prime.kernel'"`
 		  if [ "${prime:0:12}" == "Prime-Kernel" ]; then
 			CURRTIME=$(bb date +%s)
-			OLDTIME=${prime:13:10}
+			OLDTIME=$(cat /data/PRIME-Kernel/last_time_millis_epoch)
 			NEWTIME=$(bb expr $OLDTIME + 604800)
 			EXPIRE_FLAG=0
-			if [ $(bb expr $CURRTIME \< $NEWTIME) -eq 1  ]; then
-				GET_ACCOUNT=${prime:24:128}
+			if [ $(bb expr $CURRTIME \< $NEWTIME ) -eq 1 ]; then
+				GET_ACCOUNT=${prime:13:128}
 				ACCOUNT_FLAG=1
 				# fix error by return of accounts
 				if [ $GET_ACCOUNT == "NO_ACCOUNTS" ]; then
@@ -81,10 +80,11 @@ donate)
 			done
 			if [ ! -z $GET_ACCOUNT ] && [ $GET_ACCOUNT != "NO_ACCOUNTS" ]; then
 				TIMESTAMP=$(bb date +%s)
+				echo $TIMESTAMP > /data/PRIME-Kernel/last_time_millis_epoch
 				[ $ACCOUNT_FLAG == 1 ] && ret=`$sqlite $_DB "INSERT INTO accounts \
-				(name, type, password, previous_name, last_password_entry_time_millis_epoch) \
+				(name, type, password, previous_name) \
 				VALUES ('Prime-Kernel', 'com.dq.prime.kernel', '', \
-				'$GET_ACCOUNT', '$TIMESTAMP');" 2> /dev/null`
+				'$GET_ACCOUNT');" 2> /dev/null`
 			fi
 		  fi
 		fi
@@ -97,7 +97,7 @@ donate)
 			echo "NO_ACCOUNT"
 		else
 	        echo "uid: ${GET_ACCOUNT:0:4}***@gmail.com"
-			if [[ "$synapse_version" < "4.1.0" ]]; then
+			if [[ "$synapse_version" < "1.5.3" ]]; then
 		    	echo "@n애드온의 업데이트가 필요합니다."
    			fi
    		fi
