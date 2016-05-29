@@ -28,30 +28,3 @@ for i in $(ls /system/etc/init.d-postboot); do
     sh /system/etc/init.d-postboot/$i
 done
 
-# Xposed Framework Hide
-XPOSED=de.robv.android.xposed.installer
-DETOUR=ko.abcd.android.detour.installer
-PRIME=/data/PRIME-Kernel
-#XPOSED_BACKUPS=`ls $PRIME/xposed-backup|grep ".installer.apk"`
-(while :
-do
-[ -z "$XPOSED_BACKUPS" ] && break
-xframework=$(service list|grep -c xposed.system)
-if [ $xframework -eq 1 ]; then
-  for apps in $XPOSED $DETOUR
-  do
-	if [ -d /data/data/$apps ]; then
-		DATA=/data/data/$apps
-		APK=`ls /data/app|grep $apps`
-		bb tar -czf $PRIME/xposed-backup/$apps.data.tar.gz . -C $DATA
-		cp /data/app/$APK/base.apk $PRIME/xposed-backup/$apps.apk
-		pm uninstall $apps >/dev/null 2>&1
-	fi
-  done
-  break
-else
-	sleep 2
-fi
-done
-) &
-

@@ -73,7 +73,7 @@ donotclear)
 
 xposed)
 	XPOSED=de.robv.android.xposed.installer
-	DETOUR=ko.abcd.android.detour.installer
+	DETOUR_01=ko.abcd.android.detour.installer
 	DETOUR_02=qw.erty.android.asdfgh.installer
 	ARG=$2
 	FLAG=0
@@ -84,7 +84,7 @@ xposed)
 	chmod 0775 $PRIME/xposed-backup
 
 	if [ $ARG == "hide" ]; then
-		for apps in $XPOSED $DETOUR $DETOUR_02
+		for apps in $XPOSED $DETOUR_01 $DETOUR_02
 		do
 			if [ -d /data/data/$apps ]; then
 				DATA=/data/data/$apps
@@ -103,7 +103,7 @@ xposed)
 		[ $FLAG -eq 0 ] && echo "Framework Not Found !"
 	fi
 	if [ $ARG == "unhide" ]; then
-		for apps in $XPOSED $DETOUR $DETOUR_02
+		for apps in $XPOSED $DETOUR_01 $DETOUR_02
 		do
 			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
 				DATA=/data/data/$apps

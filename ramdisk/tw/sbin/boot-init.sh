@@ -258,6 +258,8 @@ if [ $INS_LAST -eq 1 ]; then
 	fi
 fi
 
+/sbin/unhide_xposed.sh
+
 source /sbin/synapse_loader.sh
 /sbin/uci reset
 /sbin/uci
