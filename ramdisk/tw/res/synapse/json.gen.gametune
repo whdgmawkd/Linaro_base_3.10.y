@@ -25,10 +25,10 @@ elements:[
 
 	{ SPane:{
 		title:"System Applications",
-		description:"기기에 미리 탑재되는 애플리케이션들입니다.\n목록이 저장된 파일은 /sdcard/Synapse/pakage_list_system.txt 입니다."
+		description:"기기에 미리 탑재되는 애플리케이션들입니다."
 	}},
 `
-_LIST="/data/media/0/Synapse/pakage_list_system.txt"
+_LIST="/data/PRIME-Kernel/list/pakage_list_system.txt"
 alias bb=/res/bin/busybox
 while read LINE
 do
@@ -44,10 +44,10 @@ done < $_LIST
 	{ SSpacer:{height:1}},
 	{ SPane:{
 		title:"Google Applications",
-		description:"구글에서 제공하는 애플리케이션들입니다.\n목록이 저장된 파일은 /sdcard/Synapse/pakage_list_google.txt 입니다."
+		description:"구글에서 제공하는 애플리케이션들입니다."
 	}},
 `
-_LIST="/data/media/0/Synapse/pakage_list_google.txt"
+_LIST="/data/PRIME-Kernel/list/pakage_list_google.txt"
 alias bb=/res/bin/busybox
 while read LINE
 do

@@ -72,9 +72,8 @@ donotclear)
 ;;
 
 xposed)
-	XPOSED=de.robv.android.xposed.installer
-	DETOUR_01=ko.abcd.android.detour.installer
-	DETOUR_02=qw.erty.android.asdfgh.installer
+	XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
+	LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
 	ARG=$2
 	FLAG=0
 
@@ -84,13 +83,15 @@ xposed)
 	chmod 0775 $PRIME/xposed-backup
 
 	if [ $ARG == "hide" ]; then
-		for apps in $XPOSED $DETOUR_01 $DETOUR_02
+		mount -o rw,remount /system
+		for apps in $XPOSED_APK
 		do
 			if [ -d /data/data/$apps ]; then
 				DATA=/data/data/$apps
 				APK=`ls /data/app|grep $apps`
 				bb tar -czf $PRIME/xposed-backup/$apps.data.tar.gz . -C $DATA
-				cp /data/app/$APK/base.apk $PRIME/xposed-backup/$apps.apk
+				cp -f /data/app/$APK/base.apk $PRIME/xposed-backup/$apps.apk
+				chmod 0774 $PRIME/xposed-backup/$apps.apk
 				pm uninstall $apps >/dev/null 2>&1
 				if [ $FLAG -eq 0 ]; then 
 					echo "Hide: $apps"
@@ -100,10 +101,20 @@ xposed)
 				FLAG=1
 			fi
 		done
-		[ $FLAG -eq 0 ] && echo "Framework Not Found !"
+		if [ $FLAG -eq 1 ]; then
+			for bridge in $LIST_BRIDGE
+			do
+				if [ -f /system/framework/$bridge ]; then
+					mv /system/framework/$bridge /system/framework/$bridge.bak
+				fi
+			done
+		else
+			echo "Framework Not Found !"
+		fi
 	fi
 	if [ $ARG == "unhide" ]; then
-		for apps in $XPOSED $DETOUR_01 $DETOUR_02
+		mount -o rw,remount /system
+		for apps in $XPOSED_APK
 		do
 			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
 				DATA=/data/data/$apps
@@ -122,7 +133,16 @@ xposed)
 				FLAG=1
 			fi
 		done
-		[ $FLAG -eq 0 ] && echo "Backup Not Found !"
+		if [ $FLAG -eq 1 ]; then
+			for bridge in $LIST_BRIDGE
+			do
+				if [ -f /system/framework/$bridge.bak ]; then
+					mv /system/framework/$bridge.bak /system/framework/$bridge
+				fi
+			done
+		else
+			echo "Backup Not Found !"
+		fi
 	fi
 ;;
 esac

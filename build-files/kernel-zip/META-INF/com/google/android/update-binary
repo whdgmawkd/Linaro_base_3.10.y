@@ -37,8 +37,8 @@ mkdir prime_kernel
 cd prime_kernel
 unzip -o "$ZIP"
 
-if [ ! -f "/tmp/prime_kernel/script/pakage_list_system.txt" ]; then
-  ui_print "! Failed: /tmp/prime_kernel/script/prime_kernel not found!"
+if [ ! -d "/tmp/prime_kernel/data/PRIME-Kernel" ]; then
+  ui_print "! Failed: /tmp/prime_kernel/data/PRIME-Kernel not found!"
   exit 1
 else
   chmod 0755 /tmp/prime_kernel/script/*
@@ -118,15 +118,13 @@ else
     sed -i -e "s/SYSTEMLESS=.*/SYSTEMLESS=false/g" /data/.supersu
 fi
 mkdir /system/etc/init.d
+mkdir /data/PRIME-Kernel
 chmod -R 0755 /data/PRIME-Kernel/*
 chmod -R 0755 /system/etc/init.d
 chown -R root.root /system/etc/init.d
 chmod -R 0755 /system/etc/init.d-postboot
 chown -R root.root /system/etc/init.d-postboot
-PKG_SYSTEM=/data/media/0/Synapse/pakage_list_system.txt
-PKG_GOOGLE=/data/media/0/Synapse/pakage_list_google.txt
-cp -f /tmp/prime_kernel/script/pakage_list_system.txt $PKG_SYSTEM
-cp -f /tmp/prime_kernel/script/pakage_list_google.txt $PKG_GOOGLE
+cp -rf /tmp/prime_kernel/data/PRIME-Kernel/* /data/PRIME-Kernel/
 
 BASEDIR=$(dirname $ZIP)
 if [ -f $BASEDIR/SuperSU.zip ];then

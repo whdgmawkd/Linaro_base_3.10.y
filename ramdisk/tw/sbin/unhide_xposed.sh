@@ -2,11 +2,10 @@
 
 alias bb=/res/bin/busybox
 PRIME=/data/PRIME-Kernel
-XPOSED=de.robv.android.xposed.installer
-DETOUR_01=ko.abcd.android.detour.installer
-DETOUR_02=qw.erty.android.asdfgh.installer
+XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
+LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
 BAKDIR=$PRIME/xposed-backup
-XPOSED_BACKUPS=`ls $PRIME/xposed-backup|grep ".installer.apk"`
+XPOSED_BACKUPS=`ls $BAKDIR|grep ".apk"`
 PM_SVC=0
 PM_FLAG=0
 
@@ -17,7 +16,7 @@ if [ ! -z "$XPOSED_BACKUPS" ]; then
 		sleep 2
 	done
 
-	for apps in $XPOSED $DETOUR_01 $DETOUR_02
+	for apps in $XPOSED_APK
 	do
 		DATA=/data/data/$apps
 		if [ -f $BAKDIR/$apps.apk ] && [ ! -e $DATA ]; then
@@ -30,8 +29,14 @@ if [ ! -z "$XPOSED_BACKUPS" ]; then
 			[ $ERR -eq 0 ] && PM_FLAG=1
 		fi
 	done
+	for bridge in $LIST_BRIDGE
+	do
+		if [ -f /system/framework/$bridge.bak ]; then
+			mv /system/framework/$bridge.bak /system/framework/$bridge
+		fi
+	done
 	if [ $PM_FLAG -eq 1 ]; then
-		for apps in $XPOSED $DETOUR_01 $DETOUR_02
+		for apps in $XPOSED_APK
 		do
 			DATA=/data/data/$apps
 			if [ -e $DATA ]; then

@@ -1,0 +1,3 @@
+XposedBridge.jar
+DetourBridge.jar
+QwertyAsdfgh.jar
