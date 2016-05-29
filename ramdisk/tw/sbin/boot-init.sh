@@ -261,8 +261,6 @@ fi
 /sbin/unhide_xposed.sh
 
 source /sbin/synapse_loader.sh
-/sbin/uci reset
-/sbin/uci
 
 echo init.d script start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log

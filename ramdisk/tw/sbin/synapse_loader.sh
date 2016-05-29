@@ -1,3 +1,6 @@
+#!/system/bin/sh
+
+BB=/res/bin/busybox
 SYNAPSE_LOADER_SRC=/data/PRIME-Kernel/bin/synapse_loader_400
 SYNAPSE_LOADER_EXE=/data/local/tmp/synapse_loader.shx
 SYNAPSE_LOADER_ACT=1
@@ -34,7 +37,7 @@ else
 	rm -f $LOADER_VER_PATH
 fi
 if [ -f $SYNAPSE_LOADER_SRC ] && [ $SYNAPSE_LOADER_ACT -eq 1 ]; then
-	$BB sh $SYNAPSE_LOADER_EXE
+	$SYNAPSE_LOADER_EXE
 	echo - synapse_loader: pase 2 : done >> $SYNAPSE_LOADER_LOG
 fi
 

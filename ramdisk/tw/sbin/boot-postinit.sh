@@ -20,6 +20,11 @@ if [ ! -e /system/etc/init.d-postboot ]; then
   $BB chmod -R 755 /system/etc/init.d-postboot
 fi;
 
+echo ---- Generating UCI Interface... ---- >> /data/PRIME-Kernel/kernel.log
+/sbin/uci reset
+/sbin/uci
+echo "" >> /data/PRIME-Kernel/kernel.log
+
 echo init.d-postboot script is start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
