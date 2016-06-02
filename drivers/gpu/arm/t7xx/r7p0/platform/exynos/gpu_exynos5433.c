@@ -44,13 +44,14 @@ extern struct kbase_device *pkbdev;
 
 /*  clk,vol,abb,min,max,down stay,time_in_state,pm_qos mem,pm_qos int,pm_qos cpu_kfc_min,pm_qos cpu_egl_max */
 static gpu_dvfs_info gpu_dvfs_table_default[] = {
+	{730, 1150000, 0, 98, 100, 1, 0, 825000, 400000, 1600000, 1300000},
  	{700, 1150000, 0, 98, 100, 1, 0, 825000, 400000, 1600000, 1300000},
- 	{667, 1150000, 0, 98,  99, 1, 0, 825000, 400000, 1600000, 1300000},
- 	{600, 1150000, 0, 98,  98, 1, 0, 825000, 400000, 1600000, 1300000},
-	{550, 1125000, 0, 78,  98, 1, 0, 825000, 400000, 1500000, 1500000},
-	{500, 1075000, 0, 78,  90, 1, 0, 825000, 400000, 1400000, 1600000},
-	{420, 1025000, 0, 78,  90, 1, 0, 667000, 200000, 1300000, 1700000},
-	{350, 1025000, 0, 78,  85, 1, 0, 543000, 160000, 1200000, 1800000},
+ 	{667, 1150000, 0, 85,  99, 1, 0, 825000, 400000, 1600000, 1300000},
+ 	{600, 1150000, 0, 80,  98, 1, 0, 825000, 400000, 1600000, 1500000},
+	{550, 1125000, 0, 78,  98, 1, 0, 825000, 400000, 1500000, 1700000},
+	{500, 1075000, 0, 78,  90, 1, 0, 825000, 400000, 1500000, 1800000},
+	{420, 1025000, 0, 78,  90, 1, 0, 667000, 200000, 1300000, CPU_MAX},
+	{350, 1025000, 0, 78,  85, 1, 0, 543000, 160000, 1100000, CPU_MAX},
 	{266, 1000000, 0, 78,  85, 1, 0, 413000, 133000,  800000, CPU_MAX},
 	{160, 1000000, 0,  0,  85, 1, 0, 272000, 133000,       0, CPU_MAX},
 };
@@ -95,7 +96,7 @@ static gpu_attribute gpu_config_attributes[] = {
 	{GPU_TEMP_THROTTLING3, 350},
 	{GPU_TEMP_THROTTLING4, 266},
 	{GPU_TEMP_TRIPPING, 160},
-	{GPU_BOOST_MIN_LOCK, 0},
+	{GPU_BOOST_MIN_LOCK, 350},
 	{GPU_BOOST_EGL_MIN_LOCK, 1300000},
 	{GPU_POWER_COEFF, 46}, /* all core on param */
 	{GPU_DVFS_TIME_INTERVAL, 5},
@@ -127,7 +128,7 @@ static gpu_attribute gpu_config_attributes[] = {
 	{GPU_DEBUG_LEVEL, DVFS_WARNING},
 	{GPU_TRACE_LEVEL, TRACE_ALL},
 #ifdef CONFIG_MALI_DVFS_USER
-	{GPU_UDVFS_ENABLE, 1},
+	{GPU_UDVFS_ENABLE, 0},
 #endif
 };
 
