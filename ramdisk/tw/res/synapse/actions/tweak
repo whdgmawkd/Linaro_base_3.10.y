@@ -4,7 +4,6 @@ BB=/res/bin/busybox;
 [[ ! -f $BB ]] && BB=/sbin/busybox;
 
 alias sysctl="/sbin/busybox sysctl -w";
-if [ -f /data/PRIME-Kernel/synapse_loader_ver ]; then
 if [ ! -z $1 ]; then
     P=/res/synapse/settings/tweak_$1
     $BB chmod 0777 $P
@@ -123,4 +122,4 @@ if [ ! -z $1 ]; then
     echo $RET_VALUE
 else
 	echo "0";
-fi; fi;
+fi;
