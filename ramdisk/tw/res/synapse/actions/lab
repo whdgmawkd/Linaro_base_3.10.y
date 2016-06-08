@@ -71,11 +71,19 @@ donotclear)
 	echo $(cat $1)
 ;;
 
-xposed)
-	XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
+rootcloak)
+	HIDE_BRIDGE=$(cat $PRIME/synapse/settings/root_hide_bridge)
+	HIDE_BB=$(cat $PRIME/synapse/settings/root_hide_busybox)
+	HIDE_SU=$(cat $PRIME/synapse/settings/root_hide_supersu)
 	LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
 	ARG=$2
 	FLAG=0
+
+	if [ $HIDE_SU -eq 1 ]; then
+		XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt $PRIME/list/list_supersu_apks.txt)
+	else
+		XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
+	fi
 
 	if [ ! -d $PRIME/xposed-backup ];then 
 		mkdir -p $PRIME/xposed-backup;
@@ -86,36 +94,56 @@ xposed)
 		mount -o rw,remount /system
 		for apps in $XPOSED_APK
 		do
+			[ -z "$apps" ] && continue
 			if [ -d /data/data/$apps ]; then
 				DATA=/data/data/$apps
-				APK=`ls /data/app|grep $apps`
+				APK=$(pm list packages -f|grep -e "$apps$")
+				APK=${APK%%=*} && APK=${APK##package:}
+				if [ $(bb expr match "$APK" '/system/app/') -gt 0 ]; then
+					echo "ERROR: $APK is system app!"
+					continue
+				fi
 				bb tar -czf $PRIME/xposed-backup/$apps.data.tar.gz . -C $DATA
-				cp -f /data/app/$APK/base.apk $PRIME/xposed-backup/$apps.apk
+				cp -f $APK $PRIME/xposed-backup/$apps.apk
 				chmod 0774 $PRIME/xposed-backup/$apps.apk
 				pm uninstall $apps >/dev/null 2>&1
 				if [ $FLAG -eq 0 ]; then 
-					echo "Hide: $apps"
+					echo "HIDE: $apps"
 				else
 					echo " & $apps"
 				fi
 				FLAG=1
 			fi
 		done
+
+		if [ $HIDE_BB -eq 1 ] && [ -f /system/xbin/busybox ]; then
+			for i in $(/system/xbin/busybox --list); do
+				is_symlink=`bb readlink /system/xbin/$i`
+				[[ "$is_symlink" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/$i;
+			done
+            rm -f /system/xbin/busybox;
+            echo 1 > $PRIME/synapse/settings/bbins_last
+        fi
+		
 		if [ $FLAG -eq 1 ]; then
+			if [ $HIDE_BRIDGE -eq 1 ]; then
 			for bridge in $LIST_BRIDGE
 			do
+				[ -z "$bridge" ] && continue
 				if [ -f /system/framework/$bridge ]; then
 					mv /system/framework/$bridge /system/framework/$bridge.bak
 				fi
 			done
+			fi
 		else
 			echo "Framework Not Found !"
 		fi
 	fi
-	if [ $ARG == "unhide" ]; then
+	if [ $ARG == "show" ]; then
 		mount -o rw,remount /system
 		for apps in $XPOSED_APK
 		do
+			[ -z "$apps" ] && continue
 			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
 				DATA=/data/data/$apps
 				chmod 0774 $PRIME/xposed-backup/$apps.apk
@@ -126,16 +154,28 @@ xposed)
 				rm -f $PRIME/xposed-backup/$apps.data.tar.gz
 				rm -f $PRIME/xposed-backup/$apps.apk
 				if [ $FLAG -eq 0 ]; then 
-					echo "Un Hide: $apps "
+					echo "SHOW: $apps "
 				else
 					echo " & $apps"
 				fi
 				FLAG=1
 			fi
 		done
+
+		BB_INST=$(cat $PRIME/synapse/settings/bbins_last)
+		BB_TARGET=/system/xbin/busybox
+		if [ $HIDE_BB -eq 1 ] && [ ! -f /system/xbin/busybox ]; then
+			bb cp /res/bin/busybox $BB_TARGET;
+			chmod 0755 $BB_TARGET
+			$BB_TARGET --install -s /system/xbin
+			[[ "$(bb readlink /system/xbin/su)" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/su;
+            echo 1 > $PRIME/synapse/settings/bbins_last
+		fi
+
 		if [ $FLAG -eq 1 ]; then
 			for bridge in $LIST_BRIDGE
 			do
+				[ -z "$bridge" ] && continue
 				if [ -f /system/framework/$bridge.bak ]; then
 					mv /system/framework/$bridge.bak /system/framework/$bridge
 				fi

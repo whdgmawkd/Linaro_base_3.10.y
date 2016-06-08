@@ -96,7 +96,7 @@ donate)
 			bb rm -rf /data/PRIME-Kernel/bin
 			echo "NO_ACCOUNT"
 		else
-	        echo "uid: ${GET_ACCOUNT:0:4}***@gmail.com"
+	        echo "uid: ${GET_ACCOUNT:0:4}***"
 			if [[ "$synapse_version" < "4.1.0" ]]; then
 		    	echo "@n애드온의 업데이트가 필요합니다."
    			fi

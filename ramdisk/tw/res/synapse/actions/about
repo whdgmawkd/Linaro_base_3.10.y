@@ -22,11 +22,16 @@ new_version)
   if [ -z "$GET_LATEST" ]; then
     echo "서버 접속 문제로 버전확인 불가"
   else
-    if [[ "$GET_NEWBUILD" != $GET_LATEST ]]; then 
-    	echo "$GET_NEWBUILD 버전이 대기 상태입니다.@n"
-    	echo "다운로드 가능한 최신 버전은 $GET_LATEST 입니다."
-    elif [[ "$GET_LATEST" != $U ]]; then echo "$GET_LATEST 버전을 다운로드 가능합니다."
-    else echo "최신버전입니다."; fi
+    if [[ "$GET_NEWBUILD" == $U ]]; then
+		echo "최신버전입니다."
+    elif [[ "$GET_NEWBUILD" != $GET_LATEST ]]; then 
+		echo "$GET_NEWBUILD 버전이 대기 상태입니다.@n"
+		echo "다운로드 가능한 최신 버전은 $GET_LATEST 입니다."
+    elif [[ "$GET_LATEST" != $U ]]; then
+		echo "$GET_LATEST 버전을 다운로드 가능합니다."
+    else
+		echo "최신버전입니다."
+    fi
   fi
   ;;
 download)

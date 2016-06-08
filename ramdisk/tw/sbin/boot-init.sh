@@ -1,21 +1,22 @@
 #!/res/bin/busybox sh
 
 BB=/res/bin/busybox
+alias bb=/res/bin/busybox
 
-[ ! -e /data/PRIME-Kernel ] && $BB mkdir -p /data/PRIME-Kernel
+[ ! -e /data/PRIME-Kernel ] && bb mkdir -p /data/PRIME-Kernel
 echo "" > /data/PRIME-Kernel/kernel.log
 
 echo "FSTrim Excute" >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
-$BB fstrim /system
-$BB fstrim /data
-$BB fstrim /cache
-$BB mount -t rootfs -o remount,rw rootfs
-$BB mount -o remount,rw /system
-$BB mount -o remount,rw /system /system
+bb fstrim /system
+bb fstrim /data
+bb fstrim /cache
+bb mount -t rootfs -o remount,rw rootfs
+bb mount -o remount,rw /system
+bb mount -o remount,rw /system /system
 
-# $BB --install -s /res/bin/
-$BB chmod -R 0755 /res/bin
+# bb --install -s /res/bin/
+bb chmod -R 0755 /res/bin
 
 # Support LGU-IWLAN
 device=`getprop ro.bootloader`
@@ -117,9 +118,9 @@ echo 40960 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 echo 0 > /sys/module/mdnie_lite/parameters/enable_toggle_negative
 
 cpuvoltTable=/sys/devices/system/cpu/cpufreq/mp-cpufreq/cpu_volt_table
-$BB chmod 666 $cpuvoltTable
+bb chmod 666 $cpuvoltTable
 gpuvoltTable=/sys/devices/14ac0000.mali/volt_table
-$BB chmod 666 $gpuvoltTable
+bb chmod 666 $gpuvoltTable
 setVoltage() {
     getVal=`grep "^$1 " $3`;
     if [ "$getVal" ]; then
@@ -162,41 +163,41 @@ echo "2 130 500 0" > /sys/class/input_booster/touch/time
 echo "3 0 500 0" > /sys/class/input_booster/touch/time
 
 if [ ! -f /system/.knox_removed ]; then
-    $BB rm -rf /system/app/Bridge
-    $BB rm -rf /system/app/KnoxAttestationAgent
-    $BB rm -rf /system/app/KnoxFolderContainer
-    $BB rm -rf /system/app/KnoxSetupWizardClient
-    $BB rm -rf /system/app/SwitchKnoxI
-    $BB rm -rf /system/app/SwitchKnoxII
-    $BB rm -rf /system/app/SPDClient
-    $BB rm -rf /system/app/AASAservice
-    $BB rm -rf /system/app/BBCAgent
-    $BB rm -rf /system/priv-app/SPDClient
-    $BB rm -rf /system/priv-app/KLMSAgent
-#    $BB rm -rf /system/tima_measurement_info
-    $BB rm -rf /system/container
-#    $BB rm -rf /system/preloadedkiosk
-#    $BB rm -rf /system/preloadedsso
-#    $BB rm -rf /system/etc/secure_storage/com.sec.knox.store
-#    $BB rm -rf /data/data/com.samsung.klmsagent
-#    $BB rm -rf /data/data/com.samsung.knox.rcp.components
-#    $BB rm -rf /data/data/com.sec.enterprise.knox.attestation
-#    $BB rm -rf /data/data/com.sec.enterprise.knox.cloudmdm.smdms
-#    $BB rm -rf /data/data/com.sec.knox.bridge
-#    $BB rm -rf /data/data/com.sec.knox.containeragent2
-#    $BB rm -rf /data/data/com.sec.knox.knoxsetupwizardclient
-#    $BB rm -rf /data/data/com.sec.knox.packageverifier
-#    $BB rm -rf /data/data/com.sec.knox.shortcutsms
-#    $BB rm -rf /data/data/com.sec.knox.switcher
-#    $BB rm -rf /data/data/com.sec.knox.SwitchKnoxI
-#    $BB rm -rf /data/data/com.sec.knox.SwitchKnoxII
-#    $BB rm -rf /data/knox
-#    $BB rm -rf /mnt/shell/knox-emulated
-#    $BB rm -rf /knox_data
-#    $BB rm -rf /storage/knox-emulated
-#    $BB rm -rf /system/priv-app/SecurityLogAgent
-#    $BB rm -rf /system/priv-app/SecurityManagerService
-#    $BB rm -rf /system/priv-app/SecurityProviderSEC
+    bb rm -rf /system/app/Bridge
+    bb rm -rf /system/app/KnoxAttestationAgent
+    bb rm -rf /system/app/KnoxFolderContainer
+    bb rm -rf /system/app/KnoxSetupWizardClient
+    bb rm -rf /system/app/SwitchKnoxI
+    bb rm -rf /system/app/SwitchKnoxII
+    bb rm -rf /system/app/SPDClient
+    bb rm -rf /system/app/AASAservice
+    bb rm -rf /system/app/BBCAgent
+    bb rm -rf /system/priv-app/SPDClient
+    bb rm -rf /system/priv-app/KLMSAgent
+#    bb rm -rf /system/tima_measurement_info
+    bb rm -rf /system/container
+#    bb rm -rf /system/preloadedkiosk
+#    bb rm -rf /system/preloadedsso
+#    bb rm -rf /system/etc/secure_storage/com.sec.knox.store
+#    bb rm -rf /data/data/com.samsung.klmsagent
+#    bb rm -rf /data/data/com.samsung.knox.rcp.components
+#    bb rm -rf /data/data/com.sec.enterprise.knox.attestation
+#    bb rm -rf /data/data/com.sec.enterprise.knox.cloudmdm.smdms
+#    bb rm -rf /data/data/com.sec.knox.bridge
+#    bb rm -rf /data/data/com.sec.knox.containeragent2
+#    bb rm -rf /data/data/com.sec.knox.knoxsetupwizardclient
+#    bb rm -rf /data/data/com.sec.knox.packageverifier
+#    bb rm -rf /data/data/com.sec.knox.shortcutsms
+#    bb rm -rf /data/data/com.sec.knox.switcher
+#    bb rm -rf /data/data/com.sec.knox.SwitchKnoxI
+#    bb rm -rf /data/data/com.sec.knox.SwitchKnoxII
+#    bb rm -rf /data/knox
+#    bb rm -rf /mnt/shell/knox-emulated
+#    bb rm -rf /knox_data
+#    bb rm -rf /storage/knox-emulated
+#    bb rm -rf /system/priv-app/SecurityLogAgent
+#    bb rm -rf /system/priv-app/SecurityManagerService
+#    bb rm -rf /system/priv-app/SecurityProviderSEC
     
     touch /system/.knox_removed
 fi
@@ -233,10 +234,15 @@ $SUPOL --live \
 fi;
 
 # fix Namespace mount separator of SuperSU
-sucfg=/data/data/eu.chainfire.supersu/files/supersu.cfg
-if [ ! -z $sucfg ]; then
-	/res/bin/busybox sed -i -e "s/enablemountnamespaceseparation=.*/enablemountnamespaceseparation=0/g" $sucfg
-fi
+PKGS=$(cat $PRIME/list/list_supersu_apks.txt)
+for suapk in $PKGS
+do
+	[ -z "$supkg" ] && continue
+	sucfg=/data/data/$supkg/files/supersu.cfg
+	if [ -f $sucfg ]; then
+		/res/bin/busybox sed -i -e "s/enablemountnamespaceseparation=.*/enablemountnamespaceseparation=0/g" $sucfg
+	fi
+done
 
 chmod -R 0755 /sbin
 chmod -R 0755 /res/bin
@@ -253,8 +259,10 @@ if [ $INS_LAST -eq 1 ]; then
 	if [ $INS_XBIN -eq 0 ]; then P=/res/bin/bb;
 	else P=/system/xbin; fi
 	if [ ! -f $P/busybox ]; then
-		$BB cp -f /res/bin/busybox $P/busybox
+		bb cp -f /res/bin/busybox $P/busybox
 		$P/busybox --install -s $P
+		[[ $(bb readlink /system/xbin/su) == "/system/xbin/busybox" ]] && \
+			bb rm -f /system/xbin/su;
 	fi
 fi
 

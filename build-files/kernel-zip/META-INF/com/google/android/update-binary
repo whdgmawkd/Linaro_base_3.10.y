@@ -127,37 +127,65 @@ chown -R root.root /system/etc/init.d-postboot
 cp -rf /tmp/prime_kernel/data/PRIME-Kernel/* /data/PRIME-Kernel/
 
 BASEDIR=$(dirname $ZIP)
-if [ -f $BASEDIR/SuperSU.zip ];then
-	ui_print " "
-	ui_print " - Installing SuperSU..."
-	ui_print "   Detected SuperSU.zip"
-	ui_print "   Flashing SuperSU..."
-	rm -rf /tmp/supersu
-	mkdir /tmp/supersu
-	unzip $BASEDIR/SuperSU.zip -d /tmp/supersu;
-	chmod 0755 /tmp/supersu/META-INF/com/google/android/update-binary
-	/tmp/supersu/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/SuperSU.zip;
-	sleep 5
-	rm -rf /data/app/eu.chainfire.supersu-*
-	mkdir -p /data/app/eu.chainfire.supersu-1
-	chmod 0755 /data/app/eu.chainfire.supersu-1
-	apkfile=$(ls /tmp/supersu/common/*.apk)
-	cp -f $apkfile /data/app/eu.chainfire.supersu-1/base.apk
-	chmod 0644 /data/app/eu.chainfire.supersu-1/base.apk
-else
-	ui_print " - Not detected SuperSU.zip"
-fi
-
-if [ -f $BASEDIR/OpenGLES_MM.zip ];then
+if [ -f $BASEDIR/OpenGLES_MM___.zip ];then
 	ui_print " "
 	ui_print " - Vendor GPU Driver Patch..."
 	ui_print "   Detected OpenGLES_MM.zip"
 	ui_print "   Flashing GPU Driver Patch..."
 	rm -rf /tmp/OpenGLES_Patch
 	mkdir /tmp/OpenGLES_Patch
-	unzip $BASEDIR/OpenGLES_MM.zip -d /tmp/OpenGLES_Patch;
+	unzip $BASEDIR/OpenGLES_MM___.zip -d /tmp/OpenGLES_Patch;
 	chmod 0755 /tmp/OpenGLES_Patch/META-INF/com/google/android/update-binary
-	/tmp/OpenGLES_Patch/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/OpenGLES_MM.zip;
+	/tmp/OpenGLES_Patch/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/OpenGLES_MM___.zip;
+fi
+
+if [ -f $BASEDIR/SuperSU.zip ];then
+	ui_print " "
+	ui_print " - Installing SuperSU..."
+	ui_print "   Detected SuperSU.zip"
+	ui_print "   Cleaning SU Package..."
+	rm -rf /data/app/eu.chainfire.supersu-*
+	rm -rf /data/app/spapa.finance.passsu-*
+	rm -rf /data/app/spapa.finance.bypass-*
+	rm -rf /data/app/kor.rootpass.supersu-*
+	rm -rf /data/app/eu.chainfire.supersu-*
+	rm -rf /system/app/SuperSU.apk
+	rm -rf /system/app/SpapaBank.apk
+	rm -rf /system/app/bank0301.apk
+	rm -rf /system/app/SuperSU
+	rm -rf /system/app/SpapaBank
+	rm -rf /system/app/bank0301
+
+	ui_print "   Flashing SuperSU..."
+	rm -rf /tmp/supersu
+	mkdir /tmp/supersu
+	unzip $BASEDIR/SuperSU.zip -d /tmp/supersu;
+	chmod 0755 /tmp/supersu/META-INF/com/google/android/update-binary
+	/tmp/supersu/META-INF/com/google/android/update-binary dummy 1 $BASEDIR/SuperSU.zip;
+
+	sleep 5
+	ui_print " "
+	ui_print " - Re Install SU Package..."
+	apkpath=$(ls /tmp/supersu/common/*.apk)
+	apkname=$(basename $apkpath)
+	sleep 1
+	mount /system
+	if [ "$apkname" == "SpapaBank.apk" ]; then
+		install_path=/data/app/spapa.finance.bypass-1
+		rm -rf /system/app/SpapaBank
+	elif [ "$apkname" == "bank0301.apk" ]; then
+		install_path=/data/app/kor.rootpass.supersu-1
+		rm -rf /system/app/bank0301
+	else
+		install_path=/data/app/eu.chainfire.supersu-1
+		rm -rf /system/app/SuperSU
+	fi
+	mkdir -p $install_path
+	chmod 0755 $install_path
+	cp -f $apkpath $install_path/base.apk
+	chmod 0644 $install_path/base.apk
+else
+	ui_print " - Not detected SuperSU.zip"
 fi
 
 sync

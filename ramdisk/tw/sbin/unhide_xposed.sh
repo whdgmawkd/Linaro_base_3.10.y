@@ -2,22 +2,30 @@
 
 alias bb=/res/bin/busybox
 PRIME=/data/PRIME-Kernel
-XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
 LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
+HIDE_BRIDGE=$(cat $PRIME/synapse/settings/root_hide_bridge)
+HIDE_SU=$(cat $PRIME/synapse/settings/root_hide_supersu)
 BAKDIR=$PRIME/xposed-backup
 XPOSED_BACKUPS=`ls $BAKDIR|grep ".apk"`
 PM_SVC=0
 PM_FLAG=0
 
+if [ $HIDE_SU -eq 1 ]; then
+	XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt $PRIME/list/list_supersu_apks.txt)
+else
+	XPOSED_APK=$(cat $PRIME/list/list_xposed_apks.txt)
+fi
+
 if [ ! -z "$XPOSED_BACKUPS" ]; then
 	while [ $PM_SVC -eq 0 ]
 	do
 		PM_SVC=`service list|bb grep -c 'package:'`
-		sleep 2
+		sleep 1
 	done
 
 	for apps in $XPOSED_APK
 	do
+		[ -z "$apps" ] && continue
 		DATA=/data/data/$apps
 		if [ -f $BAKDIR/$apps.apk ] && [ ! -e $DATA ]; then
 			echo "Restore Xposed Framework" >> /data/PRIME-Kernel/kernel.log
@@ -31,6 +39,7 @@ if [ ! -z "$XPOSED_BACKUPS" ]; then
 	done
 	for bridge in $LIST_BRIDGE
 	do
+		[ -z "$bridge" ] && continue
 		if [ -f /system/framework/$bridge.bak ]; then
 			mv /system/framework/$bridge.bak /system/framework/$bridge
 		fi
@@ -38,6 +47,7 @@ if [ ! -z "$XPOSED_BACKUPS" ]; then
 	if [ $PM_FLAG -eq 1 ]; then
 		for apps in $XPOSED_APK
 		do
+			[ -z "$apps" ] && continue
 			DATA=/data/data/$apps
 			if [ -e $DATA ]; then
 				OWN=`bb stat -c %u.%g $DATA`
