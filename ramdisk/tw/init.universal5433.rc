@@ -96,7 +96,7 @@ on boot
     mkdir /efs/FactoryApp 0775 system system
 
     # SSWAP
-    write /proc/sys/vm/swappiness 190
+    write /proc/sys/vm/swappiness 150
 
     # For kernel lock in BT/WiFi race condtion
     chmod 0600 /dev/btlock
