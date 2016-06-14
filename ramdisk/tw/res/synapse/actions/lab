@@ -72,10 +72,12 @@ donotclear)
 ;;
 
 rootcloak)
+	HIDE_XPOSED=$(cat $PRIME/synapse/settings/root_hide_xposed)
 	HIDE_BRIDGE=$(cat $PRIME/synapse/settings/root_hide_bridge)
 	HIDE_BB=$(cat $PRIME/synapse/settings/root_hide_busybox)
 	HIDE_SU=$(cat $PRIME/synapse/settings/root_hide_supersu)
 	LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
+	LIST_SU_BIN=$(cat $PRIME/list/list_supersu_bins.txt)
 	ARG=$2
 	FLAG=0
 
@@ -92,6 +94,8 @@ rootcloak)
 
 	if [ $ARG == "hide" ]; then
 		mount -o rw,remount /system
+		
+		if [ $HIDE_XPOSED -eq 1 ]; then
 		for apps in $XPOSED_APK
 		do
 			[ -z "$apps" ] && continue
@@ -115,6 +119,20 @@ rootcloak)
 				FLAG=1
 			fi
 		done
+		fi
+
+		if [ $HIDE_SU -eq 1 ]; then
+			for BINS in $LIST_SU_BIN
+			do
+				[ -z "$BINS" ] && continue
+				if [ -f $BINS ]; then
+					BASENAME=$(bb basename $BINS)
+					DIRNAME=$(bb dirname $BINS)
+					FULLPATH_BIN="$DIRNAME/primebackup_$BASENAME"
+					bb mv $BINS $FULLPATH_BIN
+				fi
+			done
+		fi
 
 		if [ $HIDE_BB -eq 1 ] && [ -f /system/xbin/busybox ]; then
 			for i in $(/system/xbin/busybox --list); do
@@ -162,6 +180,19 @@ rootcloak)
 			fi
 		done
 
+		if [ $HIDE_SU -eq 1 ]; then
+			for BINS in $LIST_SU_BIN
+			do
+				[ -z "$BINS" ] && continue
+				BASENAME=$(bb basename $BINS)
+				DIRNAME=$(bb dirname $BINS)
+				FULLPATH_BIN="$DIRNAME/primebackup_$BASENAME"
+				if [ -f $FULLPATH_BIN ]; then
+					bb mv $FULLPATH_BIN $BINS
+				fi
+			done
+		fi
+
 		BB_INST=$(cat $PRIME/synapse/settings/bbins_last)
 		BB_TARGET=/system/xbin/busybox
 		if [ $HIDE_BB -eq 1 ] && [ ! -f /system/xbin/busybox ]; then
@@ -177,7 +208,7 @@ rootcloak)
 			do
 				[ -z "$bridge" ] && continue
 				if [ -f /system/framework/$bridge.bak ]; then
-					mv /system/framework/$bridge.bak /system/framework/$bridge
+					bb mv /system/framework/$bridge.bak /system/framework/$bridge
 				fi
 			done
 		else

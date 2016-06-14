@@ -57,6 +57,7 @@ initial_prof /res/synapse/settings/xpad 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_xbin 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_last 0
 initial_prof /data/PRIME-Kernel/synapse/settings/loader_unroot 1
+initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_xposed 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_bridge 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_busybox 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_supersu 0

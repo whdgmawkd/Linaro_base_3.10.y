@@ -76,6 +76,12 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 
 	{ SCheckBox:{
+        label:"Xposed Framework 를 포함합니다.",
+        description:"일부 루팅감지 앱에서 확인합니다.\n",
+		default:`cat /data/PRIME-Kernel/synapse/settings/root_hide_xposed`,
+		action:"hmp /data/PRIME-Kernel/synapse/settings/root_hide_xposed"
+	}},
+	{ SCheckBox:{
         label:"Xposed Bridge 를 포함합니다.",
         description:"일부 루팅감지 앱에서 이 파일을 확인합니다.\n",
 		default:`cat /data/PRIME-Kernel/synapse/settings/root_hide_bridge`,

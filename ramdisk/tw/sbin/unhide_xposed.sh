@@ -5,6 +5,7 @@ PRIME=/data/PRIME-Kernel
 LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
 HIDE_BRIDGE=$(cat $PRIME/synapse/settings/root_hide_bridge)
 HIDE_SU=$(cat $PRIME/synapse/settings/root_hide_supersu)
+LIST_SU_BIN=$(cat $PRIME/list/list_supersu_bins.txt)
 BAKDIR=$PRIME/xposed-backup
 XPOSED_BACKUPS=`ls $BAKDIR|grep ".apk"`
 PM_SVC=0
@@ -37,11 +38,23 @@ if [ ! -z "$XPOSED_BACKUPS" ]; then
 			[ $ERR -eq 0 ] && PM_FLAG=1
 		fi
 	done
+
+	for BINS in $LIST_SU_BIN
+	do
+		[ -z "$BINS" ] && continue
+		BASENAME=$(bb basename $BINS)
+		DIRNAME=$(bb dirname $BINS)
+		FULLPATH_BIN="$DIRNAME/primebackup_$BASENAME"
+		if [ -f $FULLPATH_BIN ]; then
+			bb mv $FULLPATH_BIN $BINS
+		fi
+	done
+
 	for bridge in $LIST_BRIDGE
 	do
 		[ -z "$bridge" ] && continue
 		if [ -f /system/framework/$bridge.bak ]; then
-			mv /system/framework/$bridge.bak /system/framework/$bridge
+			bb mv /system/framework/$bridge.bak /system/framework/$bridge
 		fi
 	done
 	if [ $PM_FLAG -eq 1 ]; then
