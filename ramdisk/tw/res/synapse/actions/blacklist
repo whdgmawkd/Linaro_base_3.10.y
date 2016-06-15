@@ -27,13 +27,13 @@ if [ $CHECK_BLACKLIST -eq 1 ]; then
 	if [ ! -z "$naver" ]; then
 	  for v in ${naver[@]}; do
 		GET_ACCOUNT=$($CURL -L "http://enfree.com/prime/?page=blacklist&uid=$v@naver.com" 2> /dev/null)
-		[ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
+		[ $GET_ACCOUNT ] && [ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
 	  done
 	fi
 	if [ ! -z "$google" ]; then
 	  for v in ${google[@]}; do
 		GET_ACCOUNT=$($CURL -L "http://enfree.com/prime/?page=blacklist&uid=$v" 2> /dev/null)
-		[ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
+		[ $GET_ACCOUNT ] && [ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
 	  done
 	fi
 fi
