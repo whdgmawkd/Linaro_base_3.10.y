@@ -1,13 +1,259 @@
-#!/res/bin/busybox sh
-BB=/res/bin/busybox;
-INC=/data/PRIME-Kernel/bin/func.inc
+#!/system/bin/sh
 
-if [ -e $INC ]; then
-    source $INC
-else
-  case $1 in
-    donotclear)
-		echo 0
-    ;;
-  esac
-fi
+BB=/res/bin/busybox;
+alias bb=/res/bin/busybox;
+
+function pskill() {
+	pids=$(ps $1 | awk '{print  $  2 }' | grep -E '[0-9]')
+	if [ ! -z "$pids" ]; then
+		for i in $pids
+		do
+			kill $i 2>/dev/null
+		done
+	fi
+}
+
+case $1 in
+donotclear)
+	P=/res/synapse/settings/synapse_do_not_clear
+	if [ ! -f $P ]; then
+		echo 0 > $P
+	fi
+	if [ ! -z $2 ]; then
+		if [ $2 -eq 1 ]; then
+			touch /sdcard/Synapse/.do_not_remove_data
+			echo 1 > $P
+			echo 1
+		else
+			rm /sdcard/Synapse/.do_not_remove_data > /dev/null 2>&1
+			echo 0 > $P
+			echo 0
+		fi
+	else
+		echo $(cat $P)
+	fi
+;;
+
+rootcloak)
+	HIDE_XPOSED=$(cat $PRIME/synapse/settings/root_hide_xposed)
+	HIDE_BRIDGE=$(cat $PRIME/synapse/settings/root_hide_bridge)
+	HIDE_BB=$(cat $PRIME/synapse/settings/root_hide_busybox)
+	HIDE_SU=$(cat $PRIME/synapse/settings/root_hide_supersu)
+	LIST_BRIDGE=$(cat $PRIME/list/list_xposed_bridge.txt)
+	LIST_SU_BIN=$(cat $PRIME/list/list_supersu_bins.txt)
+	ARG=$2
+	FLAG=0
+
+	if [ $HIDE_XPOSED -eq 1 ]; then
+		XPOSED_APK1=$(cat $PRIME/list/list_xposed_apks.txt)
+	fi
+	if [ $HIDE_SU -eq 1 ]; then
+		XPOSED_APK2=$(cat $PRIME/list/list_supersu_apks.txt)
+	fi
+	XPOSED_APK=$XPOSED_APK1$XPOSED_APK2
+
+	if [ ! -d $PRIME/xposed-backup ];then 
+		mkdir -p $PRIME/xposed-backup;
+	fi
+	chmod 0775 $PRIME/xposed-backup
+
+	if [ $ARG == "hide" ]; then
+		mount -o rw,remount /system
+		
+		if [ ! -z "$XPOSED_APK" ]; then
+		for apps in $XPOSED_APK
+		do
+			[ -z "$apps" ] && continue
+			if [ -d /data/data/$apps ]; then
+				DATA=/data/data/$apps
+				APK=$(pm list packages -f|grep -e "$apps$")
+				APK=${APK%%=*} && APK=${APK##package:}
+				if [ $(bb expr match "$APK" '/system/app/') -gt 0 ]; then
+					echo "ERROR: $APK is system app!"
+					continue
+				fi
+				bb tar -czf $PRIME/xposed-backup/$apps.data.tar.gz . -C $DATA
+				cp -f $APK $PRIME/xposed-backup/$apps.apk
+				chmod 0774 $PRIME/xposed-backup/$apps.apk
+				pm uninstall $apps >/dev/null 2>&1
+				if [ $FLAG -eq 0 ]; then 
+					echo "HIDE: $apps"
+				else
+					echo " & $apps"
+				fi
+				FLAG=1
+			fi
+		done
+		fi
+
+		if [ $HIDE_SU -eq 1 ]; then
+			susymlink=$(bb readlink /system/bin/app_process)
+			for BINS in $LIST_SU_BIN
+			do
+				[ -z "$BINS" ] && continue
+				if [ -f $BINS ]; then
+					BASENAME=$(bb basename $BINS)
+					DIRNAME=$(bb dirname $BINS)
+					FULLPATH_BIN="$DIRNAME/primebackup_$BASENAME"
+					[ -f $BINS ] && [ $BINS != $susymlink ] && [ $BASENAME != "su" ] && pskill $BASENAME
+					bb mv $BINS $FULLPATH_BIN
+				fi
+				SUFLAG=1
+			done
+			if [ $SUFLAG -eq 1 ]; then
+				bb cp -Prf /system/bin/app_process $PRIME/xposed-backup/app_process
+				bb cp -Prf /system/bin/app_process32 $PRIME/xposed-backup/app_process32
+				bb ln -sf /system/bin/app_process_original /system/bin/app_process
+				bb ln -sf /system/bin/app_process_original /system/bin/app_process32
+			fi
+
+			if [ $FLAG -eq 0 ]; then 
+				echo "HIDE: SU Binarys"
+			else
+				echo " & SU Binarys"
+			fi
+			FLAG=1
+		fi
+
+		if [ $HIDE_BB -eq 1 ] && [ -f /system/xbin/busybox ]; then
+			for i in $(/system/xbin/busybox --list); do
+				is_symlink=`bb readlink /system/xbin/$i`
+				[[ "$is_symlink" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/$i;
+			done
+            rm -f /system/xbin/busybox;
+            echo 1 > $PRIME/synapse/settings/bbins_last
+
+			if [ $FLAG -eq 0 ]; then 
+				echo "BusyBox"
+			else
+				echo " & BusyBox"
+			fi
+			FLAG=1
+        fi
+		
+		if [ $FLAG -eq 1 ]; then
+			if [ $HIDE_BRIDGE -eq 1 ]; then
+			for bridge in $LIST_BRIDGE
+			do
+				[ -z "$bridge" ] && continue
+				if [ -f /system/framework/$bridge ]; then
+					mv /system/framework/$bridge /system/framework/$bridge.bak
+				fi
+			done
+			fi
+
+			if [ $FLAG -eq 0 ]; then 
+				echo "Xposed Bridge"
+			else
+				echo " & Xposed Bridge"
+			fi
+			FLAG=1
+		fi
+		if [ $FLAG -eq 0 ]; then
+			echo "Target Not Found !"
+		fi
+	fi
+
+	if [ $ARG == "show" ]; then
+		mount -o rw,remount /system
+
+		if [ $HIDE_SU -eq 1 ]; then
+			for BINS in $LIST_SU_BIN
+			do
+				[ -z "$BINS" ] && continue
+				BASENAME=$(bb basename $BINS)
+				DIRNAME=$(bb dirname $BINS)
+				FULLPATH_BIN="$DIRNAME/primebackup_$BASENAME"
+				if [ -f $FULLPATH_BIN ]; then
+					bb mv $FULLPATH_BIN $BINS
+				fi
+				SUFLAG=1
+			done
+			if [ $SUFLAG -eq 1 ]; then
+				bb cp -Prf $PRIME/xposed-backup/app_process /system/bin/app_process
+				bb cp -Prf $PRIME/xposed-backup/app_process32 /system/bin/app_process32
+				rm -f $PRIME/xposed-backup/app_process
+				rm -f $PRIME/xposed-backup/app_process32
+			fi
+		fi
+
+		for apps in $XPOSED_APK
+		do
+			[ -z "$apps" ] && continue
+			if [ -f $PRIME/xposed-backup/$apps.apk ]; then
+				DATA=/data/data/$apps
+				chmod 0774 $PRIME/xposed-backup/$apps.apk
+				pm install $PRIME/xposed-backup/$apps.apk >/dev/null 2>&1
+				ERR=$?
+				if [ $ERR -ne 0 ]; then
+					echo "ERROR: data not found! in $apps"
+					continue
+				fi
+				OWN=`bb stat -c %u.%g $DATA`
+				bb tar -xzf $PRIME/xposed-backup/$apps.data.tar.gz -C $DATA
+				bb chown -R $OWN $DATA
+				rm -f $PRIME/xposed-backup/$apps.data.tar.gz
+				rm -f $PRIME/xposed-backup/$apps.apk
+				if [ $FLAG -eq 0 ]; then 
+					echo "SHOW: $apps "
+				else
+					echo " & $apps"
+				fi
+				FLAG=1
+			fi
+		done
+
+		BB_INST=$(cat $PRIME/synapse/settings/bbins_last)
+		BB_TARGET=/system/xbin/busybox
+		if [ $HIDE_BB -eq 1 ] && [ ! -f /system/xbin/busybox ]; then
+			bb cp /res/bin/busybox $BB_TARGET;
+			chmod 0755 $BB_TARGET
+			$BB_TARGET --install -s /system/xbin
+			[[ "$(bb readlink /system/xbin/su)" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/su;
+            echo 1 > $PRIME/synapse/settings/bbins_last
+
+			if [ $FLAG -eq 0 ]; then 
+				echo "BusyBox"
+			else
+				echo " & BusyBox"
+			fi
+			FLAG=1
+		fi
+
+		if [ $FLAG -eq 1 ]; then
+			for bridge in $LIST_BRIDGE
+			do
+				[ -z "$bridge" ] && continue
+				if [ -f /system/framework/$bridge.bak ]; then
+					bb mv /system/framework/$bridge.bak /system/framework/$bridge
+				fi
+			done
+
+			if [ $FLAG -eq 0 ]; then 
+				echo "Xposed Bridge"
+			else
+				echo " & Xposed Bridge"
+			fi
+			FLAG=1
+		fi
+		if [ $FLAG -eq 0 ]; then
+			echo "Backup Not Found !"
+		fi
+	fi
+;;
+
+sukill)
+	app_proc=$PRIME/xposed-backup/app_process
+	if [ ! -e $app_proc ]; then
+		app_proc=/system/bin/app_process
+	fi
+	if [ -s $app_proc ]; then
+		symlink=$(bb readlink $app_proc)
+		subin=$(bb basename $symlink)
+	fi	
+	echo "Success Kill!"
+	pskill su
+	[ "$subin" ] && pskill $subin
+;;
+
+esac
