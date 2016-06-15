@@ -1,7 +1,6 @@
 #!/system/bin/sh
 
 BB=/res/bin/busybox;
-[[ ! -f $BB ]] && BB=/sbin/busybox;
 
 alias sysctl="/sbin/busybox sysctl -w";
 if [ ! -z $1 ]; then

