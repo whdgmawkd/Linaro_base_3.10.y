@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
 BB=/res/bin/busybox;
-INC=/data/PRIME-Kernel/bin/profile.inc
+INC=/data/PRIME-Kernel/bin/preset.inc
 ACT=/res/synapse/actions
 RESIZE_SCREEN=`wm size | grep "Override size:"`
 GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`

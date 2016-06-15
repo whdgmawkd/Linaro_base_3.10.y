@@ -9,5 +9,11 @@ else
     donotclear)
 		echo 0
     ;;
+    rootcloak)
+	echo "기부하신 후 사용 가능한 기능입니다.";
+    ;;
+    sukill)
+	echo "기부하신 후 사용 가능한 기능입니다.";
+    ;;
   esac
 fi

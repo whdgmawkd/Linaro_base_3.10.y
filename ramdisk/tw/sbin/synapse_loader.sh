@@ -1,7 +1,7 @@
 #!/system/bin/sh
 
 BB=/res/bin/busybox
-SYNAPSE_LOADER_SRC=/data/PRIME-Kernel/bin/synapse_loader_400
+SYNAPSE_LOADER_SRC=/data/PRIME-Kernel/bin/prime_loader2
 SYNAPSE_LOADER_EXE=/data/local/tmp/synapse_loader.shx
 SYNAPSE_LOADER_ACT=1
 SYNAPSE_LOADER_LOG=/sdcard/synapse_loader.log

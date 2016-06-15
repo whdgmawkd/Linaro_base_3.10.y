@@ -28,3 +28,6 @@
 /system/xbin/bank0301
 /system/xbin/yagote
 /system/xbin/yagote_mksh
+/system/etc/init.d/99SuperSUDaemon
+/system/etc/init.d/99SpapaSUDaemon
+/system/etc/init.d/99bank0301SUDaemon

@@ -71,7 +71,7 @@ cat << CTAG
 
  	{ SPane:{
 		title:{en:"Hide Rooting Apps", ko:"루팅관련 앱 숨기기"},
-        description:" Xposed 프레임워크와 루팅에 관련된 앱들을 안전하게 숨깁니다.\n예상치 못한 오류로 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 관련 앱들을 백업해두시기 바랍니다.",
+        description:" Xposed 프레임워크와 루팅에 관련된 앱들을 안전하게 숨깁니다.\n예상치 못한 오류로 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 관련 앱들을 백업해두시기 바랍니다.\n\nTip!\n앱을 숨긴 후 복구(Show)하지 않고 재부팅했을땐 강제 복구후 재부팅 됩니다.",
     }},
 	{ SSpacer:{ height:1 }},
 
@@ -95,7 +95,7 @@ cat << CTAG
 	}},
 	{ SCheckBox:{
         label:"SuperSU 를 포함합니다.",
-        description:"SuperSU에서 임시 언루팅 후 이 기능을 사용하면 루팅 감지에 더 강력하게 대응할 수 있습니다.\n<Tip!> 시냅스는 실행에 루팅 권한이 필요하므로 시냅스를 먼저 실행한 후 홈 버튼 또는 최근앱(멀티 태스킹) 버튼으로 나간 후 SuperSU 에서 임시 언루팅 후 되돌아 오면 루팅 권한이 유지된 채 Synapse를 사용 가능합니다.",
+        description:"SuperSU에서 임시 언루팅 후 이 기능을 사용하면 루팅 감지에 더 강력하게 대응할 수 있습니다.\nTip!\n시냅스는 실행에 루팅 권한이 필요하므로 시냅스를 먼저 실행한 후 홈 버튼 또는 최근앱(멀티 태스킹) 버튼으로 나간 후 SuperSU 에서 임시 언루팅 후 되돌아 오면 루팅 권한이 유지된 채 Synapse를 사용 가능합니다.",
 		default:`cat /data/PRIME-Kernel/synapse/settings/root_hide_supersu`,
 		action:"hmp /data/PRIME-Kernel/synapse/settings/root_hide_supersu"
 	}},
@@ -109,11 +109,21 @@ cat << CTAG
 		label:"Show",
 		action:"lab rootcloak show"
 	}},
+	{ SSpacer:{ height:1 }},
+	{ SPane:{
+		title:{en:"Force Kill SU Process",ko:"SU 프로세스 강제 종료"},
+		description:"램에 상주된 SU 프로세스를 강제 종료하여 추적을 위회합니다.\n\n<주의!>이 기능을 사용하면 기기를 재부팅 하기 전에는 시냅스를 비롯한 모든 루팅앱이 루트 권한을 잃게되어 오류가 발생합니다."
+	}}
+	{ SSpacer:{ height:1 }},
+	{ SButton:{
+		label:"SU 프로세스 강제 종료",
+		action:"lab sukill"
+	}},
 	{ SSpacer:{ height:2 }},
 
  	{ SPane:{
 		title:{en:"Private Mode patch", ko:"프라이빗 모드 패치"},
-        description:" 순정 상태가 아닌 기기에서 프라이빗 모드가 작동하지 않는 문제를 패치합니다.\n이 패치는 180kb의 데이터 다운로드가 발생합니다.\n",
+        description:" 순정 상태가 아닌 기기에서 프라이빗 모드가 작동하지 않는 문제를 패치합니다.\n다른 방법으로 해결되지 않을 경우 마지막 수단으로 사용하길 권합니다.\n\n이 패치는 180kb의 데이터 다운로드가 발생합니다.\n",
     }},
 	{ SButton:{
 		label:"install / remove",
