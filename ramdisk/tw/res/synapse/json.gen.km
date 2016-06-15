@@ -4,20 +4,6 @@ cat << CTAG
 {
     name:{en:"Kernel Modules", ko:"커널모듈"},
     elements:[
-`
-  if [ ! -e /data/PRIME-Kernel/synapse_loader_ver ]; then
-    echo '    { SPane:{
-	    title:"기부하신 후 사용할 수 있는 기능입니다.",
-		description:"기부하신 분들께 제공되는 혜택입니다.\n기부는 간접적인 개발 참여 방법입니다.\n이 커널이 꾸준히 업데이트 되길 원한다면 기부에 동참해보세요.\n",
-    }},
-	{ SButton:{
-		label:"기부로 개발에 동참하기",
-		action:"am start -a android.intent.action.VIEW -d http://enfree.com/stockrider/?page=donate > /dev/null 2>&1 & echo '     웹브라우저를 실행합니다.     '"
-	}},
-	{ SSpacer:{ height:2 }},'
-  fi
-`
-
 	{ SPane:{
 		title:"Kernel Modules",
 		description:{en:"Here you can load some kernel modules that will allow some extra functions.", ko:"커널모듈을 허용해서 새로운 디바이스 드라이버를 추가 할 수 있습니다."}
