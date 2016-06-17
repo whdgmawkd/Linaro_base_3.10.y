@@ -103,11 +103,11 @@ cat << CTAG
 
 	{ SButton:{
 		label:"Hide",
-		action:"lab rootcloak hide"
+		action:"func rootcloak hide"
 	}},
 	{ SButton:{
 		label:"Show",
-		action:"lab rootcloak show"
+		action:"func rootcloak show"
 	}},
 	{ SSpacer:{ height:1 }},
 	{ SPane:{
@@ -117,7 +117,7 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 	{ SButton:{
 		label:"SU 프로세스 강제 종료",
-		action:"lab sukill"
+		action:"func sukill"
 	}},
 	{ SSpacer:{ height:2 }},
 
