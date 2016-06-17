@@ -1,12 +1,12 @@
 BB=/res/bin/busybox;
 CURL=/res/bin/curl
-PSRC=/sys/devices/battery.30
+
 U=$($BB uname -r|$BB awk '{print tolower($0)}')
 U=${U##*-v}
 U=${U##*_v}
 U=${U##*-}
 U=${U##*_}
-URL="http://enfree.com/stockrider"
+URL="http://enfree.com/prime"
 
 GET_LATEST=$($CURL -L $URL/?page=get_latest 2> /dev/null|$BB awk '{print tolower($0)}')
 GET_NEWBUILD=$($CURL -L $URL/?page=get_newbuild 2> /dev/null|$BB awk '{print tolower($0)}')
