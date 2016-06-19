@@ -81,10 +81,12 @@ mv -f bootimg.tar.xz ../kernel-zip/bootimg.tar.xz
 cd ../kernel-zip
 rm $KERNEL_NAME > /dev/null 2>&1
 rm ../../../HostPC/Kernel/out/$KERNEL_NAME > /dev/null 2>&1
+echo $KERNEL_VERSION > version
 7z a -mx9 $KERNEL_NAME *
 zipalign -v 4 $KERNEL_NAME ../../../HostPC/Kernel/out/$KERNEL_NAME
 rm bootimg.tar.xz > /dev/null 2>&1
 rm $KERNEL_NAME > /dev/null 2>&1
+rm version
 cd $CDIR
 rm $TMPDIR/* 2> /dev/null
 echo ""

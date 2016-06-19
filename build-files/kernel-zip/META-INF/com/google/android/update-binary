@@ -17,9 +17,33 @@ sleep 2
 
 ui_print " "
 ui_print " "
-ui_print "=============================="
-ui_print "   PRIME-Kernel for Note4";
-ui_print "=============================="
+ui_print "==================================="
+ui_print "   PRIME-Kernel for Galaxy Note4";
+ui_print "==================================="
+ui_print " "
+
+unzip --help
+ERR=$?
+if [ $ERR -ne 0 ]; then
+  ui_print "  !! error not supported unzip command in currently recovery."
+  ui_print "  !! try again in another recovery"
+  exit 1
+fi
+
+cd /tmp
+rm -rf prime_kernel
+mkdir prime_kernel
+cd prime_kernel
+
+unzip -o "$ZIP"
+
+if [ ! -f "/tmp/prime_kernel/version" ]; then
+  ui_print "! Failed: /tmp/prime_kernel/version not found!"
+  exit 1
+fi
+
+KERNEL_VER=$(cat /tmp/prime_kernel/version)
+ui_print "   VERSION: $KERNEL_VER" && sleep 1
 ui_print " "
 
 ui_print " - Mounting /system and /data"
@@ -31,20 +55,6 @@ mount -o rw,remount /data
 mount -o rw,remount /data /data
 
 ui_print " - Extracting files"
-cd /tmp
-rm -rf prime_kernel
-mkdir prime_kernel
-cd prime_kernel
-unzip -o "$ZIP"
-
-if [ ! -d "/tmp/prime_kernel/data/PRIME-Kernel" ]; then
-  ui_print "! Failed: /tmp/prime_kernel/data/PRIME-Kernel not found!"
-  exit 1
-else
-  chmod 0755 /tmp/prime_kernel/script/*
-fi
-
-
 
 ui_print " - Checking environment"
 bootloader=`getprop ro.bootloader`
@@ -62,23 +72,21 @@ if [ $VARIANT_PASS -eq 0 ]; then
   exit 1
 fi
 
-unzip --help
-ERR=$?
-if [ $ERR -ne 0 ]; then
-  ui_print "  !! error not supported unzip command in currently recovery."
-  ui_print "  !! try again in another recovery"
-  exit 1
-fi
-
-
 ui_print " - Flashing boot image..."
 ui_print "   DEVICE: $variant"
 device_name=`echo $variant|awk '{print tolower($0)}'`
 device=${device_name:0:4}
+
 tar -Jxf ./bootimg.tar.xz $device-boot.img
+if [ ! -f "/tmp/prime_kernel/$device-boot.img" ]; then
+  ui_print "! Failed: $device-boot.img not found!"
+  exit 1
+fi
+
 ui_print "   FILE  : $device-boot.img"
 TARGET_BLOCK=`readlink /dev/block/platform/*/by-name/BOOT`
 [ -z $TARGET_BLOCK ] && TARGET_BLOCK="/dev/block/mmcblk0p9"
+
 dd of=$TARGET_BLOCK if=/tmp/prime_kernel/$device-boot.img
 rm bootimg.tar.xz $device-boot.img
 sync
