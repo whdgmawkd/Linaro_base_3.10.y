@@ -94,6 +94,10 @@ struct cpufreq_cpuinfo {
 struct cpufreq_real_policy {
 	unsigned int		min;    /* in kHz */
 	unsigned int		max;    /* in kHz */
+
+	unsigned int		user_min;    /* in kHz, untouched by kernel-space */
+	unsigned int		user_max;    /* in kHz, untouched by kernel-space */
+
 	unsigned int		policy; /* see above */
 	struct cpufreq_governor	*governor; /* see below */
 };
@@ -114,6 +118,9 @@ struct cpufreq_policy {
 	unsigned int		max;    /* in kHz */
 	unsigned int		cur;    /* in kHz, only needed if cpufreq
 					 * governors are used */
+	unsigned int		user_min;    /* in kHz, untouched by kernel-space */
+	unsigned int		user_max;    /* in kHz, untouched by kernel-space */
+
 	unsigned int		policy; /* see above */
 	struct cpufreq_governor	*governor; /* see below */
 	void			*governor_data;
