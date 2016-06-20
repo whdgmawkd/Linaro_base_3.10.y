@@ -61,6 +61,7 @@ initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_xposed 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_bridge 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_busybox 1
 initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_supersu 0
+initial_prof /data/PRIME-Kernel/synapse/settings/root_hide_subin 0
 
 if [ ! -f $CONFIG_JSON ]; then
 	chmod -R 0755 /res/synapse

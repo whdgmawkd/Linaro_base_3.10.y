@@ -7,11 +7,15 @@ alias bb=/res/bin/busybox
 [ ! -e /data/PRIME-Kernel ] && bb mkdir -p /data/PRIME-Kernel
 echo "" > /data/PRIME-Kernel/kernel.log
 
-echo "FSTrim Excute" >> /data/PRIME-Kernel/kernel.log
+echo "FSTrim Start" >> /data/PRIME-Kernel/kernel.log
 echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 bb fstrim /system
 bb fstrim /data
 bb fstrim /cache
+
+echo "FSTrim Complete" >> /data/PRIME-Kernel/kernel.log
+echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
+
 bb mount -t rootfs -o remount,rw rootfs
 bb mount -o rw,remount /system
 bb mount -o rw,remount /system /system
@@ -120,10 +124,6 @@ if [ "$BLACKLIST_FLAG" -eq 1 ]; then
 	sleep 1
 	bb reboot
 fi
-
-# disable knox & securitylogagent
-pm disable com.sec.knox.seandroid
-pm disable com.samsung.android.securitylogagent
 
 # Allow untrusted apps to read from debugfs
 if [ ! -f /data/PRIME-Kernel/.allow_AppPermit ]; then
