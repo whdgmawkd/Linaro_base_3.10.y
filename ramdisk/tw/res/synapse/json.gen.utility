@@ -71,10 +71,8 @@ cat << CTAG
 
  	{ SPane:{
 		title:{en:"Hide Rooting Apps", ko:"루팅관련 앱 숨기기"},
-        description:" Xposed 프레임워크와 루팅에 관련된 앱들을 안전하게 숨깁니다.\n예상치 못한 오류로 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 관련 앱들을 백업해두시기 바랍니다.\n\nTip!\n앱을 숨긴 후 복구(Show)하지 않고 재부팅했을땐 강제 복구후 재부팅 됩니다.",
+        description:" Xposed 프레임워크와 루팅에 관련된 앱들을 안전하게 숨깁니다.\n예상치 못한 오류로 데이터가 유실될 수 있으니 숨기기(Hide) 버튼을 누르기 전에 '티타늄 백업' 등의 앱을 이용해 먼저 안전하게 관련 앱들을 백업해두시기 바랍니다.\n\nTip!\n앱을 숨긴 후 복구(Show)하지 않고 재부팅했을땐 강제 복구후 재부팅 됩니다.\n",
     }},
-	{ SSpacer:{ height:1 }},
-
 	{ SCheckBox:{
         label:"Xposed Framework 를 포함합니다.",
         description:"일부 루팅감지 앱에서 확인합니다.\n",
@@ -94,10 +92,16 @@ cat << CTAG
 		action:"hmp /data/PRIME-Kernel/synapse/settings/root_hide_busybox"
 	}},
 	{ SCheckBox:{
-        label:"SuperSU 를 포함합니다.",
-        description:"SuperSU에서 임시 언루팅 후 이 기능을 사용하면 루팅 감지에 더 강력하게 대응할 수 있습니다.\nTip!\n시냅스는 실행에 루팅 권한이 필요하므로 시냅스를 먼저 실행한 후 홈 버튼 또는 최근앱(멀티 태스킹) 버튼으로 나간 후 SuperSU 에서 임시 언루팅 후 되돌아 오면 루팅 권한이 유지된 채 Synapse를 사용 가능합니다.",
+        label:"SuperSU Apk 를 포함합니다.",
+        description:"SuperSU에서 임시 언루팅 후 이 기능을 사용하면 루팅 감지에 더 강력하게 대응할 수 있습니다.\n<Tip!> 시냅스는 실행에 루팅 권한이 필요하므로 시냅스를 먼저 실행한 후 홈 버튼 또는 최근앱(멀티 태스킹) 버튼으로 나간 후 SuperSU 에서 임시 언루팅 후 되돌아 오면 루팅 권한이 유지된 채 Synapse를 사용 가능합니다.\n",
 		default:`cat /data/PRIME-Kernel/synapse/settings/root_hide_supersu`,
 		action:"hmp /data/PRIME-Kernel/synapse/settings/root_hide_supersu"
+	}},
+	{ SCheckBox:{
+        label:"SuperSU Binary 를 포함합니다. (실험적 기능)",
+        description:"완전한 언루팅과 유사한 상태로 만듭니다.\n<주의!!> 이 항목을 숨긴 후 복구하지 않은 채 재부팅하면 부팅되지 않습니다. 그런 상황에 빠졌을 경우 TWRP에서 SuperSU를 다시 플래싱 하시면 부팅됩니다.",
+		default:`cat /data/PRIME-Kernel/synapse/settings/root_hide_subin`,
+		action:"hmp /data/PRIME-Kernel/synapse/settings/root_hide_subin"
 	}},
 	{ SSpacer:{ height:1 }},
 
@@ -112,7 +116,7 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 	{ SPane:{
 		title:{en:"Force Kill SU Process",ko:"SU 프로세스 강제 종료"},
-		description:"램에 상주된 SU 프로세스를 강제 종료하여 추적을 위회합니다.\n\n<주의!>이 기능을 사용하면 기기를 재부팅 하기 전에는 시냅스를 비롯한 모든 루팅앱이 루트 권한을 잃게되어 오류가 발생합니다."
+		description:"램에 상주된 SU 프로세스를 강제 종료하여 추적을 위회합니다.\n\n<주의!>이 기능을 사용하면 기기를 재부팅 하기 전에는 시냅스를 비롯한 모든 루팅앱이 루트 권한을 잃게되어 오류가 발생하고 숨겼던 루팅 앱도 복원할 수 없습니다."
 	}}
 	{ SSpacer:{ height:1 }},
 	{ SButton:{
@@ -133,13 +137,6 @@ cat << CTAG
 	
  	{ SPane:{
 		title:"Busybox Install/Remove",
-        description:" Busybox는 루팅 권한을 요구하는 대부분의 앱에서 필요로 하지만 최근의 금융앱과 일부 게임에서는 루팅 검사 때 Busybox 설치 유무도 확인하고 있습니다.\n",
-    }},
-	{ SCheckBox:{
-        label:"Busybox를 /system/xbin 경로에 설치합니다.",
-        description:"해제시 /res/bin/bb 경로에 설치하지만 시스템에서 지원하지 않을 경우 /system/xbin에 설치됩니다.\n* xbin에 설치하면 루팅 상태로 감지될 확률이 높아집니다.\n\n",
-		default:0,
-		action:"hmp /data/PRIME-Kernel/synapse/settings/bbins_xbin"
 	}},
 	{ SButton:{
 		label:"Busybox Install",
