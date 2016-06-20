@@ -35,7 +35,6 @@ rm -rf prime_kernel
 mkdir prime_kernel
 cd prime_kernel
 
-ui_print " - Extracting files"
 unzip -o "$ZIP"
 
 if [ ! -f "/tmp/prime_kernel/version" ]; then

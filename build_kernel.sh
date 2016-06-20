@@ -65,9 +65,9 @@ echo $KERNEL_VERSION > version
 zipalign -v 4 $KERNEL_NAME ../../../HostPC/Kernel/out/$KERNEL_NAME
 rm bootimg.tar.xz
 rm $KERNEL_NAME
+rm version
 cd $CDIR
 rm $TMPDIR/* 2> /dev/null
-rm version
 echo ""
 echo "------------------------   DONE!!   ----------------------------"
 echo ""
