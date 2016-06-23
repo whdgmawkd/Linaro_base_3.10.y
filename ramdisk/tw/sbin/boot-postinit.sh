@@ -33,3 +33,26 @@ for i in $(ls /system/etc/init.d-postboot); do
     sh /system/etc/init.d-postboot/$i
 done
 
+count=0
+while :
+do
+	server_avail=$(/res/bin/curl "http://enfree.com/prime 2>/dev/null")
+	if [ -z "$server_avail" ]; then
+		echo "wait"
+		count=$(bb expr $count + 1)
+		if [ $count -lt 30 ]; then
+			sleepsec=10
+		if [ $count -lt 60 ]; then
+			sleepsec=60
+		elif [ $count -lt 180 ]; then
+			sleepsec=300
+		fi		
+		sleep $sleepsec
+	else
+		echo "run /res/synapse/actions/blacklist"
+		echo "done account check" >> /data/PRIME-Kernel/kernel.log
+		echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
+		break
+	fi
+done
+

