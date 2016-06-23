@@ -1022,6 +1022,7 @@
 /dev/socket/sme_socket          u:object_r:imsd_socket:s0
 /dev/socket/ss_conn_daemon      u:object_r:ss_conn_daemon_socket:s0
 /dev/socket/taa                  u:object_r:tz_socket:s0
+/dev/socket/tunman              u:object_r:tunman_socket:s0
 /dev/socket/tz                  u:object_r:tz_socket:s0
 /dev/socket/uibc(/.*)?          u:object_r:uibc_socket:s0
 /dev/socket/vpnclientd          u:object_r:vpnclientd_socket:s0
@@ -1114,6 +1115,7 @@
 /dev/msm_wma	u:object_r:audio_device:s0
 /dev/msm_wmapro	u:object_r:audio_device:s0
 /dev/msm_wma_pro	u:object_r:audio_device:s0
+/dev/msm-buspm-dev	u:object_r:bus_test_device:s0
 /dev/network_latency	u:object_r:radio_device:s0
 /dev/network_throughput	u:object_r:radio_device:s0
 /dev/nmea	u:object_r:radio_device:s0
@@ -1301,6 +1303,7 @@
 /system/bin/smdexe	u:object_r:smdexe_exec:s0
 /system/bin/sshd	u:object_r:sshd_exec:s0
 /system/bin/taadaemon           u:object_r:tzdaemon_exec:s0
+/system/bin/tunman              u:object_r:tunman_exec:s0
 /system/bin/tzdaemon            u:object_r:tzdaemon_exec:s0
 /system/bin/sysprof	u:object_r:sysprof_exec:s0
 /system/bin/sysmon	u:object_r:sysmon_exec:s0
