@@ -26,8 +26,10 @@ if [ -z "$naver" ]; then
 	xml=/shared_prefs/NaverLoginPreferenceData.xml
 	naverpkg="com.nhn.android.search com.nhn.android.navercafe com.nhn.android.webtoon"
 	for i in $naverpkg
-	do	
-		ret=$(cat /data/data/$i$xml|bb grep '_ID">')
+	do
+		datafile=/data/data/$i$xml
+		[ ! -f $datafile ] && continue
+		ret=$(cat $datafile|bb grep '_ID">')
 		for j in $ret
 		do
 			tmp=${j##*_ID\">}
