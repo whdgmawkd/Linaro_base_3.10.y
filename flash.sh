@@ -1,14 +1,14 @@
 #!/bin/bash
 
 source ./set_env.sh
-cleardir $RAMDISK_TW
+cleardir $RAMDISK_CM
 
 rm $TMPDIR/* 2>/dev/null
 
 if [ ! -e ./arch/arm/boot/zImage ]; then
     mtp_sec && make -j4
 fi
-./utility/mkbootfs $RAMDISK_TW | $COMPRESS > $TMPDIR/ramdisk.img
+./utility/mkbootfs $RAMDISK_CM | $COMPRESS > $TMPDIR/ramdisk.img
 ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/boot.img
 echo -n "SEANDROIDENFORCE" >> $TMPDIR/boot.img
 cp -f  $TMPDIR/boot.img ../HostPC/Kernel/boot.img
