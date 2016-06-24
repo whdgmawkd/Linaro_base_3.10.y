@@ -1,0 +1,14 @@
+#!/res/bin/busybox sh
+# original source code: arter97
+
+SWAPSIZE=1800
+alias BB=/res/bin/busybox
+
+if cat /proc/swaps | grep -q vnswap0 ; then
+	echo "vnswap is already enabled!"
+	exit 1
+fi
+echo $(($SWAPSIZE * 1048576)) > /sys/block/vnswap0/disksize
+BB mkswap /dev/block/vnswap0
+BB swapon -p 10 /dev/block/vnswap0
+

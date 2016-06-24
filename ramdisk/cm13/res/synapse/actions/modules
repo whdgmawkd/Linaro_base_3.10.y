@@ -1,0 +1,95 @@
+#!/system/bin/sh
+
+BB=/res/bin/busybox;
+
+case $1 in
+cifs)
+  P=/res/synapse/settings/cifs
+  if [ ! -z "$2" ]; then
+  if [ $2 -eq 0 ]; then
+    echo 0 > $P
+	rmmod /system/lib/modules/cifs.ko;
+  elif [ $2 -eq 1 ]; then
+    echo 1 > $P
+	insmod /system/lib/modules/cifs.ko;
+  fi; fi
+  copy=$(cat $P)
+  if [ "$copy" == 0 ]; then
+    echo 0
+  elif [ "$copy" == 1 ]; then
+    echo 1
+  fi
+  ;;
+
+ntfs)
+  P=/res/synapse/settings/ntfs
+  if [ ! -z "$2" ]; then
+  if [ $2 -eq 0 ]; then
+    echo 0 > $P
+	rmmod /system/lib/modules/ntfs.ko;
+  elif [ $2 -eq 1 ]; then
+    echo 1 > $P
+	insmod /system/lib/modules/ntfs.ko;
+  fi; fi
+  copy=$(cat $P)
+  if [ "$copy" == 0 ]; then
+    echo 0
+  elif [ "$copy" == 1 ]; then
+    echo 1
+  fi
+  ;;
+
+isofs)
+  P=/res/synapse/settings/isofs
+  if [ ! -z "$2" ]; then
+  if [ $2 -eq 0 ]; then
+    echo 0 > $P
+	rmmod /system/lib/modules/isofs.ko;
+  elif [ $2 -eq 1 ]; then
+    echo 1 > $P
+	insmod /system/lib/modules/isofs.ko;
+  fi; fi
+  copy=$(cat $P)
+  if [ "$copy" == 0 ]; then
+    echo 0
+  elif [ "$copy" == 1 ]; then
+    echo 1
+  fi
+  ;;
+udf)
+  P=/res/synapse/settings/udf
+  if [ ! -z "$2" ]; then
+  if [ $2 -eq 0 ]; then
+    echo 0 > $P
+	rmmod /system/lib/modules/udf.ko;
+  elif [ $2 -eq 1 ]; then
+    echo 1 > $P
+	insmod /system/lib/modules/udf.ko;
+  fi; fi
+  copy=$(cat $P)
+  if [ "$copy" == 0 ]; then
+    echo 0
+  elif [ "$copy" == 1 ]; then
+    echo 1
+  fi
+  ;;
+
+xpad)
+  P=/res/synapse/settings/xpad
+  if [ ! -z "$2" ]; then
+  if [ $2 -eq 0 ]; then
+    echo 0 > $P
+	rmmod /system/lib/modules/xpad.ko;
+  elif [ $2 -eq 1 ]; then
+    echo 1 > $P
+	insmod /system/lib/modules/xpad.ko;
+  fi; fi
+  copy=$(cat $P)
+  if [ "$copy" == 0 ]; then
+    echo 0
+  elif [ "$copy" == 1 ]; then
+    echo 1
+  fi
+  ;;
+esac
+

@@ -1,0 +1,11 @@
+#!/res/bin/busybox sh
+
+BB=/res/bin/busybox
+STR=/res/synapse
+PRIME=$STR
+CONFIG_JSON=$PRIME/config.json
+ACTION=$PRIME/actions/
+ACTION_SCRIPTS=$PRIME/actions/
+LOADER_VER_PATH=/data/PRIME-Kernel/synapse_loader_ver
+URL="http://enfree.com/prime"
+

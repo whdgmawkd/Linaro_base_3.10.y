@@ -17,12 +17,12 @@ echo ""
 echo - wating device...
 #adb wait-for-device
 echo - push boot.img to /device/sdcard/ ...
-adb shell "rm -f /data/local/tmp/boot.img"
-adb push $TMPDIR/boot.img /data/local/tmp/boot.img
+adb shell "rm -f /sdcard/boot.img"
+adb push $TMPDIR/boot.img /sdcard/boot.img
 echo - flashing image...
-adb shell "su -c dd if=/data/local/tmp/boot.img of=/dev/block/mmcblk0p9"
-adb shell "dd if=/data/local/tmp/boot.img of=/dev/block/mmcblk0p9"
-adb shell "rm -f /data/local/tmp/boot.img && mount /system"
+adb shell "su -c dd if=/sdcard/boot.img of=/dev/block/mmcblk0p9"
+adb shell "dd if=/sdcard/boot.img of=/dev/block/mmcblk0p9"
+adb shell "rm -f /sdcard/boot.img && mount /system"
 echo - flashing done. device reboot after 2s
 rm $TMPDIR/* 2>/dev/null
 sleep 2

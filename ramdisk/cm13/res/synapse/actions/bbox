@@ -1,0 +1,73 @@
+#!/system/bin/sh
+
+PRIME=/data/PRIME-Kernel
+BB=/res/bin/busybox
+INS_XBIN=`cat $PRIME/synapse/settings/bbins_xbin`;
+INS_LAST="$PRIME/synapse/settings/bbins_last";
+alias bb=/res/bin/busybox
+
+! (echo "$PATH" | grep "/res/bin/bb") && INS_XBIN=1;
+
+if [ -f $PRIME/synapse_loader_ver ]; then
+    case $1 in
+    install)
+		bb mount -o remount,rw /system
+        if [ -f /system/xbin/busybox ]; then
+			for i in $(/system/xbin/busybox --list); do
+				is_symlink=`bb readlink /system/xbin/$i`
+				[[ "$is_symlink" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/$i;
+			done
+            rm -f /system/xbin/busybox;
+        fi;
+        if [ -f /res/bin/bb/busybox ]; then
+            for i in $(/res/bin/busybox --list); do
+                bb rm -f /res/bin/bb/$i;
+            done
+            rm -f /res/bin/bb/busybox;
+        fi;
+
+		if [ $INS_XBIN -eq 1 ]; then
+            P=/system/xbin;
+            if [ ! -f $P/busybox ]; then
+                bb cp /res/bin/busybox $P/busybox;
+            fi;
+        else
+            P=/res/bin/bb;
+			mkdir /res/bin/bb 2>/dev/null
+            bb ln -sf /res/bin/busybox $P/busybox;
+        fi;
+        $P/busybox --install -s $P;
+
+        echo 1 > $INS_LAST;
+        echo "Busybox를 '$P'에 설치했습니다";
+		bb mount -o remount,ro /system
+        ;;
+    remove)
+		bb mount -o remount,rw /system
+        BBREMOVE=0
+        if [ -f /system/xbin/busybox ]; then
+			for i in $(/system/xbin/busybox --list); do
+				is_symlink=`bb readlink /system/xbin/$i`
+				[[ "$is_symlink" == "/system/xbin/busybox" ]] && bb rm -f /system/xbin/$i;
+			done
+            rm -f /system/xbin/busybox;
+            echo "/system/xbin/busybox를 제거했습니다.";
+            BBREMOVE=1;
+        fi;
+        if [ -f /res/bin/bb/busybox ]; then
+            for i in $(/res/bin/busybox --list); do
+				is_symlink=`bb readlink /res/bin/bb/$i`
+				[[ "$is_symlink" == "/res/bin/busybox" ]] && bb rm -f /res/bin/bb/$i;
+            done
+            rm -f /res/bin/bb/busybox;
+            echo "/res/bin/bb/busybox를 제거했습니다.";
+            BBREMOVE=1;
+        fi;
+        if [ $BBREMOVE -eq 0 ]; then
+            echo "설치된 busybox를 찾지 못해서 취소됐습니다.";
+        fi
+        echo 0 > $INS_LAST;
+		bb mount -o remount,ro /system
+        ;;
+    esac
+fi;

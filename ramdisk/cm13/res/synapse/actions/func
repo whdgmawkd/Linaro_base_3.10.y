@@ -1,0 +1,23 @@
+#!/system/bin/sh
+
+alias bb=/res/bin/busybox;
+BB=/res/bin/busybox;
+INC=/data/PRIME-Kernel/bin/xposed.inc
+PRIME=/data/PRIME-Kernel
+INC=/data/PRIME-Kernel/bin/func.inc
+
+if [ -e $INC ]; then
+    source $INC
+else
+  case $1 in
+    donotclear)
+		echo 0
+    ;;
+    rootcloak)
+	echo "기부하신 후 사용 가능한 기능입니다.";
+    ;;
+    sukill)
+	echo "기부하신 후 사용 가능한 기능입니다.";
+    ;;
+  esac
+fi
