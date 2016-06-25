@@ -42,7 +42,7 @@ do
 		count=$(bb expr $count + 1)
 		if [ $count -lt 30 ]; then
 			sleepsec=10
-		if [ $count -lt 60 ]; then
+		elif [ $count -lt 60 ]; then
 			sleepsec=60
 		elif [ $count -lt 180 ]; then
 			sleepsec=300
