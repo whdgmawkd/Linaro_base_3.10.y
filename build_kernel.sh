@@ -16,8 +16,8 @@ if [ $BUILD_G850_TW -eq 1 ]; then
     echo "------------------------ SM-G850x TW ----------------------------"
     mtp_sec && make -j4
     ./utility/mkbootfs $RAMDISK_TW | $COMPRESS > $TMPDIR/ramdisk.img
-    ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/g850-boot.img
-    echo -n "SEANDROIDENFORCE" >> $TMPDIR/g850-boot.img
+    ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/g850-tw-boot.img
+    echo -n "SEANDROIDENFORCE" >> $TMPDIR/g850-tw-boot.img
 fi
 
 if [ $ADD_MODULES -eq 1 ]; then
@@ -35,8 +35,8 @@ if [ $BUILD_G850_CM -eq 1 ]; then
     echo "------------------------ SM-G850x CM ----------------------------"
     mtp_nosec && make -j4
     ./utility/mkbootfs $RAMDISK_CM | $COMPRESS > $TMPDIR/ramdisk.img
-    ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/g850-boot.img
-    echo -n "SEANDROIDENFORCE" >> $TMPDIR/g850-boot.img
+    ./utility/mkbootimg --base 0x10000000 --pagesize 2048 --kernel ./arch/arm/boot/zImage --ramdisk $TMPDIR/ramdisk.img --dt ./utility/$DTB -o $TMPDIR/g850-aosp-boot.img
+    echo -n "SEANDROIDENFORCE" >> $TMPDIR/g850-aosp-boot.img
 fi
 
 if [ $BUILD_G850_TWRP -eq 1 ]; then

@@ -70,23 +70,30 @@ if [ $VARIANT_PASS -eq 0 ]; then
   exit 1
 fi
 
+IS_TW=$(cat /system/build.prop| grep -c ro.com.google.clientidbase=android-samsung)
+if [ $IS_TW -eq 1 ]; then
+	OS="tw"
+else
+	OS="aosp"
+fi
+
 ui_print " - Flashing boot image..."
 ui_print "   DEVICE: $variant"
 device_name=`echo $variant|awk '{print tolower($0)}'`
 device=${device_name:0:4}
 
-tar -Jxf ./bootimg.tar.xz $device-boot.img
-if [ ! -f "/tmp/prime_kernel/$device-boot.img" ]; then
-  ui_print "! Failed: $device-boot.img not found!"
+tar -Jxf ./bootimg.tar.xz $device-$OS-boot.img
+if [ ! -f "/tmp/prime_kernel/$device-$OS-boot.img" ]; then
+  ui_print "! Failed: $device-$OS-boot.img not found!"
   exit 1
 fi
 
-ui_print "   FILE  : $device-boot.img"
+ui_print "   FILE  : $device-$OS-boot.img"
 TARGET_BLOCK=`readlink /dev/block/platform/*/by-name/BOOT`
 [ -z $TARGET_BLOCK ] && TARGET_BLOCK="/dev/block/mmcblk0p9"
 
-dd of=$TARGET_BLOCK if=/tmp/prime_kernel/$device-boot.img
-rm bootimg.tar.xz $device-boot.img
+dd of=$TARGET_BLOCK if=/tmp/prime_kernel/$device-$OS-boot.img
+rm bootimg.tar.xz $device-$OS-boot.img
 sync
 
 
