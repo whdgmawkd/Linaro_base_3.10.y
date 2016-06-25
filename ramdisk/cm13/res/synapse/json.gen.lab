@@ -42,6 +42,17 @@ cat << CTAG
 	{ SSpacer:{ height:1 }},
 
  	{ SPane:{
+		title:"AOSP 통화품질 패치",
+    }},
+	{ SCheckBox:{
+        label:"패치를 적용합니다.",
+        description:"이 패치는 /system/etc/mixer_patshs.xml 파일을 수정합니다. 패치후 재부팅이 필요합니다.\n패치 해제 시 원래대로 복구됩니다.",
+		default:`cat /res/synapse/settings/aosp_mixer_patch`,
+		action:"lab /res/synapse/settings/aosp_mixer_patch"
+	}},
+	{ SSpacer:{ height:1 }},
+
+ 	{ SPane:{
 		title:"Viper4Android 시스템 사운드 적용 패치",
     }},
 	{ SCheckBox:{
