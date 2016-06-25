@@ -211,6 +211,9 @@ on init
     # enable armv8_deprecated instruction hooks
     write /proc/sys/abi/swp 1
 
+	# set vibrator permission
+	chown system system /sys/class/timed_output/vibrator/pwm_value
+
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
 on property:sys.boot_from_charger_mode=1
