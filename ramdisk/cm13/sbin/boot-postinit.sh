@@ -1,10 +1,10 @@
 #!/system/bin/sh
 
-BB=/res/bin/busybox
+alias bb=/res/bin/busybox
 
-$BB mount -t rootfs -o remount,rw rootfs
-$BB mount -o remount,rw /system
-$BB mount -o remount,rw /system /system
+bb mount -t rootfs -o remount,rw rootfs
+bb mount -o remount,rw /system
+bb mount -o remount,rw /system /system
 
 echo "" >> /data/PRIME-Kernel/kernel.log
 echo ---- start postboot script ---- >> /data/PRIME-Kernel/kernel.log
@@ -15,9 +15,9 @@ echo - excecuted on $(date +"%Y-%d-%m %r") >> /data/PRIME-Kernel/kernel.log
 
 # Init.d
 if [ ! -e /system/etc/init.d-postboot ]; then
-  $BB mkdir /system/etc/init.d-postboot
-  $BB chown -R root.root /system/etc/init.d-postboot
-  $BB chmod -R 755 /system/etc/init.d-postboot
+  bb mkdir /system/etc/init.d-postboot
+  bb chown -R root.root /system/etc/init.d-postboot
+  bb chmod -R 755 /system/etc/init.d-postboot
 fi;
 
 echo ---- Generating UCI Interface... ---- >> /data/PRIME-Kernel/kernel.log
