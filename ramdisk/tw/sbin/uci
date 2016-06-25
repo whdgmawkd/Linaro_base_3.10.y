@@ -54,6 +54,7 @@ initial_prof /res/synapse/settings/ntfs 0
 initial_prof /res/synapse/settings/isofs 0
 initial_prof /res/synapse/settings/udf 0
 initial_prof /res/synapse/settings/xpad 0
+initial_prof /res/synapse/settings/aosp_mixer_patch 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_xbin 0
 initial_prof /data/PRIME-Kernel/synapse/settings/bbins_last 0
 initial_prof /data/PRIME-Kernel/synapse/settings/loader_unroot 1

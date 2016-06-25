@@ -48,7 +48,7 @@ cat << CTAG
         label:"패치를 적용합니다.",
         description:"이 패치는 /system/etc/audio_policy.conf 파일의 deep_buffer{ } 구문을 제거하고 사운드얼라이브를 해제하며, 패치 해제 시 원래대로 복구됩니다.\n설정 변경 시 디바이스 재시작이 필요합니다.\n<주의>\n1. 첫 통화 시 음성이 들리지 않을 수 있습니다. 벨소리 크기 조절을 한 번 해주면 해결됩니다.\n 2. UHQ 디코딩이 작동하지 않게되므로 파워앰프의 Hi-res 기능에 문제가 생깁니다.",
 		default:`cat /res/synapse/settings/viper_patch_00`,
-		action:"generic /res/synapse/settings/viper_patch_00"
+		action:"lab /res/synapse/settings/viper_patch_00"
 	}},
 
 	{ SSpacer:{ height:2 }},
