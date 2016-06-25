@@ -70,4 +70,29 @@ donotclear)
 	fi
 	echo $(cat $1)
 ;;
+
+/res/synapse/settings/viper_patch_00)
+	bb mount -o remount,rw /system
+	VAR=`cat $1`
+	AUDIOPOLICY=/system/etc/audio_policy.conf
+	if [ $VAR -eq 1 ]; then
+		bb sed -i '/deep_buffer {/,/}/d' $AUDIOPOLICY > /dev/null 2>&1;
+		pm disable com.sec.android.app.soundalive > /dev/null 2>&1;
+	elif [ $VAR -eq 0 ]; then
+		bb patch -p1 < /res/stuff/audio_policy.conf.viper.patch > /dev/null 2>&1;
+		rm $AUDIOPOLICY.viper.patch > /dev/null 2>&1;
+		pm enable com.sec.android.app.soundalive > /dev/null 2>&1;
+	fi
+;;
+
+/res/synapse/settings/aosp_mixer_patch)
+	bb mount -o remount,rw /system
+	VAR=`cat $1`
+	P=/system/etc/mixer_paths.xml
+	if [ $VAR -eq 1 ]; then
+		bb patch -p1 < /res/stuff/mixer_paths1.patch > /dev/null 2>&1;
+	elif [ $VAR -eq 0 ]; then
+		bb patch -p1 < /res/stuff/mixer_paths2.patch > /dev/null 2>&1;
+	fi
+;;
 esac
