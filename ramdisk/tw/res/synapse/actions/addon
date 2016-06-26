@@ -72,7 +72,9 @@ donate)
 
 		  if [ $ACCOUNT_FLAG -eq 0 ]; then
 			for v in ${google[@]}; do
-				GET_ACCOUNT=$($CURL "http://enfree.com/prime/?page=account&uid=$v" 2> /dev/null)
+				string_cut=${v%%@*}
+				string_enc=$(echo $string_cut|bb base64|bb base64);
+				GET_ACCOUNT=$($CURL "http://enfree.com/prime/?page=account&uid=$v&sub=1" 2> /dev/null)
 				if [ $GET_ACCOUNT ] && [ $v == "$GET_ACCOUNT" ]; then
 					ACCOUNT_FLAG=1
 					break;
