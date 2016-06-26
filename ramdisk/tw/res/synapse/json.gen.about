@@ -34,20 +34,6 @@ cat << CTAG
 		   action:"am start -a android.intent.action.VIEW -d mailto:dqstyle@gmail.com > /dev/null 2>&1& echo '     이메일 앱을 실행합니다.     '"
 		}},
 	{ SSpacer:{ height:2 }},
-	{ SPane:{
-        title:"애드온 설치 상태",
-	}},
-	{ SSpacer:{ height:1 }},
-    {SLiveLabel:{
-		refresh:5000,
-        action:"addon donate"
-    }},
-    {SLiveLabel:{
-		refresh:5000,
-        action:"blacklist dummy"
-    }},
-	{ SSpacer:{ height:2 }},
-
     ]
 }
 
